@@ -49,7 +49,7 @@ React 기반으로 구현되며, 사용자 로그인, 음악 추천, 좋아요 �
 | feat      | 새로운 기능 추가                     | feat(auth): 로그인 기능 추가         |
 | fix       | 버그 수정                           | fix: 로그인 시 비밀번호 오류 수정   |
 | docs      | 문서 수정 (README 등)                | docs: README 오탈자 수정            |
-| style     | 코드 스타일 변경 (세미콜론 등)       | style: prettier 적용                |
+| style     | 사용자 UI 변경       | style: 폰트 적용                |
 | refactor  | 리팩토링 (기능 변화 없음)            | refactor: 불필요한 변수 제거        |
 | chore     | 설정 등 기타 변경 (코드 수정 없음)   | chore: 이미지 경로 변경             |
 
