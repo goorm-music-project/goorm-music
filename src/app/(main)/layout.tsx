@@ -1,4 +1,5 @@
 import BottomNavBar from "@/components/BottomNavBar";
+import MobileTopBar from "@/components/MobileTopBar";
 
 export default function MainLayout({
   children,
@@ -7,6 +8,7 @@ export default function MainLayout({
 }) {
   return (
     <div className="min-h-screen relative pb-16">
+      <MobileTopBar />
       {children}
       <BottomNavBar />
     </div>
