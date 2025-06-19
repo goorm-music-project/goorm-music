@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
+/* 모드 변경 필요시 주석 해제 */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1f2937;
+  --primary-blue: #6cc2ff;
+  --primary-blue-hover: #96d3ff;
+  --error-red: #fd5361;
+  --error-red-hover: #ff6c78;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+h3 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+p {
+  font-size: 1rem;
 }
