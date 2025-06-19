@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎧 Music Project
 
-## Getting Started
+**Music Project**는 Spotify API를 활용하여 사용자의 선호 장르와 음악 취향을 바탕으로 곡을 추천해주는 음악 웹 애플리케이션입니다.  
+React 기반으로 구현되며, 사용자 로그인, 음악 추천, 좋아요 기능 등을 제공합니다.
 
-First, run the development server:
+## 🧾 프로젝트 목표
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. 외부 API 연동 경험 습득 (Spotify API)
+2. 동적인 UI 인터페이스 구현 능력 향상
+3. 컴포넌트 기반 구조 설계 능력 향상
+4. 반응형 레이아웃 및 사용자 경험 개선 훈련
+5. 팀 협업 프로젝트 경험 확보 (Git 활용 포함)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 👨‍👩‍👧‍👦 팀원
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 역할     | 이름     |
+|----------|----------|
+| 팀장     | 신유승   |
+| 팀원     | 김승범   |
+| 팀원     | 김소연   |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠 기술 스택
 
-## Learn More
+- **Frontend**: Next.js, TypeScript, Axios, React Icon
+- **API**: Spotify Web API
+- **Style**: Tailwind CSS
+- **OAuth**: Spotify Authorization Code Flow
+- **State Management**:  Zustand
 
-To learn more about Next.js, take a look at the following resources:
+## 🎨 디자인
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 협업 도구: [Figma](https://figma.com)  
+- UI 및 흐름은 팀원 간 피그마를 통해 설계 및 리뷰 진행 중  
+- 주요 색상 테마: `#6cc2ff` 기반의 라이트 모
+- Organization 로고 디자인은 ChatGPT + 이미지 편집 도구를 통해 제작
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚙️ 개발 환경
 
-## Deploy on Vercel
+- **Code Convention**: `VSCode`의 `Prettier` 기본 설정 사용
+- **협업 방식**: `GitHub Flow` 기반 브랜치 전략  
+  - `main`: 배포용
+  - `feature/브랜치명`: 기능 단위 개발
+  - `pull request`로 코드 리뷰 후 병합
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📦 Commit Convention
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| 타입      | 의미                                 | 예시                                 |
+|-----------|--------------------------------------|--------------------------------------|
+| feat      | 새로운 기능 추가                     | feat(auth): 로그인 기능 추가         |
+| fix       | 버그 수정                           | fix: 로그인 시 비밀번호 오류 수정   |
+| docs      | 문서 수정 (README 등)                | docs: README 오탈자 수정            |
+| style     | 코드 스타일 변경 (세미콜론 등)       | style: prettier 적용                |
+| refactor  | 리팩토링 (기능 변화 없음)            | refactor: 불필요한 변수 제거        |
+| chore     | 설정 등 기타 변경 (코드 수정 없음)   | chore: 이미지 경로 변경             |
+
+## 📌 기능 요약 (예정)
+
+- 회원가입 페이지
+    - spotify 계정 연동 필수
+    - DB에 사용자 선호 장르 저장
+
+- 로그인 페이지
+  - spotify 계정 로그인
+  - 자체 로그인
+
+- 메인 페이지
+  - 사용자 선호 장르를 기반으로 음악 추천
+  - 다른 페이지로 이동할 수 있는 네비게이션 바 필요
+
+- 검색 페이지
+  - 사용자의 입력을 기반으로 음악 및 아티스트 검색
+
+- 카테고리별 페이지
+  - 사용자가 선택한 카테고리별 인기 음악을 보여주는 페이지
+  - 카테고리는 국가별, 장르별 등등..
+  - 커다란 카테고리 선택 시 세부 카테고리로 나뉨(국가는 한국, 미국 등으로, 장르는 발라드, 랩 등으로)
+
+- 곡 디테일 페이지
+  - 곡마다 상세 정보를 보여주는 페이지
+  - 좋아요 기능
+  - 아티스트 클릭 시 아티스트 상세 페이지로 이동
+  - 음악 30초 미리 듣기 기능 구현
+
+- 아티스트 상세 페이지
+  - 아티스트에 대한 정보를 보여주는 페이지
+  - 아티스트가 올린 곡들도 보여줌
+
+- 마이페이지
+  - 본인의 정보를 보여주는 페이지
+  - 사용자가 만든 플레이리스트를 보여줌
+  - 선호 장르를 확인 및 수정 가능
+  - 사용자가 follow한 플레이리스트 또한 보여줌
+
+- 프로필 페이지(마이페이지와 다름)
+  - 상대방의 정보를 보여주는 페이지
+  - 민감 정보는 보여주지 않고, 그 사용자가 만든 플레이리스트 등을 보여줌
+
+- 플레이 리스트 페이지
+  - 사용자가 만든 플레이리스트를 보여주는 페이지
+  - 사용자는 자신이 만든 플레이 리스트라면 곡을 추가하고 삭제할 수 있음
+
+## 📁 디렉토리 구조 (예정)
+
