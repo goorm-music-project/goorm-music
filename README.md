@@ -39,7 +39,7 @@ React 기반으로 구현되며, 사용자 로그인, 음악 추천, 좋아요 �
 - **Code Convention**: `VSCode`의 `Prettier` 기본 설정 사용
 - **협업 방식**: `GitHub Flow` 기반 브랜치 전략  
   - `main`: 배포용
-  - `feature/브랜치명`: 기능 단위 개발
+  - `feature/{기능이름}`: 기능 단위 개발
   - `pull request`로 코드 리뷰 후 병합
 
 ## 📦 Commit Convention
