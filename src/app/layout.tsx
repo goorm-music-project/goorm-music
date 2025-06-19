@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Gowun_Batang } from "next/font/google";
 import "./globals.css";
-import BottomNavBar from "@/components/BottomNavBar";
 
 const gowunBatang = Gowun_Batang({
   weight: ["400", "700"],
@@ -22,7 +21,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${gowunBatang.className} antialiased`}>
         {children}
-        <BottomNavBar />
       </body>
     </html>
   );
