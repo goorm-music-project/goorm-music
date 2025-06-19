@@ -17,7 +17,7 @@ export default function MobileTopBar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-[#6CC2FF] h-16 flex justify-between items-center px-4 z-50">
+    <div className="fixed top-0 left-0 right-0 bg-(--primary-blue) h-16 flex justify-between items-center px-4 z-50">
       <img src="/goorm_logo_white.png" alt="로고" className="w-12 h-12 mr-3" />
 
       <form
@@ -32,7 +32,7 @@ export default function MobileTopBar() {
           className="flex-grow outline-none text-black bg-transparent placeholder-gray-400"
         />
         <button type="submit">
-          <FaSearch className="text-[#6CC2FF]" />
+          <FaSearch className="text-(--primary-blue)" />
         </button>
       </form>
     </div>
