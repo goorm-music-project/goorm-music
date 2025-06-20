@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const getAccessToken = async (): Promise<string | null> => {
   const clientId = process.env.SPOTIFY_CLIENT_ID!;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET!;
@@ -11,20 +13,16 @@ export const getAccessToken = async (): Promise<string | null> => {
     "base64"
   );
 
-  const res = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${authHeader}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({ grant_type: "client_credentials" }),
-  });
+  const res = await axios.post(
+    "https://accounts.spotify.com/api/token",
+    new URLSearchParams({ grant_type: "client_credentials" }),
+    {
+      headers: {
+        Authorization: `Basic ${authHeader}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }
+  );
 
-  if (!res.ok) {
-    console.log("Access Token fetch error: ", res.statusText);
-    return null;
-  }
-
-  const data = await res.json();
-  return data.access_token;
+  return res.data.access_token;
 };
