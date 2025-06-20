@@ -24,7 +24,6 @@ export default function TopChartList() {
       .then((data) => setDatas(data));
   }, []);
 
-  console.log(datas);
   return (
     <main className="mb-4">
       <h1>추천 음악을 들어보세요.</h1>
