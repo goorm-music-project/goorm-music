@@ -46,7 +46,7 @@ export default function NewReleaseAlbum() {
                   width={150}
                   height={150}
                 />
-                <p className="truncate">{album.name}</p>
+                <p className="truncate my-1">{album.name}</p>
                 <p className="truncate">
                   {album.artists.map((a) => a.name).join(", ")}
                 </p>
