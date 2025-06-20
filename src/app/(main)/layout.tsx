@@ -9,7 +9,9 @@ export default function MainLayout({
   return (
     <div className="min-h-screen relative pb-16">
       <MobileTopBar />
-      {children}
+      <div className="w-full p-4 fixed left-0 top-16 h-[86vh] overflow-y-auto overflow-x-hidden">
+        {children}
+      </div>
       <BottomNavBar />
     </div>
   );

@@ -43,3 +43,6 @@ h3 {
 p {
   font-size: 1rem;
 }
+button {
+  cursor: pointer;
+}
