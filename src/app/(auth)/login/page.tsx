@@ -3,7 +3,7 @@
 export default function Login() {
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-    const redirect_uri = "https://localhost:3000/callback";
+    const redirect_uri = "https://goorm-music.vercel.app/callback";
     const scope = "user-read-email user-read-private";
 
     const authUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${clientId}&scope=${encodeURIComponent(
