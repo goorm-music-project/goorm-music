@@ -60,3 +60,6 @@ button.errorBtn {
 button.errorBtn:hover {
   background-color: var(--error-red-hover);
 }
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
