@@ -15,6 +15,7 @@
   --primary-blue-hover: #96d3ff;
   --error-red: #fd5361;
   --error-red-hover: #ff6c78;
+  --gray: #4a5565;
 }
 
 @theme inline {
@@ -45,4 +46,17 @@ p {
 }
 button {
   cursor: pointer;
+  border-radius: 5px;
+}
+button.primaryBtn {
+  background-color: var(--primary-blue);
+}
+button.primaryBtn:hover {
+  background-color: var(--primary-blue-hover);
+}
+button.errorBtn {
+  background-color: var(--error-red);
+}
+button.errorBtn:hover {
+  background-color: var(--error-red-hover);
 }
