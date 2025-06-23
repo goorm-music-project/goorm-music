@@ -1,17 +1,16 @@
 "use client";
 
-import PlaylistList from "@/app/components/PlaylistList";
-import {
-  FaEdit,
-  FaHeart,
-  FaMusic,
-  FaUserFriends,
-  FaPlus,
-  FaShareAlt,
-  FaCog,
-} from "react-icons/fa";
+import PlaylistSection from "@/app/components/profile/PlaylistSection";
+import LikesSection from "@/app/components/profile/LikeSection";
+import FollowsSection from "@/app/components/profile/FollowSection";
+import { FaEdit, FaHeart, FaMusic, FaUserFriends } from "react-icons/fa";
+import { useState } from "react";
 
 export default function MyProfilePage() {
+  const [activeTab, setActiveTab] = useState<"playlist" | "likes" | "follows">(
+    "playlist"
+  );
+
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-32">
       {/* 상단 바 */}
@@ -19,10 +18,6 @@ export default function MyProfilePage() {
         {/* 헤더 */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-bold">내 프로필</h1>
-          <div className="flex items-center space-x-2">
-            <FaShareAlt className="text-gray-600" />
-            <FaCog className="text-gray-600" />
-          </div>
         </div>
 
         {/* 프로필 정보 */}
@@ -88,42 +83,45 @@ export default function MyProfilePage() {
 
       {/* 탭 메뉴 */}
       <div className="px-4">
-        <div className="grid grid-cols-3 gap-2 text-sm text-center  mb-6">
-          <button className="py-3 rounded-xl bg-blue-500 text-white flex justify-center items-center gap-1">
+        <div className="grid grid-cols-3 gap-2 text-sm text-center mb-6">
+          <button
+            onClick={() => setActiveTab("playlist")}
+            className={`py-3 rounded-xl flex justify-center items-center gap-1 ${
+              activeTab === "playlist"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
             <FaMusic className="text-xs" /> 플레이리스트
           </button>
-          <button className="py-3 rounded-xl bg-gray-100 text-gray-700 flex justify-center items-center gap-1">
+          <button
+            onClick={() => setActiveTab("likes")}
+            className={`py-3 rounded-xl flex justify-center items-center gap-1 ${
+              activeTab === "likes"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
             <FaHeart className="text-xs" /> 좋아요
           </button>
-          <button className="py-3 rounded-xl bg-gray-100 text-gray-700 flex justify-center items-center gap-1">
+          <button
+            onClick={() => setActiveTab("follows")}
+            className={`py-3 rounded-xl flex justify-center items-center gap-1 ${
+              activeTab === "follows"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
             <FaUserFriends className="text-xs" /> 팔로우
           </button>
         </div>
 
-        {/* 플레이리스트 리스트 */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">내 플레이리스트</h2>
-          <button className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center">
-            <FaPlus className="mr-1" /> 새 플레이리스트
-          </button>
+        {/* 탭 메뉴 아래 콘텐츠 영역 */}
+        <div className="px-4">
+          {activeTab === "playlist" && <PlaylistSection />}
+          {activeTab === "likes" && <LikesSection />}
+          {activeTab === "follows" && <FollowsSection />}
         </div>
-
-        <PlaylistList
-          playlists={[
-            {
-              id: "1",
-              name: "내가 좋아하는 K-Pop",
-              image: "/placeholder.jpg",
-              trackCount: 25,
-            },
-            {
-              id: "2",
-              name: "감성 R&B 모음",
-              image: "/placeholder2.jpg",
-              trackCount: 18,
-            },
-          ]}
-        />
       </div>
     </div>
   );
