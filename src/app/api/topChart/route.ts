@@ -9,7 +9,7 @@ export async function GET() {
     // 임시 : 개인 플레이리스트 출력
     const playlistId = "48AlewkJlCLDasGjfzcAoB";
     const res = await axios.get(
-      `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=5`,
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
