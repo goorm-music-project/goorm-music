@@ -1,27 +1,14 @@
 "use client";
 
-import Image from "next/image";
+// import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FaPlay, FaPlus, FaRegThumbsUp } from "react-icons/fa";
 import PlayListModal from "./PlayListModal";
 import AddNewPlayListModal from "./AddNewPlayListModal";
-import { Playlist } from "../types/Playlist";
-
-type RandomItem = {
-  track: {
-    id: string;
-    name: string;
-    album: {
-      name: string;
-      images: { url: string }[];
-    };
-    artists: { name: string }[];
-    uri: string[];
-  };
-};
+import { Playlist, PlaylistItem } from "../types/Playlist";
+import PlaylistBar from "./playlist/playlistBar";
 
 export default function RandomRecoList() {
-  const [datas, setDatas] = useState<RandomItem[]>([]);
+  const [datas, setDatas] = useState<PlaylistItem[]>([]);
   const [showPlayListModal, setShowPlayListModal] = useState(false);
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [selectTrack, setSelectTrack] = useState<string[]>([]);
@@ -45,44 +32,12 @@ export default function RandomRecoList() {
       <h1>새로운 취향을 만나보세요.</h1>
       <div className="flex flex-col gap-3">
         {datas.map((item) => (
-          <div
+          <PlaylistBar
             key={item.track.id}
-            className="relative p-2 hover:bg-(--primary-blue-hover) group"
-          >
-            <div className="flex gap-3">
-              <Image
-                src={item.track.album.images[0]?.url}
-                alt={item.track.name}
-                width={100}
-                height={100}
-              />
-              <div>
-                <p className="truncate my-1">{item.track.name}</p>
-                <p className="truncate">
-                  {item.track.artists.map((a) => a.name).join(", ")}
-                </p>
-              </div>
-            </div>
-            <div className="absolute left-0 top-0 w-full h-full hidden group-hover:block">
-              <button className="text-2xl absolute left-12 top-[40%] text-white">
-                <FaPlay />
-              </button>
-              <div>
-                <button className="text-2xl absolute right-15 top-[40%] text-white">
-                  <FaRegThumbsUp />
-                </button>
-                <button
-                  className="text-2xl absolute right-5 top-[40%] text-white"
-                  onClick={() => {
-                    handleShowPlayList();
-                    setSelectTrack(item.track.uri);
-                  }}
-                >
-                  <FaPlus />
-                </button>
-              </div>
-            </div>
-          </div>
+            item={item}
+            setSelectTrack={setSelectTrack}
+            handleShowPlayList={handleShowPlayList}
+          />
         ))}
       </div>
       <PlayListModal

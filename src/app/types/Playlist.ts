@@ -19,3 +19,16 @@ export interface AddTrackProps {
   playlistId: string;
   track: string[];
 }
+
+export interface PlaylistItem {
+  track: {
+    id: string;
+    name: string;
+    album: {
+      name: string;
+      images: { url: string }[];
+    };
+    artists: { name: string }[];
+    uri: string[];
+  };
+}
