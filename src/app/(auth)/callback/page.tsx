@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 
@@ -11,30 +12,29 @@ function InnerCallback() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!code) return;
+    const fetchToken = async () => {
+      try {
+        const res = await axios.post("/api/token", { code });
 
-    fetch("/api/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.access_token) {
-          document.cookie = `access_token=${data.access_token}; path=/; max-age=3600`;
+        const accessToken = res.data.access_token;
 
+        // 액세스 토큰을 쿠키에 저장
+        if (accessToken) {
+          document.cookie = `access_token=${accessToken}; path=/; max-age=3600`;
           router.push("/");
         } else {
-          alert("⚠️ 로그인 실패. 다시 시도해주세요.");
+          alert("로그인 실패, 다시 시도해주세요.");
         }
-      })
-      .catch((err) => {
-        console.error("❌ Token fetch error:", err);
+      } catch (error) {
+        console.error("Token 발급 중 오류 발생", error);
         alert("로그인 중 오류가 발생했습니다.");
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    if (code) {
+      fetchToken();
+    }
   }, [code, router]);
 
   return (
