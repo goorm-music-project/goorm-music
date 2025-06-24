@@ -39,7 +39,7 @@ export default function PlayList({ playlists, setPlaylists }: Props) {
       {playlists.map((playlist) => (
         <div
           key={playlist.id}
-          className="flex gap-4 p-2 rounded border border-(--gray)"
+          className="flex gap-4 p-2 rounded border border-(--gray) cursor-pointer hover:bg-(--primary-blue-hover)"
         >
           <Image
             src={playlist.images?.[0]?.url || "/goorm_logo_blue.png"}
