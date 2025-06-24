@@ -3,7 +3,8 @@
 import PlaylistSection from "@/app/components/profile/PlaylistSection";
 import LikesSection from "@/app/components/profile/LikeSection";
 import FollowsSection from "@/app/components/profile/FollowSection";
-import { FaEdit, FaHeart, FaMusic, FaUserFriends } from "react-icons/fa";
+import ProfileTabNav from "@/app/components/profile/ProfileTabNav";
+import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
 
 export default function MyProfilePage() {
@@ -82,46 +83,13 @@ export default function MyProfilePage() {
       </div>
 
       {/* 탭 메뉴 */}
-      <div className="px-4">
-        <div className="grid grid-cols-3 gap-2 text-sm text-center mb-6">
-          <button
-            onClick={() => setActiveTab("playlist")}
-            className={`py-3 rounded-xl flex justify-center items-center gap-1 ${
-              activeTab === "playlist"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            <FaMusic className="text-xs" /> 플레이리스트
-          </button>
-          <button
-            onClick={() => setActiveTab("likes")}
-            className={`py-3 rounded-xl flex justify-center items-center gap-1 ${
-              activeTab === "likes"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            <FaHeart className="text-xs" /> 좋아요
-          </button>
-          <button
-            onClick={() => setActiveTab("follows")}
-            className={`py-3 rounded-xl flex justify-center items-center gap-1 ${
-              activeTab === "follows"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            <FaUserFriends className="text-xs" /> 팔로우
-          </button>
-        </div>
+      <ProfileTabNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {/* 탭 메뉴 아래 콘텐츠 영역 */}
-        <div className="px-4">
-          {activeTab === "playlist" && <PlaylistSection />}
-          {activeTab === "likes" && <LikesSection />}
-          {activeTab === "follows" && <FollowsSection />}
-        </div>
+      {/* 탭 메뉴 아래 콘텐츠 영역 */}
+      <div className="px-4">
+        {activeTab === "playlist" && <PlaylistSection />}
+        {activeTab === "likes" && <LikesSection />}
+        {activeTab === "follows" && <FollowsSection />}
       </div>
     </div>
   );
