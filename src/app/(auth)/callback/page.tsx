@@ -1,19 +1,51 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+import axios from "axios";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
 
 function InnerCallback() {
   const params = useSearchParams();
   const code = params.get("code");
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (code) {
-      console.log("✅ code:", code);
-    }
-  }, [code]);
+    const fetchToken = async () => {
+      try {
+        const res = await axios.post("/api/token", { code });
 
-  return <div>Spotify 로그인 처리 중...</div>;
+        const accessToken = res.data.access_token;
+
+        // 액세스 토큰을 쿠키에 저장
+        if (accessToken) {
+          document.cookie = `access_token=${accessToken}; path=/; max-age=3600`;
+          router.push("/");
+        } else {
+          alert("로그인 실패, 다시 시도해주세요.");
+        }
+      } catch (error) {
+        console.error("Token 발급 중 오류 발생", error);
+        alert("로그인 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (code) {
+      fetchToken();
+    }
+  }, [code, router]);
+
+  return (
+    <div className="flex items-center justify-center h-screen">
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <div>처리 완료. 메인 페이지로 돌아갑니다.</div>
+      )}
+    </div>
+  );
 }
 
 export default function Page() {
