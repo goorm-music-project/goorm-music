@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus, FaRegThumbsUp } from "react-icons/fa";
 import PlayListModal from "./PlayListModal";
-import { signIn, useSession } from "next-auth/react";
 import AddNewPlayListModal from "./AddNewPlayListModal";
 import { Playlist } from "../types/Playlist";
 
@@ -27,7 +26,6 @@ export default function RandomRecoList() {
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [selectTrack, setSelectTrack] = useState<string[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const { data: session } = useSession();
 
   const handleShowPlayList = () => {
     setShowPlayListModal(true);
@@ -41,9 +39,6 @@ export default function RandomRecoList() {
       .then((res) => res.json())
       .then((data) => setDatas(data));
   }, []);
-
-  if (!session)
-    return <button onClick={() => signIn("spotify")}>로그인</button>;
 
   return (
     <main className="mb-4">
@@ -96,6 +91,7 @@ export default function RandomRecoList() {
         playlists={playlists}
         setPlaylists={setPlaylists}
         onShowNewPlaylist={() => handleShowNewPlayList()}
+        track={selectTrack}
       />
 
       <AddNewPlayListModal
