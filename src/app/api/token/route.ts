@@ -4,8 +4,8 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const code = body.code;
 
-  const client_id = process.env.SPOTIFY_CLIENT_ID!;
-  const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
+  const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!;
+  const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET!;
   const redirect_uri = "http://127.0.0.1:3000/callback";
 
   const params = new URLSearchParams();
