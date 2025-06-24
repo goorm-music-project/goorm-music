@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Gowun_Batang } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./Providers";
 
 const gowunBatang = Gowun_Batang({
   weight: ["400", "700"],
@@ -20,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${gowunBatang.className} antialiased`}>
-        <Providers>{children}</Providers>
-      </body>
+      <body className={`${gowunBatang.className} antialiased`}>{children}</body>
     </html>
   );
 }

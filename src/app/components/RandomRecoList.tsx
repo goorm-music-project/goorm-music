@@ -1,11 +1,10 @@
 "use client";
 
-// import Image from "next/image";
 import { useEffect, useState } from "react";
 import PlayListModal from "./PlayListModal";
 import AddNewPlayListModal from "./AddNewPlayListModal";
 import { Playlist, PlaylistItem } from "../types/Playlist";
-import PlaylistBar from "./playlist/playlistBar";
+import PlaylistBar from "./PlaylistBar";
 
 export default function RandomRecoList() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
