@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { FaSearch } from "react-icons/fa";
@@ -18,7 +19,13 @@ export default function MobileTopBar() {
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-(--primary-blue) h-16 flex justify-between items-center px-4 z-50">
-      <img src="/goorm_logo_white.png" alt="로고" className="w-12 h-12 mr-3" />
+      <Image
+        src="/goorm_logo_white.png"
+        alt="로고"
+        className="w-12 h-12 mr-3"
+        width={100}
+        height={100}
+      />
 
       <form
         className="flex items-center bg-white rounded-full px-4 py-2 w-full max-w-[550px]"
@@ -30,6 +37,7 @@ export default function MobileTopBar() {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           className="flex-grow outline-none text-black bg-transparent placeholder-gray-400"
+          style={{ border: "none" }}
         />
         <button type="submit">
           <FaSearch className="text-(--primary-blue)" />
