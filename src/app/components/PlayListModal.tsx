@@ -10,6 +10,7 @@ type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   onShowNewPlaylist: () => void;
+  track: string[];
 };
 
 export default function PlayListModal({
@@ -18,13 +19,18 @@ export default function PlayListModal({
   playlists,
   setPlaylists,
   onShowNewPlaylist,
+  track,
 }: Props) {
   return (
     <Modal showModal={showModal} onClose={onClose}>
       <div className="w-[80vw] min-h-[300px] max-h-[500px] flex flex-col gap-2">
         <h2>플레이리스트 추가</h2>
         <div className="overflow-y-auto min-h-[220px]">
-          <PlayList playlists={playlists} setPlaylists={setPlaylists} />
+          <PlayList
+            playlists={playlists}
+            setPlaylists={setPlaylists}
+            track={track}
+          />
         </div>
         <button
           onClick={onShowNewPlaylist}
