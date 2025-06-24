@@ -1,28 +1,32 @@
-import Image from "next/image";
+import Link from "next/link";
 
 type PlaylistCardProps = {
   id: string;
   name: string;
-  image: string;
-  trackCount: number;
+  description?: string;
+  owner?: string;
+  trackCount?: number;
 };
 
 export default function PlaylistCard({
+  id,
   name,
-  image,
+  description,
+  owner,
   trackCount,
 }: PlaylistCardProps) {
   return (
-    <div className="bg-gray-100 rounded-lg p-3 hover:bg-gray-200 cursor-pointer transition">
-      <Image
-        src={image}
-        alt={name}
-        width={300}
-        height={300}
-        className="rounded-md mb-2 w-full object-cover aspect-square"
-      />
-      <h3 className="text-sm font-medium truncate">{name}</h3>
-      <p className="text-xs text-gray-500">{trackCount}곡</p>
-    </div>
+    <Link href={`/playlist/${id}`}>
+      <div className="bg-gray-100 rounded-lg p-4 w-full shadow-sm hover:bg-gray-200 transition">
+        <h3 className="text-lg font-semibold">{name}</h3>
+        {description && (
+          <p className="text-sm text-gray-600 mt-1">{description}</p>
+        )}
+        <div className="flex justify-between items-center mt-2 text-sm text-gray-500">
+          {owner && <p>by {owner}</p>}
+          {trackCount !== undefined && <p>{trackCount}곡</p>}
+        </div>
+      </div>
+    </Link>
   );
 }

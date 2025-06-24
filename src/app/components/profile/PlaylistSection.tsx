@@ -1,33 +1,31 @@
 "use client";
-
-import { FaPlus } from "react-icons/fa";
+import PlaylistList from "@/app/components/PlaylistList";
 
 export default function PlaylistSection() {
+  const playlists = [
+    {
+      id: "1",
+      name: "내가 좋아하는 K-Pop",
+      image: "/placeholder.jpg",
+      trackCount: 25,
+    },
+    {
+      id: "2",
+      name: "감성 R&B 모음",
+      image: "/placeholder2.jpg",
+      trackCount: 18,
+    },
+  ];
+
   return (
-    <div className="mb-6">
+    <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">내 플레이리스트</h2>
-        <button className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center">
-          <FaPlus className="mr-1" /> 새 플레이리스트
+        <button className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+          + 새 플레이리스트
         </button>
       </div>
-
-      <div className="grid grid-cols-1 gap-4">
-        {[1, 2].map((id) => (
-          <div
-            key={id}
-            className="flex items-center space-x-4 bg-gray-100 p-4 rounded"
-          >
-            <div className="w-16 h-16 bg-gray-300 rounded" />
-            <div className="flex-1">
-              <div className="text-sm font-semibold">내가 좋아하는 K-Pop</div>
-              <div className="text-xs text-gray-600">
-                최신 K-Pop 히트곡들을 모아놨어요 · 25곡
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <PlaylistList playlists={playlists} />
     </div>
   );
 }
