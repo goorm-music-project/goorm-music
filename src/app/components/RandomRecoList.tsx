@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PlayListModal from "./PlayListModal";
 import AddNewPlayListModal from "./AddNewPlayListModal";
 import { Playlist, PlaylistItem } from "../types/Playlist";
 import PlaylistBar from "./PlaylistBar";
+import { useLikedStore } from "../stores/useLikedStore";
 
 export default function RandomRecoList() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
@@ -12,6 +13,7 @@ export default function RandomRecoList() {
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [selectTrack, setSelectTrack] = useState<string[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const setLikedTracks = useLikedStore((state) => state.setLikedTracks);
 
   const handleShowPlayList = () => {
     setShowPlayListModal(true);
@@ -20,11 +22,23 @@ export default function RandomRecoList() {
     setShowAddNewPlayListModal(true);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchLikedTracks = useCallback(async () => {
+    try {
+      const res = await fetch("/api/likedTracks");
+      const data = await res.json();
+      setLikedTracks(data.trackIds);
+    } catch (err) {
+      console.log("❌ 좋아요 리스트 실패", err);
+    }
+  }, [setLikedTracks]);
+
   useEffect(() => {
     fetch("/api/randomRecoList")
       .then((res) => res.json())
       .then((data) => setDatas(data));
-  }, []);
+    fetchLikedTracks();
+  }, [setLikedTracks]);
 
   return (
     <main className="mb-4">
