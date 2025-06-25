@@ -26,9 +26,30 @@ export async function POST(req: NextRequest) {
         },
       }
     );
-    const data = res.data;
 
-    return NextResponse.json(data);
+    const { access_token, refresh_token, expires_in } = res.data;
+
+    const response = NextResponse.json({ success: true });
+
+    const ONE_HOUR = 60 * 60;
+
+    response.cookies.set("access_token", access_token, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      maxAge: expires_in || ONE_HOUR,
+      sameSite: "lax",
+    });
+
+    response.cookies.set("refresh_token", refresh_token, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+      maxAge: ONE_HOUR * 24 * 30,
+      sameSite: "lax",
+    });
+
+    return response;
   } catch (error: any) {
     console.error(
       "Spotify 토큰 요청 실패: ",
