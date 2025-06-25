@@ -1,10 +1,11 @@
 "use client";
 
-import PlaylistSection from "@/app/components/profile/PlaylistSection";
-import LikesSection from "@/app/components/profile/LikeSection";
-import FollowsSection from "@/app/components/profile/FollowSection";
-import ProfileTabNav from "@/app/components/profile/ProfileTabNav";
-import EditProfileModal from "@/app/components/profile/EditProfileModal";
+import PlaylistSection from "@/domains/profile/components/PlaylistSection";
+import LikesSection from "@/domains/profile/components/LikeSection";
+import FollowsSection from "@/domains/profile/components/FollowSection";
+import ProfileTabNav from "@/domains/profile/components/ProfileTabNav";
+import EditProfileModal from "@/domains/profile/components/EditProfileModal";
+import EditGenreModal from "@/domains/profile/components/EditGenreModal";
 import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
 
@@ -14,7 +15,7 @@ export default function MyProfilePage() {
   );
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  // const [isGenreModalOpen, setIsGenreModalOpen] = useState(false);
+  const [isGenreModalOpen, setGenreModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-32">
@@ -73,7 +74,12 @@ export default function MyProfilePage() {
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-sm font-semibold">선호 장르</h3>
-            <button className="text-blue-500 text-xs">편집</button>
+            <button
+              className="text-blue-500 text-xs"
+              onClick={() => setGenreModalOpen(true)}
+            >
+              편집
+            </button>
           </div>
           <div className="flex flex-wrap gap-2">
             {["K-Pop", "Hip Hop", "R&B", "Pop", "Jazz", "Electronic"].map(
@@ -104,6 +110,10 @@ export default function MyProfilePage() {
         onClose={() => setIsProfileModalOpen(false)}
         initialName="김뮤직"
         initialBio="자기소개"
+      />
+      <EditGenreModal
+        isOpen={isGenreModalOpen}
+        onClose={() => setGenreModalOpen(false)}
       />
     </div>
   );
