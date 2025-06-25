@@ -32,7 +32,18 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
 
   const handleAddPlayList = async (playlistId: string) => {
     if (!accessToken) return;
-    const res = await addTrackToPlaylist({ accessToken, playlistId, track });
+    try {
+      startLoading();
+      await addTrackToPlaylist({ accessToken, playlistId, track });
+
+      //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
+      const playlistData = await getPlaylist(accessToken);
+      setPlaylists(playlistData);
+    } catch (err) {
+      console.log("플리 추가 오류 ", err);
+    } finally {
+      stopLoading();
+    }
   };
 
   return (
