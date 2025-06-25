@@ -1,12 +1,13 @@
+import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const cookieAwait = await cookies();
-    const token = cookieAwait.get("access_token")?.value;
-    console.log("token 👉", token);
+    // const cookieAwait = await cookies();
+    // const token = cookieAwait.get("access_token")?.value;
+    const token = await getAccessToken();
 
     // 임시 : 개인 플레이리스트 출력
     const playlistId = "48AlewkJlCLDasGjfzcAoB";
