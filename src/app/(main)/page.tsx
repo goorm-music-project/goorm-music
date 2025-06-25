@@ -1,6 +1,6 @@
-import NewReleaseAlbums from "../components/NewReleaseAlbums";
-import RandomRecoList from "../components/RandomRecoList";
-import TopChartList from "../components/TopChartList";
+import NewReleaseAlbums from "../../domains/main/components/NewReleaseAlbums";
+import RandomRecoList from "../../domains/main/components/RandomRecoList";
+import TopChartList from "../../domains/main/components/TopChartList";
 
 export default function page() {
   return (

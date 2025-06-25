@@ -1,10 +1,16 @@
 "use client";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { useLoadingStore } from "../../common/stores/loadingStore";
+import { useSpotifyStore } from "../../common/stores/useSpotifyStore";
 import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
+<<<<<<< HEAD:src/app/components/PlayList.tsx
 import LoadingSpinner from "./loading/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+=======
+import LoadingSpinner from "@/domains/common/components/loading/LoadingSpinner";
+>>>>>>> b5352ce (refactor : 폴더 구조 변경):src/domains/playlist/components/PlayList.tsx
 
 type Props = {
   playlists: Playlist[];

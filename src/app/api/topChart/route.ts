@@ -1,10 +1,11 @@
-import { getAccessToken } from "@/app/lib/getAccessToken";
 import axios from "axios";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const token = await getAccessToken();
+    const cookieAwait = await cookies();
+    const access_token = cookieAwait.get("access_token")?.value;
 
     // 임시 : 개인 플레이리스트 출력
     const playlistId = "48AlewkJlCLDasGjfzcAoB";
@@ -12,7 +13,7 @@ export async function GET() {
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       }
     );

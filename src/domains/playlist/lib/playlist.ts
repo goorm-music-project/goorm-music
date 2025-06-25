@@ -1,5 +1,5 @@
+import { AddNewPlaylistProps, AddTrackProps } from "@/app/types/Playlist";
 import axios from "axios";
-import { AddNewPlaylistProps, AddTrackProps } from "../types/Playlist";
 
 // 플레이리스트
 export const getPlaylist = async (accessToken: string) => {

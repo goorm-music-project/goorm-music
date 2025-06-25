@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import PlayListModal from "./PlayListModal";
-import AddNewPlayListModal from "./AddNewPlayListModal";
-import { Playlist, PlaylistItem } from "../types/Playlist";
 import PlaylistBar from "./PlaylistBar";
+import PlayListModal from "@/domains/playlist/components/PlayListModal";
+import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
+import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 import { useLikedStore } from "../stores/useLikedStore";
 
 export default function RandomRecoList() {
