@@ -1,38 +1,45 @@
 "use client";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { getPlaylist } from "../lib/playlist";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
+import { useLoadingStore } from "../stores/loadingStore";
+import LoadingSpinner from "./loading/LoadingSpinner";
+import { useSpotifyStore } from "../stores/useSpotifyStore";
 
 type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
+  track: string[];
 };
-export default function PlayList({ playlists, setPlaylists }: Props) {
-  const [loading, setLoading] = useState(true);
-  const { data: session } = useSession();
-  const accessToken = session?.accessToken;
+export default function PlayList({ playlists, setPlaylists, track }: Props) {
+  const { isLoading, startLoading, stopLoading } = useLoadingStore();
+  const { accessToken, userId } = useSpotifyStore.getState();
 
   useEffect(() => {
     if (!accessToken) return;
 
     const fetchPlaylists = async () => {
-      setLoading(true);
+      startLoading();
       try {
         const playlistData = await getPlaylist(accessToken);
         setPlaylists(playlistData);
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
-        setLoading(false);
+        stopLoading();
       }
     };
 
     fetchPlaylists();
-  }, [accessToken, setPlaylists]);
+  }, [accessToken, setPlaylists, startLoading, stopLoading]);
 
-  if (loading) return <p>Loading...</p>;
+  const handleAddPlayList = async (playlistId: string) => {
+    if (!accessToken) return;
+    const res = await addTrackToPlaylist({ accessToken, playlistId, track });
+  };
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-4">
@@ -40,6 +47,7 @@ export default function PlayList({ playlists, setPlaylists }: Props) {
         <div
           key={playlist.id}
           className="flex gap-4 p-2 rounded border border-(--gray) cursor-pointer hover:bg-(--primary-blue-hover)"
+          onClick={() => handleAddPlayList(playlist.id)}
         >
           <Image
             src={playlist.images?.[0]?.url || "/goorm_logo_blue.png"}
@@ -54,6 +62,7 @@ export default function PlayList({ playlists, setPlaylists }: Props) {
           </div>
         </div>
       ))}
+      {isLoading && <LoadingSpinner />}
     </div>
   );
 }

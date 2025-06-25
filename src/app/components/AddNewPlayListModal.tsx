@@ -1,7 +1,6 @@
 "use client";
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import Modal from "./Modal";
-import { useSession } from "next-auth/react";
 import {
   addNewPlaylist,
   addTrackToPlaylist,
@@ -10,6 +9,7 @@ import {
 import { Playlist } from "../types/Playlist";
 import { useLoadingStore } from "../stores/loadingStore";
 import LoadingSpinner from "./loading/LoadingSpinner";
+import { useSpotifyStore } from "../stores/useSpotifyStore";
 
 interface Props {
   showModal: boolean;
@@ -25,15 +25,18 @@ export default function AddNewPlayListModal({
   track,
 }: Props) {
   const { isLoading, startLoading, stopLoading } = useLoadingStore();
+  const { accessToken, userId } = useSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
-  const { data: session } = useSession();
-  const userId = session?.user?.id as string;
-  const accessToken = session?.accessToken as string;
 
+  console.log("userDataaaaaaaaa", accessToken, userId);
   const handleAddNewPlaylist = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!accessToken || !userId) {
+      console.error("accessToken 또는 userId가 없습니다.");
+      return;
+    }
     try {
       startLoading();
 
@@ -46,9 +49,10 @@ export default function AddNewPlayListModal({
       });
       addTrackToPlaylist({ accessToken, playlistId, track });
 
-      // TODO : 신규 트랙 추가 후 0곡 출력 오류
+      //TODO : 신규 트랙 추가 후 0곡 출력 오류
       const playlistData = await getPlaylist(accessToken);
       setPlaylists(playlistData);
+
       // const playlistData = await getPlaylistDetail({ accessToken, playlistId });
       // setPlaylists((prev) => [playlistData, ...prev]);
 
