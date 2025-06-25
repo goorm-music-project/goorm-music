@@ -30,7 +30,6 @@ export default function AddNewPlayListModal({
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
 
-  console.log("userDataaaaaaaaa", accessToken, userId);
   const handleAddNewPlaylist = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!accessToken || !userId) {

@@ -14,7 +14,7 @@ type Props = {
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
   const { isLoading, startLoading, stopLoading } = useLoadingStore();
-  const { accessToken, userId } = useSpotifyStore.getState();
+  const { accessToken } = useSpotifyStore.getState();
 
   useEffect(() => {
     if (!accessToken) return;
