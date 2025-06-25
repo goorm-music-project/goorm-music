@@ -1,7 +1,8 @@
 import { PlaylistItem } from "@/app/types/Playlist";
 import Image from "next/image";
 import React, { Dispatch } from "react";
-import { FaPlay, FaPlus, FaRegThumbsUp } from "react-icons/fa";
+import { FaPlay, FaPlus } from "react-icons/fa";
+import LikedButton from "./LikedButton";
 
 interface PlayListBarProps {
   item: PlaylistItem;
@@ -38,9 +39,7 @@ export default function PlaylistBar({
           <FaPlay />
         </button>
         <div>
-          <button className="text-2xl absolute right-15 top-[40%] text-white">
-            <FaRegThumbsUp />
-          </button>
+          <LikedButton trackId={item.track.id} />
           <button
             className="text-2xl absolute right-5 top-[40%] text-white"
             onClick={() => {
