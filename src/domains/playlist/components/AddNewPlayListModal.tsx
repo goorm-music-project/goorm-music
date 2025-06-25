@@ -1,15 +1,15 @@
 "use client";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+import Modal from "@/domains/common/components/Modal";
+import { useLoadingStore } from "@/domains/common/stores/loadingStore";
+import { useSpotifyStore } from "@/domains/common/stores/useSpotifyStore";
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import Modal from "./Modal";
 import {
   addNewPlaylist,
   addTrackToPlaylist,
   getPlaylist,
 } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
-import { useLoadingStore } from "../stores/loadingStore";
-import LoadingSpinner from "./loading/LoadingSpinner";
-import { useSpotifyStore } from "../stores/useSpotifyStore";
 
 interface Props {
   showModal: boolean;

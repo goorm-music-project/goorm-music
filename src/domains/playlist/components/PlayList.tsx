@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
+import { useLoadingStore } from "../../common/stores/loadingStore";
+import { useSpotifyStore } from "../../common/stores/useSpotifyStore";
 import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
-import { useLoadingStore } from "../stores/loadingStore";
-import LoadingSpinner from "./loading/LoadingSpinner";
-import { useSpotifyStore } from "../stores/useSpotifyStore";
+import LoadingSpinner from "@/domains/common/components/loading/LoadingSpinner";
 
 type Props = {
   playlists: Playlist[];

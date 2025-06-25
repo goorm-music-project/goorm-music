@@ -1,7 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { useSpotifyStore } from "@/app/stores/useSpotifyStore";
+import { useSpotifyStore } from "@/domains/common/stores/useSpotifyStore";
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
