@@ -30,7 +30,7 @@ export default function EditProfileModal({
     >
       <Dialog.Panel className="w-full max-w-md bg-white rounded-lg shadow-lg">
         {/* 상단 헤더 */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 ">
           <Dialog.Title className="text-lg font-bold text-gray-900">
             프로필 편집
           </Dialog.Title>
