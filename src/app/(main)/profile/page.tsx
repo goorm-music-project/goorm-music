@@ -4,6 +4,7 @@ import PlaylistSection from "@/app/components/profile/PlaylistSection";
 import LikesSection from "@/app/components/profile/LikeSection";
 import FollowsSection from "@/app/components/profile/FollowSection";
 import ProfileTabNav from "@/app/components/profile/ProfileTabNav";
+import EditProfileModal from "@/app/components/profile/EditProfileModal";
 import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
 
@@ -11,6 +12,9 @@ export default function MyProfilePage() {
   const [activeTab, setActiveTab] = useState<"playlist" | "likes" | "follows">(
     "playlist"
   );
+
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  // const [isGenreModalOpen, setIsGenreModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-32">
@@ -35,7 +39,11 @@ export default function MyProfilePage() {
                 <strong className="text-gray-9 00">567</strong> 팔로잉
               </span>
             </div>
-            <button className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded flex items-center">
+            {/* 프로필 편집 버튼 */}
+            <button
+              className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded flex items-center"
+              onClick={() => setIsProfileModalOpen(true)}
+            >
               <FaEdit className="mr-1" />
               프로필 편집
             </button>
@@ -91,6 +99,12 @@ export default function MyProfilePage() {
         {activeTab === "likes" && <LikesSection />}
         {activeTab === "follows" && <FollowsSection />}
       </div>
+      <EditProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        initialName="김뮤직"
+        initialBio="자기소개"
+      />
     </div>
   );
 }
