@@ -19,7 +19,6 @@ export async function POST() {
     });
 
     const { id: userId, display_name, email } = res.data;
-    console.log("userIddddddddd", userId);
 
     return NextResponse.json({ userId, display_name, email });
   } catch (err: any) {
