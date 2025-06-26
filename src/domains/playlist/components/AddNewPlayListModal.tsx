@@ -1,14 +1,8 @@
 "use client";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Modal from "@/domains/common/components/Modal";
-import { useLoadingStore } from "@/domains/common/stores/loadingStore";
 import { useSpotifyStore } from "@/domains/common/stores/useSpotifyStore";
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import {
-  addNewPlaylist,
-  addTrackToPlaylist,
-  getPlaylist,
-} from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
 
 interface Props {
@@ -24,36 +18,53 @@ export default function AddNewPlayListModal({
   setPlaylists,
   track,
 }: Props) {
-  const { isLoading, startLoading, stopLoading } = useLoadingStore();
-  const { accessToken, userId } = useSpotifyStore.getState();
+  const [isLoading, setIsLoading] = useState(false);
+  const { userId } = useSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
 
   const handleAddNewPlaylist = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!accessToken || !userId) {
-      console.error("accessToken 또는 userId가 없습니다.");
+    if (!userId) {
+      console.error("userId가 없습니다.");
       return;
     }
     try {
-      startLoading();
+      setIsLoading(true);
 
-      const playlistId = await addNewPlaylist({
-        userId,
-        accessToken,
-        name,
-        description,
-        isPublic,
+      const addPlaylistRes = await fetch("/api/playlist/addPlaylist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          name,
+          description,
+          isPublic,
+        }),
       });
-      addTrackToPlaylist({ accessToken, playlistId, track });
+      const playlistId = await addPlaylistRes.json();
+
+      await fetch("/api/playlist/addTrack", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ playlistId, track }),
+      });
 
       //TODO : 신규 트랙 추가 후 0곡 출력 오류
-      const playlistData = await getPlaylist(accessToken);
-      setPlaylists(playlistData);
+      // const res = await fetch("/api/playlist/getPlaylist");
+      // const data = await res.json();
+      // setPlaylists(data);
+      const playlistDetailRes = await fetch(
+        `/api/spotify/playlists/${playlistId}`
+      );
+      const playlistDetail = await playlistDetailRes.json();
 
-      // const playlistData = await getPlaylistDetail({ accessToken, playlistId });
-      // setPlaylists((prev) => [playlistData, ...prev]);
+      setPlaylists((prev) => [playlistDetail, ...prev]);
 
       setName("");
       setDescription("");
@@ -62,10 +73,10 @@ export default function AddNewPlayListModal({
     } catch (err) {
       console.log("플리 추가 오류 ", err);
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
-
+  if (isLoading) return <LoadingSpinner />;
   return (
     <Modal showModal={showModal} onClose={onClose}>
       <div className="w-[80vw] h-[300px] flex flex-col gap-2">
@@ -116,7 +127,6 @@ export default function AddNewPlayListModal({
           </button>
         </div>
       </div>
-      {isLoading && <LoadingSpinner />}
     </Modal>
   );
 }

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
-import LoadingSpinner from "@/domains/common/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 type Props = {
   playlists: Playlist[];
