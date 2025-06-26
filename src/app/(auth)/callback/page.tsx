@@ -16,7 +16,6 @@ function InnerCallback() {
     const fetchToken = async () => {
       try {
         const res = await axios.post("/api/token", { code });
-
         const userData = await fetch("/api/userData", {
           method: "POST",
         });
@@ -32,7 +31,11 @@ function InnerCallback() {
           } else {
             router.push("/select-genre");
           }
+
+          localStorage.setItem("userId", data.userId);
         }
+
+        router.push("/");
       } catch (error) {
         console.error("Token 발급 중 오류 발생", error);
         alert("로그인 중 오류가 발생했습니다.");
