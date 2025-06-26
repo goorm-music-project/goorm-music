@@ -28,7 +28,7 @@ export default function PlaylistBar({
           width={100}
           height={100}
         />
-        <div>
+        <div className="w-[40%]">
           <p className="truncate my-1">{item.track.name}</p>
           <p className="truncate">
             {item.track.artists.map((a) => a.name).join(", ")}
