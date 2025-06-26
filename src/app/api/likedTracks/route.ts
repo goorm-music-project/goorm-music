@@ -22,25 +22,6 @@ export async function GET() {
     const ids = items.map((item: any) => item.track.id);
     allTrackIds = [...allTrackIds, ...ids];
 
-    // let offset = 0;
-    // let hasNext = true;
-    // while (hasNext) {
-    //   const url = `https://api.spotify.com/v1/me/tracks?limit=50&offset=${offset}`;
-    //   const response = await axios.get(url, {
-    //     headers: { Authorization: `Bearer ${access_token}` },
-    //   });
-
-    //   const items = response.data.items;
-    //   const ids = items.map((item: any) => item.track.id);
-    //   allTrackIds = [...allTrackIds, ...ids];
-
-    //   if (items.length < 50) {
-    //     hasNext = false;
-    //   } else {
-    //     offset += 50;
-    //   }
-    // }
-
     return NextResponse.json({ trackIds: allTrackIds });
   } catch (err: any) {
     console.log(
