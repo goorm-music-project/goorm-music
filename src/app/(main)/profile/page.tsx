@@ -17,6 +17,18 @@ export default function MyProfilePage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isGenreModalOpen, setGenreModalOpen] = useState(false);
 
+  const [name, setName] = useState("김뮤직");
+  const [bio, setBio] = useState("자기소개");
+
+  const [genres, setGenres] = useState<string[]>([
+    "K-Pop",
+    "Hip Hop",
+    "R&B",
+    "Pop",
+    "Jazz",
+    "Electronic",
+  ]);
+
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-32">
       {/* 상단 바 */}
@@ -30,7 +42,7 @@ export default function MyProfilePage() {
         <div className="flex items-start space-x-4 mb-6">
           <div className="w-20 h-20 rounded-full bg-gray-200" />
           <div className="flex-1">
-            <h2 className="text-2xl font-bold">김뮤직</h2>
+            <h2 className="text-2xl font-bold">{name}</h2>
             <p className="text-gray-600">@musiclover2025</p>
             <div className="flex space-x-4 text-sm text-gray-600 my-2">
               <span>
@@ -52,7 +64,7 @@ export default function MyProfilePage() {
         </div>
 
         {/* 자기소개 */}
-        <p className="text-gray-700 mb-6 text-sm leading-relaxed">자기소개</p>
+        <p className="text-gray-700 mb-6 text-sm leading-relaxed">{bio}</p>
 
         {/* 통계 */}
         <div className="grid grid-cols-3 text-center mb-6">
@@ -82,16 +94,14 @@ export default function MyProfilePage() {
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
-            {["K-Pop", "Hip Hop", "R&B", "Pop", "Jazz", "Electronic"].map(
-              (genre) => (
-                <span
-                  key={genre}
-                  className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded"
-                >
-                  {genre}
-                </span>
-              )
-            )}
+            {genres.map((genre) => (
+              <span
+                key={genre}
+                className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded"
+              >
+                {genre}
+              </span>
+            ))}
           </div>
         </div>
       </div>
@@ -108,12 +118,18 @@ export default function MyProfilePage() {
       <EditProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        initialName="김뮤직"
-        initialBio="자기소개"
+        initialName={name}
+        initialBio={bio}
+        onSave={(newName, newBio) => {
+          setName(newName);
+          setBio(newBio);
+        }}
       />
       <EditGenreModal
         isOpen={isGenreModalOpen}
         onClose={() => setGenreModalOpen(false)}
+        selectedGenres={genres}
+        onSave={(updatedGenres) => setGenres(updatedGenres)}
       />
     </div>
   );

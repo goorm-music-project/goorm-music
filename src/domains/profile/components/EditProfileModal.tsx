@@ -8,19 +8,22 @@ export default function EditProfileModal({
   onClose,
   initialName,
   initialBio,
+  onSave,
 }: {
   isOpen: boolean;
   onClose: () => void;
   initialName: string;
   initialBio?: string;
+  onSave: (name: string, bio: string) => void;
 }) {
   const [name, setName] = useState(initialName);
   const [bio, setBio] = useState(initialBio || "");
 
   const handleSave = () => {
-    console.log("저장:", name, bio);
+    onSave(name, bio);
     onClose();
   };
+  if (!isOpen) return null;
 
   return (
     <Dialog
