@@ -1,6 +1,6 @@
 "use client";
 
-import { useSpotifyStore } from "@/app/stores/useSpotifyStore";
+import { useSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import BlueBackgroundBtn from "@/domains/common/components/BlueBackgroundBtn";
 import GenreToggleBtn from "@/domains/select-genre/components/GenreToggleBtn";
 import { savePreferredGenres } from "@/domains/select-genre/lib/savePreferredGenres";

@@ -7,9 +7,8 @@ import {
   getPlaylist,
 } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
-import { useLoadingStore } from "../stores/loadingStore";
 import LoadingSpinner from "./loading/LoadingSpinner";
-import { useSpotifyStore } from "../stores/useSpotifyStore";
+import { useSpotifyStore } from "../../domains/common/stores/userSpotifyStore";
 
 interface Props {
   showModal: boolean;
@@ -24,7 +23,6 @@ export default function AddNewPlayListModal({
   setPlaylists,
   track,
 }: Props) {
-  const { isLoading, startLoading, stopLoading } = useLoadingStore();
   const { accessToken, userId } = useSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -38,8 +36,6 @@ export default function AddNewPlayListModal({
       return;
     }
     try {
-      startLoading();
-
       const playlistId = await addNewPlaylist({
         userId,
         accessToken,
@@ -63,7 +59,6 @@ export default function AddNewPlayListModal({
     } catch (err) {
       console.log("플리 추가 오류 ", err);
     } finally {
-      stopLoading();
     }
   };
 
@@ -117,7 +112,6 @@ export default function AddNewPlayListModal({
           </button>
         </div>
       </div>
-      {isLoading && <LoadingSpinner />}
     </Modal>
   );
 }
