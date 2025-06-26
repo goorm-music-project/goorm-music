@@ -1,9 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { useLoadingStore } from "../../common/stores/loadingStore";
-import { useSpotifyStore } from "../../common/stores/useSpotifyStore";
-import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
 <<<<<<< HEAD:src/app/components/PlayList.tsx
 import LoadingSpinner from "./loading/LoadingSpinner";
@@ -18,37 +15,58 @@ type Props = {
   track: string[];
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
+<<<<<<< HEAD
   const { accessToken, userId } = userSpotifyStore.getState();
+=======
+  const [isLoading, setIsLoading] = useState(false);
+>>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
 
   useEffect(() => {
-    if (!accessToken) return;
-
     const fetchPlaylists = async () => {
+<<<<<<< HEAD
+=======
+      setIsLoading(true);
+>>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
       try {
-        const playlistData = await getPlaylist(accessToken);
-        setPlaylists(playlistData);
+        const res = await fetch("/api/playlist/getPlaylist");
+        const data = await res.json();
+        setPlaylists(data);
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
+<<<<<<< HEAD
+=======
+        setIsLoading(false);
+>>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
       }
     };
 
     fetchPlaylists();
+<<<<<<< HEAD
   }, [accessToken, setPlaylists]);
+=======
+  }, [setPlaylists, setIsLoading]);
+>>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
 
   const handleAddPlayList = async (playlistId: string) => {
-    if (!accessToken) return;
     try {
-      startLoading();
-      await addTrackToPlaylist({ accessToken, playlistId, track });
+      setIsLoading(true);
+      await fetch("/api/playlist/addTrack", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ playlistId, track }),
+      });
 
       //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
-      const playlistData = await getPlaylist(accessToken);
-      setPlaylists(playlistData);
+      const res = await fetch("/api/playlist/getPlaylist");
+      const data = await res.json();
+      setPlaylists(data);
     } catch (err) {
       console.log("플리 추가 오류 ", err);
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
