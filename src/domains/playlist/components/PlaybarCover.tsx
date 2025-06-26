@@ -14,14 +14,14 @@ export default function PlaybarCover({
   setSelectTrack,
 }: PlaybarCoverProps) {
   return (
-    <div className="absolute left-0 top-0 w-full h-full hidden group-hover:block">
-      <button className="text-2xl absolute left-12 top-[40%] text-white">
+    <div className="absolute left-0 top-0 w-full h-full">
+      <button className="text-2xl absolute left-12 top-[40%] text-(--primary-blue)">
         <FaPlay />
       </button>
       <div>
         <LikedButton trackId={item.track.id} />
         <button
-          className="text-2xl absolute right-5 top-[40%] text-white"
+          className="text-2xl absolute right-5 top-[40%] text-(--primary-blue)"
           onClick={() => {
             handleShowPlayList?.();
             setSelectTrack?.(item.track.uri);
