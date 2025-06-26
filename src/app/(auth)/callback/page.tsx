@@ -23,7 +23,6 @@ function InnerCallback() {
         if (accessToken) {
           document.cookie = `access_token=${accessToken}; path=/; max-age=3600`;
           useSpotifyStore.getState().setAccessToken(accessToken);
-          router.push("/");
         } else {
           alert("로그인 실패, 다시 시도해주세요.");
         }
@@ -35,7 +34,10 @@ function InnerCallback() {
 
         if (data.userId) {
           useSpotifyStore.getState().setUserId(data.userId);
+          localStorage.setItem("userId", data.userId);
         }
+
+        router.push("/");
       } catch (error) {
         console.error("Token 발급 중 오류 발생", error);
         alert("로그인 중 오류가 발생했습니다.");

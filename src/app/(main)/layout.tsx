@@ -1,3 +1,4 @@
+import InitUserIdState from "@/domains/common/components/InitUserIdState";
 import BottomNavBar from "../components/BottomNavBar";
 import MobileTopBar from "../components/MobileTopBar";
 
@@ -13,6 +14,7 @@ export default function MainLayout({
         {children}
       </div>
       <BottomNavBar />
+      <InitUserIdState />
     </div>
   );
 }
