@@ -2,12 +2,16 @@
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/components/PlayList.tsx
 import LoadingSpinner from "./loading/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 =======
 import LoadingSpinner from "@/domains/common/components/loading/LoadingSpinner";
 >>>>>>> b5352ce (refactor : 폴더 구조 변경):src/domains/playlist/components/PlayList.tsx
+=======
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+>>>>>>> 815c28c (refactor : 로딩 스피너 전역상태 삭제)
 
 type Props = {
   playlists: Playlist[];
