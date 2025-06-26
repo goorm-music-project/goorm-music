@@ -1,5 +1,5 @@
-import BottomNavBar from "../components/BottomNavBar";
-import MobileTopBar from "../components/MobileTopBar";
+import BottomNavBar from "@/domains/layout/components/BottomNavBar";
+import MobileTopBar from "@/domains/layout/components/MobileTopBar";
 
 export default function MainLayout({
   children,

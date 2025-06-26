@@ -1,5 +1,5 @@
 "use client";
-import { useLoadingStore } from "@/app/stores/loadingStore";
+import { useLoadingStore } from "@/domains/common/stores/loadingStore";
 
 export default function LoadingSpinner() {
   const { isLoading } = useLoadingStore();

@@ -3,9 +3,8 @@ import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
-import { useLoadingStore } from "../stores/loadingStore";
 import LoadingSpinner from "./loading/LoadingSpinner";
-import { useSpotifyStore } from "../stores/useSpotifyStore";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 type Props = {
   playlists: Playlist[];
@@ -13,33 +12,28 @@ type Props = {
   track: string[];
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
-  const { isLoading, startLoading, stopLoading } = useLoadingStore();
-  const { accessToken, userId } = useSpotifyStore.getState();
+  const { accessToken, userId } = userSpotifyStore.getState();
 
   useEffect(() => {
     if (!accessToken) return;
 
     const fetchPlaylists = async () => {
-      startLoading();
       try {
         const playlistData = await getPlaylist(accessToken);
         setPlaylists(playlistData);
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
-        stopLoading();
       }
     };
 
     fetchPlaylists();
-  }, [accessToken, setPlaylists, startLoading, stopLoading]);
+  }, [accessToken, setPlaylists]);
 
   const handleAddPlayList = async (playlistId: string) => {
     if (!accessToken) return;
     const res = await addTrackToPlaylist({ accessToken, playlistId, track });
   };
-
-  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-4">
@@ -62,7 +56,6 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
           </div>
         </div>
       ))}
-      {isLoading && <LoadingSpinner />}
     </div>
   );
 }
