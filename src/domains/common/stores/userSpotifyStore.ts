@@ -3,15 +3,17 @@ import { create } from "zustand";
 interface SpotifyStore {
   accessToken: string | null;
   userId: string | null;
+  isLoggedIn: boolean;
   setAccessToken: (token: string) => void;
   setUserId: (id: string) => void;
-  // reset: () => void;
+  setIsLoggedIn: (state: boolean) => void;
 }
 
 export const userSpotifyStore = create<SpotifyStore>((set) => ({
   accessToken: null,
   userId: null,
+  isLoggedIn: false,
   setAccessToken: (token) => set({ accessToken: token }),
   setUserId: (id) => set({ userId: id }),
-  // reset: () => set({ accessToken: null, userId: null }),
+  setIsLoggedIn: (state) => set({ isLoggedIn: state }),
 }));

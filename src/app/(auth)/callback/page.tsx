@@ -24,6 +24,7 @@ function InnerCallback() {
 
         if (data.userId) {
           userSpotifyStore.getState().setUserId(data.userId);
+          userSpotifyStore.getState().setIsLoggedIn(true);
         }
         if (res.data.success) {
           if (data.userExists) {
