@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingSpinner from "@/app/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 import axios from "axios";
