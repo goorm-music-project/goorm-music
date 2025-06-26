@@ -17,10 +17,6 @@ function InnerCallback() {
       try {
         const res = await axios.post("/api/token", { code });
 
-        if (res.data.success) {
-          router.push("/");
-        }
-
         const userData = await fetch("/api/userData", {
           method: "POST",
         });
@@ -28,6 +24,13 @@ function InnerCallback() {
 
         if (data.userId) {
           useSpotifyStore.getState().setUserId(data.userId);
+        }
+        if (res.data.success) {
+          if (data.userExists) {
+            router.push("/");
+          } else {
+            router.push("/select-genre");
+          }
         }
       } catch (error) {
         console.error("Token 발급 중 오류 발생", error);

@@ -1,12 +1,18 @@
 "use client";
 
-import BlueBackgroundBtn from "@/app/components/BlueBackgroundBtn";
-import GenreToggleBtn from "@/app/components/GenreToggleBtn";
+import { useSpotifyStore } from "@/app/stores/useSpotifyStore";
+import BlueBackgroundBtn from "@/domains/common/components/BlueBackgroundBtn";
+import GenreToggleBtn from "@/domains/select-genre/components/GenreToggleBtn";
+import { savePreferredGenres } from "@/domains/select-genre/lib/savePreferredGenres";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SelectGenre() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const userId = useSpotifyStore((state) => state.userId);
+  const router = useRouter();
+
   const genreList = [
     "발라드",
     "팝",
@@ -30,7 +36,19 @@ export default function SelectGenre() {
     );
   };
 
-  const handleSignUp = () => {};
+  const handleSignUp = async () => {
+    if (!userId) {
+      alert("로그인 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await savePreferredGenres(userId, selectedGenres);
+      router.push("/");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-2 items-center">
@@ -47,7 +65,9 @@ export default function SelectGenre() {
           </GenreToggleBtn>
         ))}
       </div>
-      <BlueBackgroundBtn onClick={handleSignUp} className="w-85 mt-10">가입하기</BlueBackgroundBtn>
+      <BlueBackgroundBtn onClick={handleSignUp} className="w-85 mt-10">
+        가입하기
+      </BlueBackgroundBtn>
     </div>
   );
 }
