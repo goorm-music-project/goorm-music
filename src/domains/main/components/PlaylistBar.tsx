@@ -1,13 +1,13 @@
-import { PlaylistItem } from "@/app/types/Playlist";
 import Image from "next/image";
 import React, { Dispatch } from "react";
-import { FaPlay, FaPlus } from "react-icons/fa";
-import LikedButton from "./LikedButton";
+import { PlaylistItem } from "@/domains/playlist/types/Playlist";
+import PlaybarCover from "@/domains/playlist/components/PlaybarCover";
+import { useSpotifyStore } from "@/domains/common/stores/useSpotifyStore";
 
 interface PlayListBarProps {
   item: PlaylistItem;
-  setSelectTrack: Dispatch<React.SetStateAction<string[]>>;
-  handleShowPlayList: () => void;
+  setSelectTrack?: Dispatch<React.SetStateAction<string[]>>;
+  handleShowPlayList?: () => void;
 }
 
 export default function PlaylistBar({
@@ -15,6 +15,7 @@ export default function PlaylistBar({
   setSelectTrack,
   handleShowPlayList,
 }: PlayListBarProps) {
+  const { userId } = useSpotifyStore.getState();
   return (
     <div
       key={item.track.id}
@@ -34,23 +35,13 @@ export default function PlaylistBar({
           </p>
         </div>
       </div>
-      <div className="absolute left-0 top-0 w-full h-full hidden group-hover:block">
-        <button className="text-2xl absolute left-12 top-[40%] text-white">
-          <FaPlay />
-        </button>
-        <div>
-          <LikedButton trackId={item.track.id} />
-          <button
-            className="text-2xl absolute right-5 top-[40%] text-white"
-            onClick={() => {
-              handleShowPlayList();
-              setSelectTrack(item.track.uri);
-            }}
-          >
-            <FaPlus />
-          </button>
-        </div>
-      </div>
+      {userId ? (
+        <PlaybarCover
+          item={item}
+          setSelectTrack={setSelectTrack}
+          handleShowPlayList={handleShowPlayList}
+        />
+      ) : null}
     </div>
   );
 }
