@@ -2,6 +2,7 @@
 
 import LoadingSpinner from "@/app/components/loading/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
@@ -32,7 +33,11 @@ function InnerCallback() {
           } else {
             router.push("/select-genre");
           }
+
+          localStorage.setItem("userId", data.userId);
         }
+
+        router.push("/");
       } catch (error) {
         console.error("Token 발급 중 오류 발생", error);
         alert("로그인 중 오류가 발생했습니다.");

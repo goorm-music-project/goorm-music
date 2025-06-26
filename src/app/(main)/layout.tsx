@@ -1,5 +1,6 @@
 import BottomNavBar from "@/domains/layout/components/BottomNavBar";
 import MobileTopBar from "@/domains/layout/components/MobileTopBar";
+import InitUserIdState from "@/domains/common/components/InitUserIdState";
 
 export default function MainLayout({
   children,
@@ -13,6 +14,7 @@ export default function MainLayout({
         {children}
       </div>
       <BottomNavBar />
+      <InitUserIdState />
     </div>
   );
 }

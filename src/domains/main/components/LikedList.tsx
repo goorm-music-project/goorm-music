@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import PlayListModal from "./PlayListModal";
-import AddNewPlayListModal from "./AddNewPlayListModal";
-import { Playlist, PlaylistItem } from "../types/Playlist";
 import PlaylistBar from "./PlaylistBar";
+import PlayListModal from "@/domains/playlist/components/PlayListModal";
+import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
+import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 
-export default function RandomRecoList() {
+export default function LikedList() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
   const [showPlayListModal, setShowPlayListModal] = useState(false);
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
@@ -24,11 +24,11 @@ export default function RandomRecoList() {
     fetch("/api/randomRecoList")
       .then((res) => res.json())
       .then((data) => setDatas(data));
-  }, []);
+  }, [datas]);
 
   return (
     <main className="mb-4">
-      <h1>새로운 취향을 만나보세요.</h1>
+      <h1>좋아하는 음악을 만나보세요.</h1>
       <div className="flex flex-col gap-3">
         {datas.map((item) => (
           <PlaylistBar

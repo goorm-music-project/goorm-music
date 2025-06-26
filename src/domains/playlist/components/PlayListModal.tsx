@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction } from "react";
-import Modal from "./Modal";
+import Modal from "../../common/components/Modal";
 import { FaPlus } from "react-icons/fa";
 import PlayList from "./PlayList";
-import { Playlist } from "../types/Playlist";
+import { Playlist } from "../../../app/types/Playlist";
 
 type Props = {
   showModal: boolean;
