@@ -1,7 +1,6 @@
 "use client";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
+
 import Modal from "@/domains/common/components/Modal";
-import { useSpotifyStore } from "@/domains/common/stores/useSpotifyStore";
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
@@ -20,8 +19,7 @@ export default function AddNewPlayListModal({
   track,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const { userId } = useSpotifyStore.getState();
-
+  const { userId } = userSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
@@ -78,7 +76,7 @@ export default function AddNewPlayListModal({
       setIsLoading(false);
     }
   };
-  if (isLoading) return <LoadingSpinner />;
+  // if (isLoading) return <LoadingSpinner />;
   return (
     <Modal showModal={showModal} onClose={onClose}>
       <div className="w-[80vw] h-[300px] flex flex-col gap-2">

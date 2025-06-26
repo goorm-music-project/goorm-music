@@ -2,16 +2,6 @@
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
-<<<<<<< HEAD
-<<<<<<< HEAD:src/app/components/PlayList.tsx
-import LoadingSpinner from "./loading/LoadingSpinner";
-import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-=======
-import LoadingSpinner from "@/domains/common/components/loading/LoadingSpinner";
->>>>>>> b5352ce (refactor : 폴더 구조 변경):src/domains/playlist/components/PlayList.tsx
-=======
-import LoadingSpinner from "@/app/components/LoadingSpinner";
->>>>>>> 815c28c (refactor : 로딩 스피너 전역상태 삭제)
 
 type Props = {
   playlists: Playlist[];
@@ -19,18 +9,11 @@ type Props = {
   track: string[];
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
-<<<<<<< HEAD
-  const { accessToken, userId } = userSpotifyStore.getState();
-=======
   const [isLoading, setIsLoading] = useState(false);
->>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
 
   useEffect(() => {
     const fetchPlaylists = async () => {
-<<<<<<< HEAD
-=======
       setIsLoading(true);
->>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
       try {
         const res = await fetch("/api/playlist/getPlaylist");
         const data = await res.json();
@@ -38,19 +21,12 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
-<<<<<<< HEAD
-=======
         setIsLoading(false);
->>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
       }
     };
 
     fetchPlaylists();
-<<<<<<< HEAD
-  }, [accessToken, setPlaylists]);
-=======
   }, [setPlaylists, setIsLoading]);
->>>>>>> 783b6f6 (refactor : 로딩 전역관리 로직 삭제)
 
   const handleAddPlayList = async (playlistId: string) => {
     try {
@@ -73,6 +49,8 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-4">

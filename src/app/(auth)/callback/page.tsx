@@ -2,6 +2,7 @@
 
 import LoadingSpinner from "@/app/components/loading/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
@@ -16,6 +17,7 @@ function InnerCallback() {
     const fetchToken = async () => {
       try {
         const res = await axios.post("/api/token", { code });
+
         const userData = await fetch("/api/userData", {
           method: "POST",
         });
