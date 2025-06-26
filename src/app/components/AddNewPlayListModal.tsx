@@ -7,8 +7,7 @@ import {
   getPlaylist,
 } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
-import LoadingSpinner from "./loading/LoadingSpinner";
-import { useSpotifyStore } from "../../domains/common/stores/userSpotifyStore";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 interface Props {
   showModal: boolean;
@@ -23,7 +22,7 @@ export default function AddNewPlayListModal({
   setPlaylists,
   track,
 }: Props) {
-  const { accessToken, userId } = useSpotifyStore.getState();
+  const { accessToken, userId } = userSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");

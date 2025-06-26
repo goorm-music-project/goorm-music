@@ -8,7 +8,7 @@ interface SpotifyStore {
   // reset: () => void;
 }
 
-export const useSpotifyStore = create<SpotifyStore>((set) => ({
+export const userSpotifyStore = create<SpotifyStore>((set) => ({
   accessToken: null,
   userId: null,
   setAccessToken: (token) => set({ accessToken: token }),

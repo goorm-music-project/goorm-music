@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
 import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "./loading/LoadingSpinner";
-import { useSpotifyStore } from "../../domains/common/stores/userSpotifyStore";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 type Props = {
   playlists: Playlist[];
@@ -12,7 +12,7 @@ type Props = {
   track: string[];
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
-  const { accessToken, userId } = useSpotifyStore.getState();
+  const { accessToken, userId } = userSpotifyStore.getState();
 
   useEffect(() => {
     if (!accessToken) return;

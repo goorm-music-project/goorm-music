@@ -1,7 +1,7 @@
 "use client";
 
-import { useSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import BlueBackgroundBtn from "@/domains/common/components/BlueBackgroundBtn";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import GenreToggleBtn from "@/domains/select-genre/components/GenreToggleBtn";
 import { savePreferredGenres } from "@/domains/select-genre/lib/savePreferredGenres";
 import Image from "next/image";
@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export default function SelectGenre() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const userId = useSpotifyStore((state) => state.userId);
+  const userId = userSpotifyStore((state) => state.userId);
   const router = useRouter();
 
   const genreList = [

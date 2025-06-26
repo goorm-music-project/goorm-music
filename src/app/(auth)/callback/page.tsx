@@ -1,7 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/app/components/loading/LoadingSpinner";
-import { useSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
@@ -23,7 +23,7 @@ function InnerCallback() {
         const data = await userData.json();
 
         if (data.userId) {
-          useSpotifyStore.getState().setUserId(data.userId);
+          userSpotifyStore.getState().setUserId(data.userId);
         }
         if (res.data.success) {
           if (data.userExists) {
