@@ -1,9 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { useLoadingStore } from "../../common/stores/loadingStore";
-import { useSpotifyStore } from "../../common/stores/useSpotifyStore";
-import { addTrackToPlaylist, getPlaylist } from "../lib/playlist";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "@/domains/common/components/loading/LoadingSpinner";
 
@@ -13,40 +10,44 @@ type Props = {
   track: string[];
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
-  const { isLoading, startLoading, stopLoading } = useLoadingStore();
-  const { accessToken } = useSpotifyStore.getState();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!accessToken) return;
-
     const fetchPlaylists = async () => {
-      startLoading();
+      setIsLoading(true);
       try {
-        const playlistData = await getPlaylist(accessToken);
-        setPlaylists(playlistData);
+        const res = await fetch("/api/playlist/getPlaylist");
+        const data = await res.json();
+        setPlaylists(data);
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
-        stopLoading();
+        setIsLoading(false);
       }
     };
 
     fetchPlaylists();
-  }, [accessToken, setPlaylists, startLoading, stopLoading]);
+  }, [setPlaylists, setIsLoading]);
 
   const handleAddPlayList = async (playlistId: string) => {
-    if (!accessToken) return;
     try {
-      startLoading();
-      await addTrackToPlaylist({ accessToken, playlistId, track });
+      setIsLoading(true);
+      await fetch("/api/playlist/addTrack", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ playlistId, track }),
+      });
 
       //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
-      const playlistData = await getPlaylist(accessToken);
-      setPlaylists(playlistData);
+      const res = await fetch("/api/playlist/getPlaylist");
+      const data = await res.json();
+      setPlaylists(data);
     } catch (err) {
       console.log("플리 추가 오류 ", err);
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
@@ -73,7 +74,6 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
           </div>
         </div>
       ))}
-      {isLoading && <LoadingSpinner />}
     </div>
   );
 }
