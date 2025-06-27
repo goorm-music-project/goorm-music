@@ -21,7 +21,7 @@ export default function LikedList() {
   };
 
   useEffect(() => {
-    fetch("/api/randomRecoList")
+    fetch("/api/likeList")
       .then((res) => res.json())
       .then((data) => setDatas(data));
   }, []);
