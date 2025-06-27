@@ -17,10 +17,7 @@ export default function PlaylistBar({
 }: PlayListBarProps) {
   const { userId } = userSpotifyStore.getState();
   return (
-    <div
-      key={item.track.id}
-      className="relative p-2 hover:bg-(--primary-blue-hover) group"
-    >
+    <div key={item.track.id} className="relative p-2 ">
       <div className="flex gap-3">
         <Image
           src={item.track.album.images[0]?.url}
