@@ -10,7 +10,7 @@ type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   onShowNewPlaylist: () => void;
-  track: string[];
+  track: string[] | string;
 };
 
 export default function PlayListModal({
@@ -29,7 +29,7 @@ export default function PlayListModal({
           <PlayList
             playlists={playlists}
             setPlaylists={setPlaylists}
-            track={track}
+            track={track as string[]}
           />
         </div>
         <button
