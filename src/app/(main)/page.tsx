@@ -8,7 +8,7 @@ import LikedList from "@/domains/main/components/LikedList";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 export default function page() {
-  const { isLoggedIn } = userSpotifyStore.getState();
+  const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
 
   return (
     <div className="">
