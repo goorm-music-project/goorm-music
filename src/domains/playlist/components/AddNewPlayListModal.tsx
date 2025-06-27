@@ -55,16 +55,15 @@ export default function AddNewPlayListModal({
         body: JSON.stringify({ playlistId, track }),
       });
 
-      //TODO : 신규 트랙 추가 후 0곡 출력 오류
-      // const res = await fetch("/api/playlist/getPlaylist");
-      // const data = await res.json();
-      // setPlaylists(data);
-      const playlistDetailRes = await fetch(
-        `/api/spotify/playlists/${playlistId}`
-      );
-      const playlistDetail = await playlistDetailRes.json();
+      const res = await fetch("/api/playlist/getPlaylist");
+      const data = await res.json();
+      setPlaylists(data);
+      // const playlistDetailRes = await fetch(
+      //   `/api/spotify/playlists/${playlistId}`
+      // );
+      // const playlistDetail = await playlistDetailRes.json();
 
-      setPlaylists((prev) => [playlistDetail, ...prev]);
+      // setPlaylists((prev) => [playlistDetail, ...prev]);
 
       setName("");
       setDescription("");
