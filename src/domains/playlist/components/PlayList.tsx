@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 
 type Props = {
   playlists: Playlist[];
@@ -26,7 +27,7 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
     };
 
     fetchPlaylists();
-  }, [setPlaylists, setIsLoading]);
+  }, []);
 
   const handleAddPlayList = async (playlistId: string) => {
     try {
