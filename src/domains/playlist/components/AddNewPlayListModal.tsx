@@ -18,7 +18,6 @@ export default function AddNewPlayListModal({
   setPlaylists,
   track,
 }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
   const { userId } = userSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -31,8 +30,6 @@ export default function AddNewPlayListModal({
       return;
     }
     try {
-      setIsLoading(true);
-
       const addPlaylistRes = await fetch("/api/playlist/addPlaylist", {
         method: "POST",
         headers: {
@@ -55,16 +52,15 @@ export default function AddNewPlayListModal({
         body: JSON.stringify({ playlistId, track }),
       });
 
-      //TODO : 신규 트랙 추가 후 0곡 출력 오류
-      // const res = await fetch("/api/playlist/getPlaylist");
-      // const data = await res.json();
-      // setPlaylists(data);
-      const playlistDetailRes = await fetch(
-        `/api/spotify/playlists/${playlistId}`
-      );
-      const playlistDetail = await playlistDetailRes.json();
+      const res = await fetch("/api/playlist/getPlaylist");
+      const data = await res.json();
+      setPlaylists(data);
+      // const playlistDetailRes = await fetch(
+      //   `/api/spotify/playlists/${playlistId}`
+      // );
+      // const playlistDetail = await playlistDetailRes.json();
 
-      setPlaylists((prev) => [playlistDetail, ...prev]);
+      // setPlaylists((prev) => [playlistDetail, ...prev]);
 
       setName("");
       setDescription("");
@@ -72,8 +68,6 @@ export default function AddNewPlayListModal({
       onClose();
     } catch (err) {
       console.log("플리 추가 오류 ", err);
-    } finally {
-      setIsLoading(false);
     }
   };
   // if (isLoading) return <LoadingSpinner />;
