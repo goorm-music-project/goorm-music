@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { Dispatch } from "react";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import PlaybarCover from "@/domains/playlist/components/PlaybarCover";
-import { useSpotifyStore } from "@/domains/common/stores/useSpotifyStore";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 interface PlayListBarProps {
   item: PlaylistItem;
@@ -15,7 +15,7 @@ export default function PlaylistBar({
   setSelectTrack,
   handleShowPlayList,
 }: PlayListBarProps) {
-  const { userId } = useSpotifyStore.getState();
+  const { userId } = userSpotifyStore.getState();
   return (
     <div
       key={item.track.id}

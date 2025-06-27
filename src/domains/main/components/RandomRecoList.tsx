@@ -11,7 +11,7 @@ export default function RandomRecoList() {
     fetch("/api/randomRecoList")
       .then((res) => res.json())
       .then((data) => setDatas(data));
-  }, [datas]);
+  }, []);
 
   return (
     <main className="mb-4">

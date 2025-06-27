@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingSpinner from "@/app/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 import axios from "axios";
@@ -36,8 +36,6 @@ function InnerCallback() {
 
           localStorage.setItem("userId", data.userId);
         }
-
-        router.push("/");
       } catch (error) {
         console.error("Token 발급 중 오류 발생", error);
         alert("로그인 중 오류가 발생했습니다.");
