@@ -29,7 +29,7 @@ export default function PlayListModal({
           <PlayList
             playlists={playlists}
             setPlaylists={setPlaylists}
-            track={track}
+            track={track as string}
           />
         </div>
         <button

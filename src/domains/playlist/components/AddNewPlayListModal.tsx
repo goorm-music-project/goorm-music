@@ -4,6 +4,7 @@ import Modal from "@/domains/common/components/Modal";
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 
 interface Props {
   showModal: boolean;
@@ -19,6 +20,7 @@ export default function AddNewPlayListModal({
   track,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
@@ -30,6 +32,7 @@ export default function AddNewPlayListModal({
       return;
     }
     try {
+      setIsLoading(true);
       const addPlaylistRes = await fetch("/api/playlist/addPlaylist", {
         method: "POST",
         headers: {
@@ -52,6 +55,8 @@ export default function AddNewPlayListModal({
         body: JSON.stringify({ playlistId, track }),
       });
 
+      //TODO : 신규 트랙 추가 후 0곡 출력 오류
+
       const res = await fetch("/api/playlist/getPlaylist");
       const data = await res.json();
       setPlaylists(data);
@@ -62,9 +67,11 @@ export default function AddNewPlayListModal({
       onClose();
     } catch (err) {
       console.log("플리 추가 오류 ", err);
+    } finally {
+      setIsLoading(false);
     }
   };
-  // if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoadingSpinner />;
   return (
     <Modal showModal={showModal} onClose={onClose}>
       <div className="w-[80vw] h-[300px] flex flex-col gap-2">
