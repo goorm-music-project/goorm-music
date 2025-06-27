@@ -50,11 +50,15 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
-    console.error(
-      "Spotify 토큰 요청 실패: ",
-      error.response?.data || error.message
-    );
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Spotify 토큰 요청 실패: ",
+        error.response?.data || error.message
+      );
+    } else {
+      console.error("알 수 없는 에러 발생: ", error);
+    }
 
     return NextResponse.json(
       { error: "Failed to get access_token" },
