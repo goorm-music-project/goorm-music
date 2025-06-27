@@ -18,7 +18,6 @@ export default function AddNewPlayListModal({
   setPlaylists,
   track,
 }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
   const { userId } = userSpotifyStore.getState();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -31,8 +30,6 @@ export default function AddNewPlayListModal({
       return;
     }
     try {
-      setIsLoading(true);
-
       const addPlaylistRes = await fetch("/api/playlist/addPlaylist", {
         method: "POST",
         headers: {
@@ -71,8 +68,6 @@ export default function AddNewPlayListModal({
       onClose();
     } catch (err) {
       console.log("플리 추가 오류 ", err);
-    } finally {
-      setIsLoading(false);
     }
   };
   // if (isLoading) return <LoadingSpinner />;
