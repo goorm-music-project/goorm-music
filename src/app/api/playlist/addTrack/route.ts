@@ -13,8 +13,7 @@ export async function POST(req: Request) {
 
   try {
     await axios.post(
-      `
-https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
         uris: [track],
       },
