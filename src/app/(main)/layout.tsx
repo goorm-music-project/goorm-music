@@ -17,7 +17,6 @@ export default function MainLayout({
       const res = await fetch("/api/refresh-token", { method: "POST" });
 
       if (res.status === 200) {
-        // 토큰 새로고침 성공했으면 사용자 정보 요청
         const userData = await axios.post("/api/userData");
         const { userId } = userData.data;
 
@@ -25,6 +24,9 @@ export default function MainLayout({
           userSpotifyStore.getState().setUserId(userId);
           userSpotifyStore.getState().setIsLoggedIn(true);
         }
+      } else {
+        userSpotifyStore.getState().setUserId("");
+        userSpotifyStore.getState().setIsLoggedIn(false);
       }
     };
 
