@@ -4,14 +4,12 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 type TrackItem = {
-  track: {
-    id: string;
+  id: string;
+  artists: { name: string }[];
+  album: {
     name: string;
-    album: {
-      name: string;
-      images: { url: string }[];
-    };
-    artists: { name: string }[];
+    images: { url: string }[];
+    uri: string;
   };
 };
 
@@ -19,7 +17,7 @@ export default function JenreRecoList() {
   const [datas, setDatas] = useState<TrackItem[]>([]);
 
   useEffect(() => {
-    fetch("/api/topChart")
+    fetch("/api/jenreRecoList")
       .then((res) => res.json())
       .then((data) => setDatas(data));
   }, []);
@@ -38,18 +36,18 @@ export default function JenreRecoList() {
           className="recoSwiper"
         >
           {datas.map((item) => (
-            <SwiperSlide key={item.track.id} style={{ width: "150px" }}>
-              <div key={item.track.id}>
+            <SwiperSlide key={item.id} style={{ width: "150px" }}>
+              <div>
                 <Image
-                  src={item.track.album.images[0]?.url}
-                  alt={item.track.name}
+                  src={item.album.images[0]?.url}
+                  alt={item.album.name}
                   width={150}
                   height={150}
                 />
                 <div>
-                  <p className="truncate my-1">{item.track.name}</p>
+                  <p className="truncate my-1">{item.album.name}</p>
                   <p className="truncate">
-                    {item.track.artists.map((a) => a.name).join(", ")}
+                    {item.artists.map((a) => a.name).join(", ")}
                   </p>
                 </div>
               </div>
