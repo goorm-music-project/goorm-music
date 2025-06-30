@@ -21,7 +21,6 @@ export async function GET() {
       }
     );
     const data = res.data.items;
-    console.log(data);
     return NextResponse.json(data);
   } catch (err: any) {
     console.log("❌ 좋아요 리스트 실패", err.response?.data || err.message);
