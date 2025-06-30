@@ -17,7 +17,6 @@ export async function GET() {
       }
     );
     const data = res.data.items;
-    console.log("플리 목록 가져오기", data);
     return NextResponse.json(data);
   } catch (error) {
     console.log("Error : ", error);
