@@ -32,6 +32,6 @@ export async function GET() {
     return NextResponse.json(playlistItems);
   } catch (error) {
     console.log("Error : ", error);
-    return NextResponse.json({ error: "fail to random RecoList data" });
+    return NextResponse.json({ error: "fail to popRecoList data" });
   }
 }
