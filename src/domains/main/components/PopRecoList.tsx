@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import PlaylistBar from "./PlaylistBar";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 
-export default function RandomRecoList() {
+export default function PopRecoList() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
   useEffect(() => {
-    fetch("/api/randomRecoList")
+    fetch("/api/popRecoList")
       .then((res) => res.json())
       .then((data) => setDatas(data));
   }, []);

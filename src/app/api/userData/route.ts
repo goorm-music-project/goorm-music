@@ -26,7 +26,6 @@ export async function POST() {
     const userSnap = await getDoc(userRef);
     console.log("검사하기");
     const userExists = userSnap.exists();
-    console.log("userIddddddddd", userId);
 
     return NextResponse.json({ userId, display_name, email, userExists });
   } catch (err: any) {
