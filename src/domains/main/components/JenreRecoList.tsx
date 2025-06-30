@@ -1,4 +1,6 @@
 "use client";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { getUserGenres } from "@/domains/select-genre/lib/getUserGenres";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,12 +17,18 @@ type TrackItem = {
 
 export default function JenreRecoList() {
   const [datas, setDatas] = useState<TrackItem[]>([]);
+  const userId = userSpotifyStore((state) => state.userId);
 
   useEffect(() => {
-    fetch("/api/jenreRecoList")
-      .then((res) => res.json())
-      .then((data) => setDatas(data));
-  }, []);
+    const fetchData = async () => {
+      const genre = await getUserGenres(userId as string);
+      const res = await fetch(`/api/jenreRecoList?genre=${genre[0]}`);
+      const data = await res.json();
+      setDatas(data);
+    };
+
+    if (userId) fetchData();
+  }, [userId]);
 
   return (
     <main className="mb-4">
