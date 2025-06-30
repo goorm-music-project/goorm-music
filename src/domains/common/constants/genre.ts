@@ -1,5 +1,5 @@
 export const genreList = [
-  { ko: "발라드", en: "balad" },
+  { ko: "발라드", en: "ballad" },
   { ko: "팝", en: "pop" },
   { ko: "어쿠스틱", en: "acoustic" },
   { ko: "아이돌", en: "idol" },

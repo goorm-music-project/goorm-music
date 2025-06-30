@@ -21,8 +21,9 @@ export default function JenreRecoList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const genre = await getUserGenres(userId as string);
-      const res = await fetch(`/api/jenreRecoList?genre=${genre[0]}`);
+      const genreArr = await getUserGenres(userId as string);
+      const genre = genreArr[Math.floor(Math.random() * genreArr.length)];
+      const res = await fetch(`/api/jenreRecoList?genre=${genre}`);
       const data = await res.json();
       setDatas(data);
     };
