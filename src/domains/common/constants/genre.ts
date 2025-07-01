@@ -1,0 +1,16 @@
+export const genreList = [
+  { ko: "발라드", en: "ballad" },
+  { ko: "팝", en: "pop" },
+  { ko: "어쿠스틱", en: "acoustic" },
+  { ko: "아이돌", en: "idol" },
+  { ko: "락", en: "rock" },
+  { ko: "알앤비", en: "rnb" },
+  { ko: "일렉트로닉", en: "electronic" },
+  { ko: "재즈", en: "jazz" },
+  { ko: "힙합", en: "hiphop" },
+  { ko: "인디", en: "indie" },
+  { ko: "성인가요", en: "adult" },
+  { ko: "매탈", en: "metal" },
+  { ko: "뉴에이지", en: "newage" },
+  { ko: "클래식", en: "classical" },
+];
