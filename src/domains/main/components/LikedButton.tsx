@@ -34,7 +34,7 @@ export default function LikedButton({ trackId }: LikedButtonProps) {
 
   return (
     <button
-      className="text-2xl absolute right-15 top-[40%] text-(--primary-blue)"
+      className="text-2xl absolute right-15 top-[40%] text-(--primary-blue) pointer-events-auto"
       onClick={() => toggleLiked(trackId)}
     >
       {isLiked ? <FaThumbsUp /> : <FaRegThumbsUp />}
