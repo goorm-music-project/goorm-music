@@ -5,7 +5,7 @@ import { PlaylistItem } from "../types/Playlist";
 
 interface PlaybarCoverProps {
   item: PlaylistItem;
-  setSelectTrack?: Dispatch<React.SetStateAction<string[]>>;
+  setSelectTrack?: Dispatch<React.SetStateAction<string>>;
   handleShowPlayList?: () => void;
 }
 export default function PlaybarCover({
@@ -14,7 +14,7 @@ export default function PlaybarCover({
   setSelectTrack,
 }: PlaybarCoverProps) {
   return (
-    <div className="absolute left-0 top-0 w-full h-full">
+    <div className="absolute left-0 top-0 w-full h-full pointer-events-none">
       <button className="text-2xl absolute left-12 top-[40%] text-(--primary-blue)">
         <FaPlay />
       </button>

@@ -1,10 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import PlaylistBar from "@/domains/main/components/PlaylistBar";
-import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
-import PlayListModal from "@/domains/playlist/components/PlayListModal";
+import PlayBar from "@/domains/main/components/PlayBar";
 import {
-  Playlist,
   PlaylistDetail,
   PlaylistItem,
 } from "@/domains/playlist/types/Playlist";
@@ -27,18 +23,6 @@ export default function Page() {
   const [isEdit, setIsEdit] = useState(false);
   const [tracks, setTracks] = useState<PlaylistItem[]>([]);
   const [deleteTracks, setDeleteTracks] = useState<string[]>([]);
-
-  const [showPlayListModal, setShowPlayListModal] = useState(false);
-  const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
-  const [selectTrack, setSelectTrack] = useState<string[]>([]);
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-
-  const handleShowPlayList = () => {
-    setShowPlayListModal(true);
-  };
-  const handleShowNewPlayList = () => {
-    setShowAddNewPlayListModal(true);
-  };
 
   const handleChangeChk = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -198,42 +182,18 @@ export default function Page() {
             >
               <MdDelete />
             </button>
-            {tracks &&
-              tracks.map((item) => (
-                <div key={item.track.id} className="flex gap-4">
-                  <input
-                    type="checkbox"
-                    className="w-[10vw] flex-none"
-                    style={{ width: "auto" }}
-                    onChange={(e) => handleChangeChk(e, item.track.uri)}
-                  />
-                  <div className="w-[90vw] flex-1">
-                    <PlaylistBar
-                      key={item.track.id}
-                      item={item}
-                      setSelectTrack={setSelectTrack}
-                      handleShowPlayList={handleShowPlayList}
-                    />
-                  </div>
-                </div>
-              ))}
+            {tracks && tracks.length > 0 ? (
+              <PlayBar
+                tracks={tracks}
+                selectable={true}
+                handleChangeChk={handleChangeChk}
+              />
+            ) : (
+              <p className="text-sm text-gray-400 p-4">
+                플레이리스트에 트랙이 없습니다.
+              </p>
+            )}
           </div>
-
-          <PlayListModal
-            showModal={showPlayListModal}
-            onClose={() => setShowPlayListModal(false)}
-            playlists={playlists}
-            setPlaylists={setPlaylists}
-            onShowNewPlaylist={() => handleShowNewPlayList()}
-            track={selectTrack}
-          />
-
-          <AddNewPlayListModal
-            showModal={showAddNewPlayListModal}
-            onClose={() => setShowAddNewPlayListModal(false)}
-            setPlaylists={setPlaylists}
-            track={selectTrack}
-          />
         </div>
       )}
     </div>

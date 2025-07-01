@@ -9,7 +9,7 @@ interface Props {
   showModal: boolean;
   onClose: () => void;
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
-  track: string[];
+  track: string;
 }
 
 export default function AddNewPlayListModal({

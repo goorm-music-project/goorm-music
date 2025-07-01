@@ -12,7 +12,7 @@ export default function page() {
     <div className="">
       <MyPlayList isLoggedIn={isLoggedIn} />
       <RecoListWrapper isLoggedIn={isLoggedIn} />
-      <TopChartList isLoggedIn={isLoggedIn} />
+      <TopChartList />
     </div>
   );
 }

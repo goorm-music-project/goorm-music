@@ -3,16 +3,20 @@ import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
-  track: string[];
+  track: string;
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
+  const { userId } = userSpotifyStore();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!userId) return;
+
     const fetchPlaylists = async () => {
       setIsLoading(true);
       try {
