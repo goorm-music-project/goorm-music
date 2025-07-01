@@ -36,7 +36,7 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
   const handleAddPlayList = async (playlistId: string) => {
     const res = await fetch(`/api/playlist/getPlaylistDetail?id=${playlistId}`);
     const detailData = await res.json();
-    console.log("trackkkkkk", track);
+
     const alreadyExists = detailData.tracks.items.some(
       (item: { track: { uri: string } }) => item.track.uri === track
     );
