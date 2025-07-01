@@ -46,7 +46,7 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
     <div>
       <h2 className="mt-3 mb-3">이 아티스트의 인기곡들을 만나보세요.</h2>
       {error
-        ? error
+        ? "인기곡 로드 중 오류 발생"
         : tracks && (
             <Swiper
               slidesPerView={"auto"}
