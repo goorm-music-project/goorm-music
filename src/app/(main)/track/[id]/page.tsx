@@ -44,7 +44,7 @@ export default function TrackDetailPage() {
   }, [id]);
 
   if (loading) return <LoadingSpinner />;
-  if (error || !track) return <div>오류 발생: {error}</div>;
+  if (error || !track) return <div>오류 발생</div>;
 
   return (
     <div>
