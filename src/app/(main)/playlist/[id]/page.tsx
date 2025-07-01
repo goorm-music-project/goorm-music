@@ -11,27 +11,35 @@ import { MdDelete } from "react-icons/md";
 import { RiSave3Fill } from "react-icons/ri";
 import { TiPencil } from "react-icons/ti";
 
+export interface DeleteInfo {
+  uri: string;
+  position: number;
+}
+
 export default function Page() {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
   const [listData, setListData] = useState<PlaylistDetail | null>(null);
-
+  const [snapshotId, setSnapshotId] = useState<string>("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
   const [isEdit, setIsEdit] = useState(false);
   const [tracks, setTracks] = useState<PlaylistItem[]>([]);
-  const [deleteTracks, setDeleteTracks] = useState<string[]>([]);
+  const [deleteTracks, setDeleteTracks] = useState<DeleteInfo[]>([]);
 
   const handleChangeChk = (
     e: React.ChangeEvent<HTMLInputElement>,
-    uri: string
+    uri: string,
+    idx: number
   ) => {
     if (e.target.checked) {
-      setDeleteTracks((prev) => [...prev, uri]);
+      setDeleteTracks((prev) => [...prev, { uri, position: idx }]);
     } else {
-      setDeleteTracks((prev) => prev.filter((id) => id !== uri));
+      setDeleteTracks((prev) =>
+        prev.filter((track) => !(track.uri === uri && track.position === idx))
+      );
     }
   };
 
@@ -77,6 +85,7 @@ export default function Page() {
         body: JSON.stringify({
           id,
           tracks: deleteTracks,
+          snapshot_id: snapshotId,
         }),
       });
       alert("트랙이 삭제되었습니다.");
@@ -102,10 +111,11 @@ export default function Page() {
     const res = await fetch(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = await res.json();
     setListData(data);
+    setSnapshotId(data.snapshot_id);
     setName(data.name);
     setDescription(data.description);
     setIsPublic(data.public);
-    setTracks(data.tracks.items);
+    setTracks([...data.tracks.items]);
   };
 
   useEffect(() => {

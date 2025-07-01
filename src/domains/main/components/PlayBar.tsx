@@ -11,7 +11,8 @@ interface Props {
   selectable?: boolean;
   handleChangeChk?: (
     e: React.ChangeEvent<HTMLInputElement>,
-    uri: string
+    uri: string,
+    idx: number
   ) => void;
 }
 
@@ -44,7 +45,7 @@ export default function PlayBar({
               type="checkbox"
               className="w-[10vw] flex-none"
               style={{ width: "auto" }}
-              onChange={(e) => handleChangeChk?.(e, item.track.uri)}
+              onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
             />
           )}
           <div className="flex gap-3">
