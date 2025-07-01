@@ -22,20 +22,22 @@ export async function GET(
     );
     const track = trackRes.data;
     const title = track.name;
-    const artist = track.artists?.[0]?.name;
+    const artists = track.artists?.map((artist: any) => artist.name);
+    const artistsId = track.artists?.map((artist: any) => artist.id);
     const options = {
       apiKey: process.env.NEXT_PUBLIC_GENIUS_ACCESS_TOKEN!,
       title,
-      artist,
+      artist: artists[0],
       optimizeQuery: true,
     };
     const lyrics = await Genius.getLyrics(options);
     const song = await Genius.getSong(options);
     return NextResponse.json({
       title,
-      artist,
+      artists,
       imageUrl: track.album?.images?.[0]?.url,
       lyrics,
+      artistsId,
       geniusUrl: song?.url || null,
     });
   } catch (err: any) {
