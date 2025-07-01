@@ -1,38 +1,37 @@
 import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
+import { use } from "react";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const artistId = params.id;
+  const { id } = await params;
+  const artistId = id;
   try {
     const token = await getAccessToken();
     const res = await axios.get(
       `https://api.spotify.com/v1/artists/${artistId}/top-tracks`,
       {
-        params: { market: "KR" }, // 또는 'US' 등 원하는 국가 코드
+        params: { market: "KR" },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
     return NextResponse.json(
-      res.data.tracks.map((track: any) => {
-        return {
-          imageUrl: track.album.images[0]?.url ?? "", // 가장 큰 이미지
-          title: track.name,
-          artists: track.artists.map((artist: any) => artist.name),
-        };
-      })
+      res.data.tracks.map((track: any) => ({
+        imageUrl: track.album.images[0]?.url ?? "",
+        title: track.name,
+        artists: track.artists.map((artist: any) => artist.name),
+      }))
     );
   } catch (err: any) {
     console.error(
       "아티스트 Top 트랙 조회 실패: ",
       err.response?.data || err.message
     );
-
     return NextResponse.json(
       { error: "아티스트 Top 트랙 조회 실패" },
       { status: 500 }

@@ -5,9 +5,10 @@ import Genius from "genius-lyrics-api";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const trackId = context.params.id;
+  const { id } = await params;
+  const trackId = id;
 
   try {
     const token = await getAccessToken();
