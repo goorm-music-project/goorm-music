@@ -11,6 +11,6 @@ export const genreList = [
   { ko: "인디", en: "indie" },
   { ko: "성인가요", en: "adult" },
   { ko: "매탈", en: "metal" },
-  { ko: "뉴에이지", en: "newage" },
+  { ko: "뉴에이지", en: "new age" },
   { ko: "클래식", en: "classical" },
 ];
