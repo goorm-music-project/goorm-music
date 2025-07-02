@@ -26,7 +26,7 @@ export async function GET(
     const artists = track.artists?.map((artist: any) => artist.name);
     const artistsId = track.artists?.map((artist: any) => artist.id);
     const options = {
-      apiKey: process.env.NEXT_PUBLIC_GENIUS_ACCESS_TOKEN!,
+      apiKey: process.env.GENIUS_ACCESS_TOKEN!,
       title,
       artist: artists[0],
       optimizeQuery: true,
