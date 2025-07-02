@@ -7,7 +7,7 @@ import { FaMusic, FaHome, FaUser } from "react-icons/fa";
 export default function BottomNavBar() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-(--primary-blue) text-white h-16 flex justify-around items-center z-50">
-      <NavItem icon={<FaMusic size={20} />} label="장르 검색" path="/search" />
+      <NavItem icon={<FaMusic size={20} />} label="장르 검색" path="/genre" />
       <NavItem icon={<FaHome size={20} />} label="홈" path="/" />
       <NavItem
         icon={<FaUser size={20} />}
