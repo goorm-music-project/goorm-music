@@ -52,8 +52,11 @@ export default function TrackDetailPage() {
       <div className="flex flex-col items-center">
         <Image src={track.imageUrl} alt="곡 사진" width={300} height={300} />
         <TrackActionBtns trackId={trackId} />
-        <h1 className="mt-4">{track.title}</h1>
-        <TrackInfo artists={track.artists} artistsId={track.artistsId} />
+        <TrackInfo
+          artists={track.artists}
+          artistsId={track.artistsId}
+          title={track.title}
+        />
         <TrackLyrics lyrics={track.lyrics} />
       </div>
       <ArtistMoreTracks artistId={track.artistsId[0]} />
