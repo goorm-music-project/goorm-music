@@ -39,7 +39,7 @@ export default function PlayBar({
   };
 
   useEffect(() => {
-    if (!tracks || tracks.length === 0) return;
+    if (!tracks || tracks.length === 0 || userId === "") return;
 
     const fetchLikedTracks = async () => {
       const trackIds = tracks.map((t) => t.track.id);
