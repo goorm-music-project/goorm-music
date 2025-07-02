@@ -1,4 +1,4 @@
-import LikedButton from "@/domains/main/components/LikedButton";
+import LikedButton from "@/domains/common/components/LikedButton";
 import React, { Dispatch } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { PlaylistItem } from "../../playlist/types/Playlist";
