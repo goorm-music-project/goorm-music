@@ -1,6 +1,6 @@
 import LikedButton from "@/domains/common/components/LikedButton";
 import React, { Dispatch } from "react";
-import { FaPlay, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { PlaylistItem } from "../../playlist/types/Playlist";
 
 interface PlaybarCoverProps {
@@ -14,7 +14,7 @@ export default function PlaybarCover({
   setSelectTrack,
 }: PlaybarCoverProps) {
   return (
-    <div className="absolute left-0 top-0 w-full h-full pointer-events-none">
+    <div className="absolute left-0 top-0 w-full h-full">
       <div>
         <LikedButton
           trackId={item.track.id}
