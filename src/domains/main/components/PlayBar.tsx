@@ -51,7 +51,7 @@ export default function PlayBar({
               onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
             />
           )}
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full">
             <Image
               src={item.track.album.images[0]?.url}
               alt={item.track.name}
@@ -59,8 +59,8 @@ export default function PlayBar({
               height={100}
             />
             <div className="w-[40%]">
-              <p className="truncate my-1">{item.track.name}</p>
-              <p className="truncate">
+              <p className="truncate my-1 w-full">{item.track.name}</p>
+              <p className="truncate w-full">
                 {item.track.artists.map((a) => a.name).join(", ")}
               </p>
             </div>
