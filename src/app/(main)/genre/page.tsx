@@ -40,41 +40,39 @@ export default function Page() {
   return (
     <div>
       <h1>장르별 음악들을 확인해보세요.</h1>
+      <div className="my-2 w-[100vw]">
+        <Swiper
+          slidesPerView={"auto"}
+          spaceBetween={10}
+          freeMode={true}
+          modules={[FreeMode]}
+        >
+          {genreList.map((genre) => {
+            const isActive = genre.ko === isSelect;
+            return (
+              <SwiperSlide key={genre.ko} style={{ width: "auto" }}>
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  className={`px-4 py-1.5 rounded-full border font-semibold text-sm transition ${
+                    isActive
+                      ? "bg-(--primary-blue) text-white border-(--primary-blue)"
+                      : "bg-white text-(--primary-blue) border-(--primary-blue)"
+                  }`}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => {
+                    handleClickGenre(genre.ko);
+                  }}
+                >
+                  {genre.ko}
+                </button>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      </div>
       <div>
-        <div className="my-2 w-[100vw]">
-          <Swiper
-            slidesPerView={"auto"}
-            spaceBetween={10}
-            freeMode={true}
-            modules={[FreeMode]}
-          >
-            {genreList.map((genre) => {
-              const isActive = genre.ko === isSelect;
-              return (
-                <SwiperSlide key={genre.ko} style={{ width: "auto" }}>
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    className={`px-4 py-1.5 rounded-full border font-semibold text-sm transition ${
-                      isActive
-                        ? "bg-(--primary-blue) text-white border-(--primary-blue)"
-                        : "bg-white text-(--primary-blue) border-(--primary-blue)"
-                    }`}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => {
-                      handleClickGenre(genre.ko);
-                    }}
-                  >
-                    {genre.ko}
-                  </button>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
-        <div>
-          <PlayBar tracks={datas} />
-        </div>
+        <PlayBar tracks={datas} />
       </div>
     </div>
   );
