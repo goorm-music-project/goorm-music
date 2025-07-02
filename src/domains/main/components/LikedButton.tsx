@@ -1,3 +1,5 @@
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import React, { useCallback, useEffect, useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 
@@ -11,8 +13,11 @@ export default function LikedButton({
   className = "",
 }: LikedButtonProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
+  const [showModal, setShowModal] = useState(false);
 
   const fetchLikedTracks = useCallback(async () => {
+    if (!isLoggedIn) return;
     try {
       const res = await fetch(`/api/isLiked?trackId=${trackId}`);
       const data = await res.json();
@@ -23,6 +28,10 @@ export default function LikedButton({
   }, [trackId]);
 
   const toggleLiked = async (trackId: string) => {
+    if (!isLoggedIn) {
+      setShowModal(true);
+      return;
+    }
     const liked = !isLiked;
     setIsLiked(liked);
     await fetch("/api/like", {
@@ -37,11 +46,17 @@ export default function LikedButton({
   }, [fetchLikedTracks]);
 
   return (
-    <button
-      className={`text-2xl text-(--primary-blue) ${className ?? ""}`}
-      onClick={() => toggleLiked(trackId)}
-    >
-      {isLiked ? <FaThumbsUp size={30} /> : <FaRegThumbsUp size={30} />}
-    </button>
+    <>
+      <button
+        className={`text-2xl text-(--primary-blue) ${className ?? ""}`}
+        onClick={() => toggleLiked(trackId)}
+      >
+        {isLiked ? <FaThumbsUp size={30} /> : <FaRegThumbsUp size={30} />}
+      </button>
+      <SuggestLoginModal
+        showModal={showModal}
+        onClose={() => setShowModal(false)}
+      />
+    </>
   );
 }
