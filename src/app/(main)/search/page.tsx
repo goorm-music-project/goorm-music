@@ -27,6 +27,25 @@ export default function Page() {
     setShowAddNewPlayListModal(true);
   };
 
+  const handleFollow = async (id: number) => {
+    const ok = confirm("해당 플레이리스트를 팔로우 하시겠습니까?");
+    if (!ok) return;
+    try {
+      await fetch("/api/follow", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
+      alert("팔로우 추가");
+    } catch (err) {
+      console.log("팔로우 추가 오류", err);
+    }
+  };
+
   useEffect(() => {
     if (!query) return;
     const fetchData = async () => {
@@ -110,6 +129,34 @@ export default function Page() {
         setPlaylists={setPlaylists}
         track={selectTrack}
       />
+
+      <div className="mt-2">
+        <h2 className="my-2">플레이리스트</h2>
+        <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
+          {data &&
+            data?.playlists?.items
+              ?.filter((item: any) => item !== null)
+              .map((item: any) => (
+                <div
+                  key={item?.id}
+                  className="w-[100px] h-[120px] pointer"
+                  onClick={() => handleFollow(item?.id)}
+                >
+                  <Image
+                    src={
+                      item?.images?.length > 0
+                        ? item.images[0].url
+                        : "/goorm_logo_blue.png"
+                    }
+                    alt={item?.name}
+                    width={100}
+                    height={100}
+                  />
+                  <p className="truncate">{item?.name}</p>
+                </div>
+              ))}
+        </div>
+      </div>
     </div>
   );
 }

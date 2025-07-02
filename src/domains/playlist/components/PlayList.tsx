@@ -22,7 +22,8 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
       try {
         const res = await fetch("/api/playlist/getPlaylist");
         const data = await res.json();
-        setPlaylists(data);
+        const myPlaylist = data.filter((v) => v.owner.id === userId);
+        setPlaylists(myPlaylist);
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
