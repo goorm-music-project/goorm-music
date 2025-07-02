@@ -73,6 +73,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
                       width={150}
                       height={150}
                     />
+                    <p className="truncate pt-1">{data.name}</p>
                   </div>
                 </Link>
               </SwiperSlide>
