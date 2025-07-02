@@ -25,7 +25,7 @@ export default function LikedButton({
     } catch (err) {
       console.error("❌ 좋아요 눌렀는지 확인하기 실패", err);
     }
-  }, [trackId]);
+  }, [trackId, isLoggedIn]);
 
   const toggleLiked = async (
     e: React.MouseEvent<HTMLElement, MouseEvent>,

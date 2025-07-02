@@ -1,7 +1,15 @@
 import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
-import { use } from "react";
+
+type SpotifyTrack = {
+  id: string;
+  name: string;
+  artists: { name: string }[];
+  album: {
+    images: { url: string }[];
+  };
+};
 
 export async function GET(
   req: NextRequest,
@@ -20,8 +28,11 @@ export async function GET(
         },
       }
     );
+
+    const tracks = res.data.tracks as SpotifyTrack[];
+
     return NextResponse.json(
-      res.data.tracks.map((track: any) => ({
+      tracks.map((track) => ({
         imageUrl: track.album.images[0]?.url ?? "",
         title: track.name,
         artists: track.artists.map((artist: any) => artist.name),

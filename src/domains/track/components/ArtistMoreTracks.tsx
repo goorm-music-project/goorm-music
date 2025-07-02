@@ -21,7 +21,7 @@ type artistMoreTracksType = [
 export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
   const [tracks, setTracks] = useState<artistMoreTracksType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
   const route = useRouter();
 
   useEffect(() => {
@@ -31,8 +31,12 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
         if (!res.ok) throw new Error("아티스트 인기곡 불러오기 실패");
         const data = await res.json();
         setTracks(data);
-      } catch (err: any) {
-        setError(err);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err);
+        } else {
+          setError(new Error("알 수 없는 오류가 발생했습니다."));
+        }
       } finally {
         setLoading(false);
       }
@@ -48,33 +52,37 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
   return (
     <div>
       <h2 className="mt-3 mb-3">이 아티스트의 인기곡들을 만나보세요.</h2>
-      {error
-        ? "인기곡 로드 중 오류 발생"
-        : tracks && (
-            <Swiper
-              slidesPerView={"auto"}
-              spaceBetween={30}
-              freeMode={true}
-              pagination={{
-                clickable: true,
-              }}
-              className="w-full"
-            >
-              {tracks.map((track) => (
-                <SwiperSlide
-                  key={track.imageUrl + track.title}
-                  className="!w-[150px]"
-                  onClick={() => route.push(`/track/${track.trackId}`)}
-                >
-                  <TrackCard
-                    imageUrl={track.imageUrl}
-                    name={track.title}
-                    artists={track.artists}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
+      {error ? (
+        <div className="text-red-500 font-semibold">
+          인기곡 로드 중 오류 발생: {error.message}
+        </div>
+      ) : (
+        tracks && (
+          <Swiper
+            slidesPerView={"auto"}
+            spaceBetween={30}
+            freeMode={true}
+            pagination={{
+              clickable: true,
+            }}
+            className="w-full"
+          >
+            {tracks.map((track) => (
+              <SwiperSlide
+                key={track.imageUrl + track.title}
+                className="!w-[150px]"
+                onClick={() => route.push(`/track/${track.trackId}`)}
+              >
+                <TrackCard
+                  imageUrl={track.imageUrl}
+                  name={track.title}
+                  artists={track.artists}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )
+      )}
     </div>
   );
 }

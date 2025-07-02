@@ -3,6 +3,19 @@ import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import Genius from "genius-lyrics-api";
 
+type SpotifyArtist = {
+  id: string;
+  name: string;
+};
+
+type SpotifyTrack = {
+  name: string;
+  artists: SpotifyArtist[];
+  album: {
+    images: { url: string }[];
+  };
+};
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -21,12 +34,12 @@ export async function GET(
         },
       }
     );
-    const track = trackRes.data;
+    const track = trackRes.data as SpotifyTrack;
     const title = track.name;
-    const artists = track.artists?.map((artist: any) => artist.name);
-    const artistsId = track.artists?.map((artist: any) => artist.id);
+    const artists = track.artists?.map((artist) => artist.name);
+    const artistsId = track.artists?.map((artist) => artist.id);
     const options = {
-      apiKey: process.env.NEXT_PUBLIC_GENIUS_ACCESS_TOKEN!,
+      apiKey: process.env.GENIUS_ACCESS_TOKEN!,
       title,
       artist: artists[0],
       optimizeQuery: true,
@@ -41,11 +54,18 @@ export async function GET(
       artistsId,
       geniusUrl: song?.url || null,
     });
-  } catch (err: any) {
-    console.error(
-      "트랙 상세 정보 조회 실패: ",
-      err.response?.data || err.message
-    );
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      console.error(
+        "트랙 상세 정보 조회 실패: ",
+        err.response?.data || err.message
+      );
+    } else if (err instanceof Error) {
+      console.error("트랙 상세 정보 조회 실패: ", err.message);
+    } else {
+      console.error("트랙 상세 정보 조회 실패: 알 수 없는 에러");
+    }
+
     return NextResponse.json(
       { error: "트랙 상세 정보 조회 실패" },
       { status: 500 }
