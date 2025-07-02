@@ -56,11 +56,18 @@ export async function POST() {
     });
 
     return response;
-  } catch (err: any) {
-    console.error(
-      "🔴 Refresh token failed:",
-      err.response?.data || err.message
-    );
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      console.error(
+        "토큰 리프레쉬 실패",
+        err.response?.data || err.message
+      );
+    } else if (err instanceof Error) {
+      console.error("토큰 리프레쉬 실패", err.message);
+    } else {
+      console.error("토큰 리프레쉬 중 오류 발생");
+    }
+
     return NextResponse.json(
       { error: "Failed to refresh token" },
       { status: 500 }
