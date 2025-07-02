@@ -19,6 +19,7 @@ interface TrackDetail {
 
 export default function TrackDetailPage() {
   const { id } = useParams();
+  const trackId = String(id);
 
   const [track, setTrack] = useState<TrackDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export default function TrackDetailPage() {
   useEffect(() => {
     const fetchTrack = async () => {
       try {
-        const res = await fetch(`/api/track/${id}`);
+        const res = await fetch(`/api/track/${trackId}`);
         if (!res.ok) throw new Error("트랙 상세 정보 불러오기 실패");
         const data = await res.json();
         setTrack(data);
@@ -38,10 +39,10 @@ export default function TrackDetailPage() {
       }
     };
 
-    if (id) {
+    if (trackId) {
       fetchTrack();
     }
-  }, [id]);
+  }, [trackId]);
 
   if (loading) return <LoadingSpinner />;
   if (error || !track) return <div>오류 발생</div>;
@@ -50,7 +51,7 @@ export default function TrackDetailPage() {
     <div>
       <div className="flex flex-col items-center">
         <Image src={track.imageUrl} alt="곡 사진" width={300} height={300} />
-        <TrackActionBtns />
+        <TrackActionBtns trackId={trackId} />
         <h1 className="mt-4">{track.title}</h1>
         <TrackInfo artists={track.artists} artistsId={track.artistsId} />
         <TrackLyrics lyrics={track.lyrics} />
