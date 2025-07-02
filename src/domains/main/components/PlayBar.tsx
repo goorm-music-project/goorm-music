@@ -5,6 +5,7 @@ import PlayListModal from "@/domains/playlist/components/PlayListModal";
 import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Props {
   tracks: PlaylistItem[];
@@ -26,6 +27,7 @@ export default function PlayBar({
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [selectTrack, setSelectTrack] = useState<string>("");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const router = useRouter();
 
   const handleShowPlayList = () => {
     setShowPlayListModal(true);
@@ -39,6 +41,7 @@ export default function PlayBar({
         <div
           key={`${item.track.id}_${idx}`}
           className="relative p-2 hover:bg-(--primary-blue-hover) group flex gap-2"
+          onClick={() => router.push(`/track/${item.track.id}`)}
         >
           {selectable && (
             <input

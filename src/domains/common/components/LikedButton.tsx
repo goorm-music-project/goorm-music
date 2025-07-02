@@ -27,7 +27,11 @@ export default function LikedButton({
     }
   }, [trackId]);
 
-  const toggleLiked = async (trackId: string) => {
+  const toggleLiked = async (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    trackId: string
+  ) => {
+    e.stopPropagation();
     if (!isLoggedIn) {
       setShowModal(true);
       return;
@@ -49,7 +53,7 @@ export default function LikedButton({
     <>
       <button
         className={`text-2xl text-(--primary-blue) ${className ?? ""}`}
-        onClick={() => toggleLiked(trackId)}
+        onClick={(e) => toggleLiked(e, trackId)}
       >
         {isLiked ? <FaThumbsUp size={30} /> : <FaRegThumbsUp size={30} />}
       </button>

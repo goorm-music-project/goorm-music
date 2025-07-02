@@ -22,7 +22,8 @@ export default function PlaybarCover({
         />
         <button
           className="text-2xl absolute right-5 top-[40%] text-(--primary-blue) pointer-events-auto"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             handleShowPlayList?.();
             setSelectTrack?.(item.track.uri);
           }}

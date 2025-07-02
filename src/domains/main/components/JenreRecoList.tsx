@@ -2,6 +2,7 @@
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { getUserGenres } from "@/domains/select-genre/lib/getUserGenres";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -18,6 +19,7 @@ type TrackItem = {
 export default function JenreRecoList() {
   const [datas, setDatas] = useState<TrackItem[]>([]);
   const userId = userSpotifyStore((state) => state.userId);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +47,11 @@ export default function JenreRecoList() {
           className="recoSwiper"
         >
           {datas.map((item) => (
-            <SwiperSlide key={item.id} style={{ width: "150px" }}>
+            <SwiperSlide
+              key={item.id}
+              style={{ width: "150px" }}
+              onClick={() => router.push(`/track/${item.id}`)}
+            >
               <div>
                 <Image
                   src={item.album.images[0]?.url}
