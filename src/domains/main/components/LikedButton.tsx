@@ -3,9 +3,13 @@ import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 
 interface LikedButtonProps {
   trackId: string;
+  className?: string;
 }
 
-export default function LikedButton({ trackId }: LikedButtonProps) {
+export default function LikedButton({
+  trackId,
+  className = "",
+}: LikedButtonProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   const fetchLikedTracks = useCallback(async () => {
@@ -14,7 +18,7 @@ export default function LikedButton({ trackId }: LikedButtonProps) {
       const data = await res.json();
       setIsLiked(data.data);
     } catch (err) {
-      console.log("❌ 좋아요 리스트 실패", err);
+      console.error("❌ 좋아요 눌렀는지 확인하기 실패", err);
     }
   }, [trackId]);
 
@@ -34,10 +38,10 @@ export default function LikedButton({ trackId }: LikedButtonProps) {
 
   return (
     <button
-      className="text-2xl absolute right-15 top-[40%] text-(--primary-blue) pointer-events-auto"
+      className={`text-2xl text-(--primary-blue) ${className ?? ""}`}
       onClick={() => toggleLiked(trackId)}
     >
-      {isLiked ? <FaThumbsUp /> : <FaRegThumbsUp />}
+      {isLiked ? <FaThumbsUp size={30} /> : <FaRegThumbsUp size={30} />}
     </button>
   );
 }
