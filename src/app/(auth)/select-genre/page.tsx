@@ -3,7 +3,6 @@
 import BlueBackgroundBtn from "@/domains/common/components/BlueBackgroundBtn";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import GenreToggleBtn from "@/domains/select-genre/components/GenreToggleBtn";
-import { savePreferredGenres } from "@/domains/select-genre/lib/savePreferredGenres";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -43,7 +42,13 @@ export default function SelectGenre() {
     }
 
     try {
-      await savePreferredGenres(userId, selectedGenres);
+      await fetch("/api/saveGenres", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, selectedGenres }),
+      });
       router.push("/");
     } catch (err) {
       console.error(err);
