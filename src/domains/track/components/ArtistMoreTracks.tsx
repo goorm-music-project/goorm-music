@@ -7,12 +7,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import { useRouter } from "next/navigation";
 
 type artistMoreTracksType = [
   {
     imageUrl: string;
     title: string;
     artists: string[];
+    trackId: string;
   }
 ];
 
@@ -20,6 +22,7 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
   const [tracks, setTracks] = useState<artistMoreTracksType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const route = useRouter();
 
   useEffect(() => {
     const fetchTracks = async () => {
@@ -61,6 +64,7 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
                 <SwiperSlide
                   key={track.imageUrl + track.title}
                   className="!w-[150px]"
+                  onClick={() => route.push(`/track/${track.trackId}`)}
                 >
                   <TrackCard
                     imageUrl={track.imageUrl}

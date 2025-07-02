@@ -25,6 +25,7 @@ export async function GET(
         imageUrl: track.album.images[0]?.url ?? "",
         title: track.name,
         artists: track.artists.map((artist: any) => artist.name),
+        trackId: track.id,
       }))
     );
   } catch (err: any) {
