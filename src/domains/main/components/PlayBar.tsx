@@ -1,6 +1,6 @@
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
-import PlaybarCover from "@/domains/playlist/components/PlaybarCover";
+import PlaybarCover from "@/domains/main/components/PlaybarCover";
 import PlayListModal from "@/domains/playlist/components/PlayListModal";
 import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
@@ -43,8 +43,8 @@ export default function PlayBar({
           {selectable && (
             <input
               type="checkbox"
-              className="w-[10vw] flex-none"
-              style={{ width: "auto" }}
+              className="flex-none"
+              style={{ width: "18px" }}
               onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
             />
           )}
