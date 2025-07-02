@@ -2,14 +2,15 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function GET(playlistId: string) {
+export async function GET(req: Request) {
   const cookieAwait = await cookies();
   const access_token = cookieAwait.get("access_token")?.value;
+  const { searchParams } = new URL(req.url);
+  const playlistId = searchParams.get("id");
 
   if (!access_token) {
     return new Response("No access_token", { status: 401 });
   }
-
   try {
     const res = await axios.get(
       `https://api.spotify.com/v1/playlists/${playlistId}`,

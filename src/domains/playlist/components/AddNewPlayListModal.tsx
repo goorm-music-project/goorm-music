@@ -9,7 +9,7 @@ interface Props {
   showModal: boolean;
   onClose: () => void;
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
-  track: string[];
+  track: string;
 }
 
 export default function AddNewPlayListModal({
@@ -55,12 +55,6 @@ export default function AddNewPlayListModal({
       const res = await fetch("/api/playlist/getPlaylist");
       const data = await res.json();
       setPlaylists(data);
-      // const playlistDetailRes = await fetch(
-      //   `/api/spotify/playlists/${playlistId}`
-      // );
-      // const playlistDetail = await playlistDetailRes.json();
-
-      // setPlaylists((prev) => [playlistDetail, ...prev]);
 
       setName("");
       setDescription("");

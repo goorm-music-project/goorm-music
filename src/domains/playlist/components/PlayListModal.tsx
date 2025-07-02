@@ -10,7 +10,7 @@ type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   onShowNewPlaylist: () => void;
-  track: string[];
+  track: string;
 };
 
 export default function PlayListModal({

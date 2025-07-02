@@ -3,16 +3,20 @@ import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
-  track: string[];
+  track: string;
 };
 export default function PlayList({ playlists, setPlaylists, track }: Props) {
+  const { userId } = userSpotifyStore();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!userId) return;
+
     const fetchPlaylists = async () => {
       setIsLoading(true);
       try {
@@ -30,6 +34,17 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
   }, []);
 
   const handleAddPlayList = async (playlistId: string) => {
+    const res = await fetch(`/api/playlist/getPlaylistDetail?id=${playlistId}`);
+    const detailData = await res.json();
+
+    const alreadyExists = detailData.tracks.items.some(
+      (item: { track: { uri: string } }) => item.track.uri === track
+    );
+    if (alreadyExists) {
+      alert("이미 해당 플레이리스트에 존재하는 곡입니다.");
+      return;
+    }
+
     try {
       setIsLoading(true);
       await fetch("/api/playlist/addTrack", {

@@ -34,7 +34,17 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <div>
-      <h1>나만의 플레이리스트를 만들어보세요.</h1>
+      {isLoggedIn ? (
+        <Link href="/playlist">
+          <h1 className="cursor-pointer hover:underline">
+            나만의 플레이리스트를 만들어보세요.
+          </h1>
+        </Link>
+      ) : (
+        <h1 className="cursor-not-allowed">
+          나만의 플레이리스트를 만들어보세요.
+        </h1>
+      )}
       <div className="w-[100vw]">
         <Swiper
           slidesPerView={"auto"}
@@ -63,6 +73,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
                       width={150}
                       height={150}
                     />
+                    <p className="truncate pt-1">{data.name}</p>
                   </div>
                 </Link>
               </SwiperSlide>
