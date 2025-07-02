@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+
 import { FaMusic, FaHome, FaUser } from "react-icons/fa";
 
 export default function BottomNavBar() {
