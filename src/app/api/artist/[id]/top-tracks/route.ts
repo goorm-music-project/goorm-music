@@ -1,7 +1,6 @@
 import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
-import { use } from "react";
 
 export async function GET(
   req: NextRequest,
