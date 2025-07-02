@@ -31,7 +31,7 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
     };
 
     fetchPlaylists();
-  }, []);
+  }, [setPlaylists, userId]);
 
   const handleAddPlayList = async (playlistId: string) => {
     const res = await fetch(`/api/playlist/getPlaylistDetail?id=${playlistId}`);
