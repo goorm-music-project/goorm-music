@@ -4,7 +4,7 @@ import PlaybarCover from "@/domains/main/components/PlaybarCover";
 import PlayListModal from "@/domains/playlist/components/PlayListModal";
 import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -27,6 +27,8 @@ export default function PlayBar({
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [selectTrack, setSelectTrack] = useState<string>("");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+
   const router = useRouter();
 
   const handleShowPlayList = () => {
@@ -35,6 +37,30 @@ export default function PlayBar({
   const handleShowNewPlayList = () => {
     setShowAddNewPlayListModal(true);
   };
+
+  useEffect(() => {
+    if (!tracks || tracks.length === 0) return;
+
+    const fetchLikedTracks = async () => {
+      const trackIds = tracks.map((t) => t.track.id);
+      try {
+        const res = await fetch(`/api/isLiked?trackId=${trackIds}`);
+        const result = await res.json();
+
+        const map: Record<string, boolean> = {};
+        trackIds.forEach((id, idx) => {
+          map[id] = result.data[idx];
+        });
+
+        setLikedMap(map);
+      } catch (err) {
+        console.error("좋아요 상태 가져오기 실패", err);
+      }
+    };
+
+    fetchLikedTracks();
+  }, [tracks]);
+
   return (
     <div>
       {tracks.map((item, idx) => (
@@ -70,6 +96,7 @@ export default function PlayBar({
               item={item}
               setSelectTrack={setSelectTrack}
               handleShowPlayList={handleShowPlayList}
+              likedMap={likedMap}
             />
           ) : null}
         </div>

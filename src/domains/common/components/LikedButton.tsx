@@ -1,31 +1,23 @@
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 
 interface LikedButtonProps {
   trackId: string;
   className?: string;
+  isLiked: boolean;
+  setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function LikedButton({
   trackId,
   className = "",
+  isLiked,
+  setIsLiked,
 }: LikedButtonProps) {
-  const [isLiked, setIsLiked] = useState(false);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const [showModal, setShowModal] = useState(false);
-
-  const fetchLikedTracks = useCallback(async () => {
-    if (!isLoggedIn) return;
-    try {
-      const res = await fetch(`/api/isLiked?trackId=${trackId}`);
-      const data = await res.json();
-      setIsLiked(data.data);
-    } catch (err) {
-      console.error("❌ 좋아요 눌렀는지 확인하기 실패", err);
-    }
-  }, [trackId]);
 
   const toggleLiked = async (
     e: React.MouseEvent<HTMLElement, MouseEvent>,
@@ -44,10 +36,6 @@ export default function LikedButton({
       body: JSON.stringify({ trackId, liked }),
     });
   };
-
-  useEffect(() => {
-    fetchLikedTracks();
-  }, [fetchLikedTracks]);
 
   return (
     <>

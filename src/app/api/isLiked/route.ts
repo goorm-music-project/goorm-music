@@ -19,7 +19,7 @@ export async function GET(req: Request) {
         headers: { Authorization: `Bearer ${access_token}` },
       }
     );
-    const data = res.data[0];
+    const data = await res.data;
 
     return NextResponse.json({ data });
   } catch (err: any) {
