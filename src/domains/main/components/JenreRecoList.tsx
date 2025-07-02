@@ -26,7 +26,8 @@ export default function JenreRecoList() {
       const genreArr = await getUserGenres(userId as string);
       const genre = genreArr[Math.floor(Math.random() * genreArr.length)];
       const res = await fetch(`/api/jenreRecoList?genre=${genre}`);
-      const data = await res.json();
+      const json = await res.json();
+      const data = json.slice(0, 10);
       setDatas(data);
     };
 

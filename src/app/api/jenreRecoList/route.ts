@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 
   try {
     const res = await axios.get(
-      `https://api.spotify.com/v1/search?q=genre:${genre}&type=track&limit=10`,
+      `https://api.spotify.com/v1/search?q=genre:${genre}&type=track`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
