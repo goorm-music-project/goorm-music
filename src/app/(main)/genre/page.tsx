@@ -3,7 +3,7 @@
 import { genreList } from "@/domains/common/constants/genre";
 import PlayBar from "@/domains/main/components/PlayBar";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -11,11 +11,10 @@ import "swiper/css/pagination";
 import { FreeMode } from "swiper/modules";
 
 export default function Page() {
-  const [isSelect, setIsSelect] = useState("");
+  const [isSelect, setIsSelect] = useState("발라드");
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
-  const handleClickGenre = async (genre: string) => {
-    setIsSelect(genre);
+  const fetchData = async (genre: string) => {
     const res = await fetch(`/api/jenreRecoList?genre=${genre}`);
     const json = await res.json();
 
@@ -33,9 +32,16 @@ export default function Page() {
         },
       }))
       .slice(0, 50);
-
     setDatas(data);
   };
+  const handleClickGenre = async (genre: string) => {
+    setIsSelect(genre);
+    fetchData(genre);
+  };
+
+  useEffect(() => {
+    fetchData(isSelect);
+  }, [isSelect]);
 
   return (
     <div>
