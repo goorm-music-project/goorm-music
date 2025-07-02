@@ -1,15 +1,14 @@
 "use client";
 import PlayBar from "@/domains/main/components/PlayBar";
+import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
+import PlayListEditBox from "@/domains/playlist/components/PlayListEditBox";
 import {
   PlaylistDetail,
   PlaylistItem,
 } from "@/domains/playlist/types/Playlist";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
-import { RiSave3Fill } from "react-icons/ri";
-import { TiPencil } from "react-icons/ti";
 
 export interface DeleteInfo {
   uri: string;
@@ -126,65 +125,22 @@ export default function Page() {
     <div>
       <h1>나의 플레이리스트</h1>
       {listData && (
-        <div className="flex flex-col gap-4 items-center">
-          <Image
-            src={listData.images?.[0]?.url || "/goorm_logo_blue.png"}
-            alt={listData.name}
-            width={200}
-            height={200}
-            className="rounded"
+        <div className="flex flex-col gap-2 items-center">
+          <PlayListDetailInfo
+            listData={listData}
+            setIsEdit={setIsEdit}
+            handlePlaylistDelBtn={handlePlaylistDelBtn}
           />
-          <div>
-            <button
-              className="text-2xl"
-              onClick={() => setIsEdit((prev) => !prev)}
-            >
-              <TiPencil />
-            </button>
-            <button className="text-2xl" onClick={handlePlaylistDelBtn}>
-              <MdDelete />
-            </button>
-          </div>
-          <div className="flex gap-4">
-            <div>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={!isEdit}
-                className="text-center"
-                style={{ border: isEdit ? "" : "none" }}
-              />
-              <input
-                type="text"
-                className=" text-center my-2"
-                name="description"
-                value={description}
-                disabled={!isEdit}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{ border: isEdit ? "" : "none" }}
-              />
-              <select
-                className="text-center"
-                name="public"
-                value={isPublic}
-                disabled={!isEdit}
-                onChange={(e) => setIsPublic(e.target.value)}
-                style={{
-                  appearance: isEdit ? "auto" : "none",
-                  border: isEdit ? "" : "none",
-                }}
-              >
-                <option value="true">공개</option>
-                <option value="false">비공개</option>
-              </select>
-            </div>
-            {isEdit ? (
-              <button className="text-2xl" onClick={handleEditPlaylist}>
-                <RiSave3Fill />
-              </button>
-            ) : null}
-          </div>
+          <PlayListEditBox
+            isEdit={isEdit}
+            name={name}
+            setName={setName}
+            description={description}
+            setDescription={setDescription}
+            isPublic={isPublic}
+            setIsPublic={setIsPublic}
+            handleEditPlaylist={handleEditPlaylist}
+          />
           <div className="w-full">
             <button
               className="text-2xl block ml-auto"
