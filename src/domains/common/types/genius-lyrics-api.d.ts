@@ -13,7 +13,20 @@ declare module "genius-lyrics-api" {
     artist: string;
     album?: string;
     lyrics?: string;
-    [key: string]: any; // 완전한 타입이 아니므로 확장 가능하게
+    release_date?: string;
+    featured_artists?: string[];
+    primary_artist?: {
+      id: number;
+      name: string;
+      url: string;
+    };
+    stats?: {
+      pageviews?: number;
+      hot?: boolean;
+    };
+    thumbnail?: string;
+    image?: string;
+    [key: string]: unknown;
   }
 
   export function getLyrics(options: Options): Promise<string | null>;

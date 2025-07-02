@@ -1,5 +1,5 @@
 import { getAccessToken } from "@/domains/common/lib/getAccessToken";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 type SpotifyTrack = {
@@ -35,15 +35,21 @@ export async function GET(
       tracks.map((track) => ({
         imageUrl: track.album.images[0]?.url ?? "",
         title: track.name,
-        artists: track.artists.map((artist: any) => artist.name),
+        artists: track.artists.map((artist) => artist.name),
         trackId: track.id,
       }))
     );
-  } catch (err: any) {
-    console.error(
-      "아티스트 Top 트랙 조회 실패: ",
-      err.response?.data || err.message
-    );
+  } catch (err) {
+    if (err instanceof AxiosError) {
+      console.error(
+        "아티스트 Top 트랙 조회 실패: ",
+        err.response?.data || err.message
+      );
+    } else if (err instanceof Error) {
+      console.error("아티스트 Top 트랙 조회 실패: ", err.message);
+    } else {
+      console.error("아티스트 Top 트랙 조회 실패: 알 수 없는 에러");
+    }
     return NextResponse.json(
       { error: "아티스트 Top 트랙 조회 실패" },
       { status: 500 }

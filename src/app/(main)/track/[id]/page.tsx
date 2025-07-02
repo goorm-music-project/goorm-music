@@ -32,8 +32,12 @@ export default function TrackDetailPage() {
         if (!res.ok) throw new Error("트랙 상세 정보 불러오기 실패");
         const data = await res.json();
         setTrack(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("알 수 없는 오류가 발생했습니다");
+        }
       } finally {
         setLoading(false);
       }
