@@ -1,0 +1,27 @@
+"use client";
+import PlayBar from "@/domains/main/components/PlayBar";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
+export default function Page() {
+  const params = useSearchParams();
+  const query = params.get("query") || "";
+  const [datas, setDatas] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `/api/search/track?searchText=${encodeURIComponent(query)}`
+      );
+      const json = await res.json();
+      setDatas(json);
+    };
+    fetchData();
+  }, [query]);
+  return (
+    <div>
+      <h2>더 많은 곡을 감상하세요.</h2>
+      <div>{datas && <PlayBar tracks={datas} />}</div>
+    </div>
+  );
+}

@@ -4,6 +4,7 @@ import AlertModal from "@/domains/common/components/AlertModal";
 import ConfirmModal from "@/domains/common/components/ConfirmModal";
 import PlayBar from "@/domains/main/components/PlayBar";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -86,7 +87,9 @@ export default function Page() {
       </div>
 
       <div className="mt-2">
-        <h2 className="my-2">곡</h2>
+        <Link href={`/search/tracks?query=${encodeURIComponent(query)}`}>
+          <h2 className="my-2 cursor-pointer hover:underline">곡</h2>
+        </Link>
         <div className="h-[30vh] overflow-y-auto">
           {data?.tracks && <PlayBar tracks={data.tracks} />}
         </div>
@@ -97,14 +100,10 @@ export default function Page() {
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
             data.albums?.items?.map((item: any) => (
-              <div key={item.id} className="w-[100px] h-[100px]">
-                <Image
-                  src={item.images[0]?.url}
-                  alt={item.name}
-                  width={100}
-                  height={100}
-                  style={{ height: "100%" }}
-                />
+              <div key={item.id} className="w-[100px] h-[120px]">
+                <div className="h-[100px] relative">
+                  <Image src={item.images[0]?.url} alt={item.name} fill />
+                </div>
                 <p className="truncate">{item.name}</p>
               </div>
             ))}
@@ -120,20 +119,20 @@ export default function Page() {
               .map((item: any) => (
                 <div
                   key={item?.id}
-                  className="w-[100px] h-[100px] pointer"
+                  className="w-[100px] h-[120px] pointer"
                   onClick={() => handleFollow(item?.id)}
                 >
-                  <Image
-                    src={
-                      item?.images?.length > 0
-                        ? item.images[0].url
-                        : "/goorm_logo_blue.png"
-                    }
-                    alt={item?.name}
-                    width={100}
-                    height={100}
-                    style={{ height: "100%" }}
-                  />
+                  <div className="h-[100px] relative">
+                    <Image
+                      src={
+                        item?.images?.length > 0
+                          ? item.images[0].url
+                          : "/goorm_logo_blue.png"
+                      }
+                      alt={item?.name}
+                      fill
+                    />
+                  </div>
                   <p className="truncate">{item?.name}</p>
                 </div>
               ))}
