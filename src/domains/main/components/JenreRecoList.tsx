@@ -1,6 +1,5 @@
 "use client";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import { getUserGenres } from "@/domains/select-genre/lib/getUserGenres";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,7 +22,13 @@ export default function JenreRecoList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const genreArr = await getUserGenres(userId as string);
+      const genreRes = await fetch("/api/getGenres", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const genreData = await genreRes.json();
+      const genreArr = genreData.genres;
       const genre = genreArr[Math.floor(Math.random() * genreArr.length)];
       const res = await fetch(`/api/jenreRecoList?genre=${genre}`);
       const json = await res.json();
