@@ -1,5 +1,6 @@
 "use client";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
+  const { userId } = userSpotifyStore();
   const [listData, setListData] = useState<Playlist[]>([]);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
@@ -27,7 +29,8 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
     const fetchData = async () => {
       const res = await fetch("/api/playlist/getPlaylist");
       const data = await res.json();
-      setListData(data);
+      const myPlaylist = data.filter((v) => v.owner.id === userId);
+      setListData(myPlaylist);
     };
     fetchData();
   }, [isLoggedIn]);

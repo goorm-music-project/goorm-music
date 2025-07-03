@@ -1,17 +1,20 @@
 "use client";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Page() {
+  const { userId } = userSpotifyStore();
   const [listData, setListData] = useState<Playlist[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch("/api/playlist/getPlaylist");
       const data = await res.json();
-      setListData(data);
+      const myPlaylist = data.filter((v) => v.owner.id === userId);
+      setListData(myPlaylist);
     };
     fetchData();
   }, []);
