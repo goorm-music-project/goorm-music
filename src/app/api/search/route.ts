@@ -20,14 +20,21 @@ export async function GET(req: Request) {
     const res = await axios.get(
       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
         query
-      )}&type=track,artist,album&limit=10`,
+      )}&type=track,artist,album,playlist&limit=10`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
       }
     );
-    const data = res.data;
+    const json = res.data;
+    const formatted = json.tracks?.items.map((v: any) => ({
+      track: v,
+    }));
+    const data = {
+      ...json,
+      tracks: formatted,
+    };
     return NextResponse.json(data);
   } catch (err) {
     console.log("검색 오류", err);
