@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
-import PlayListModal from "@/domains/playlist/components/PlayListModal";
-import { Playlist } from "@/domains/playlist/types/Playlist";
-import PlaylistBar from "@/domains/search/components/PlaylistBar";
+import PlayBar from "@/domains/main/components/PlayBar";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -14,18 +11,6 @@ export default function Page() {
   const query = params.get("params") || "";
   const [data, setData] = useState<any>([]);
   const [isLoading, setisLoading] = useState(false);
-  const [showPlayListModal, setShowPlayListModal] = useState(false);
-  const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
-  const [selectTrack, setSelectTrack] = useState<string>("");
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
-
-  const handleShowPlaylist = () => {
-    setShowPlayListModal(true);
-  };
-
-  const handleShowNewPlayList = () => {
-    setShowAddNewPlayListModal(true);
-  };
 
   const handleFollow = async (id: number) => {
     const ok = confirm("해당 플레이리스트를 팔로우 하시겠습니까?");
@@ -90,15 +75,7 @@ export default function Page() {
       <div className="mt-2">
         <h2 className="my-2">곡</h2>
         <div className="h-[30vh] overflow-y-auto">
-          {data &&
-            data.tracks?.items?.map((item: any) => (
-              <PlaylistBar
-                key={item.id}
-                item={item}
-                handleShowPlaylist={handleShowPlaylist}
-                setSelectTrack={setSelectTrack}
-              />
-            ))}
+          {data?.tracks && <PlayBar tracks={data.tracks} />}
         </div>
       </div>
 
@@ -114,21 +91,6 @@ export default function Page() {
             ))}
         </div>
       </div>
-      <PlayListModal
-        showModal={showPlayListModal}
-        onClose={() => setShowPlayListModal(false)}
-        playlists={playlists}
-        setPlaylists={setPlaylists}
-        onShowNewPlaylist={() => handleShowNewPlayList()}
-        track={selectTrack}
-      />
-
-      <AddNewPlayListModal
-        showModal={showAddNewPlayListModal}
-        onClose={() => setShowAddNewPlayListModal(false)}
-        setPlaylists={setPlaylists}
-        track={selectTrack}
-      />
 
       <div className="mt-2">
         <h2 className="my-2">플레이리스트</h2>
