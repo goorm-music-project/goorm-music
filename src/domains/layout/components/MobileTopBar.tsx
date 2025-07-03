@@ -1,5 +1,7 @@
 "use client";
 
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,6 +9,8 @@ import { FormEvent, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 export default function MobileTopBar() {
+  const { userId } = userSpotifyStore();
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
 
@@ -14,6 +18,10 @@ export default function MobileTopBar() {
     e.preventDefault();
 
     if (!searchText.trim()) return;
+    if (userId === "") {
+      setShowLoginModal(true);
+      return;
+    }
 
     router.push(`/search?params=${encodeURIComponent(searchText)}`);
   };
@@ -46,6 +54,10 @@ export default function MobileTopBar() {
           <FaSearch className="text-(--primary-blue)" />
         </button>
       </form>
+      <SuggestLoginModal
+        showModal={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
   );
 }
