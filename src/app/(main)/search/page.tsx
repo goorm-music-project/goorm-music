@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
+import AlertModal from "@/domains/common/components/AlertModal";
+import ConfirmModal from "@/domains/common/components/ConfirmModal";
 import PlayBar from "@/domains/main/components/PlayBar";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -11,10 +12,20 @@ export default function Page() {
   const query = params.get("params") || "";
   const [data, setData] = useState<any>([]);
   const [isLoading, setisLoading] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [followId, setFollowId] = useState<number | null>(null);
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleFollow = async (id: number) => {
-    const ok = confirm("해당 플레이리스트를 팔로우 하시겠습니까?");
-    if (!ok) return;
+    setMessage("Follow 하시겠습니까?");
+    setFollowId(id);
+    setShowConfirmModal(true);
+  };
+
+  const confirmFollow = async () => {
+    if (!followId) return;
+
     try {
       await fetch("/api/follow", {
         method: "PUT",
@@ -22,10 +33,11 @@ export default function Page() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id,
+          id: followId,
         }),
       });
-      alert("팔로우 추가");
+      setMessage("Follow가 완료되었습니다.");
+      setShowAlertModal(true);
     } catch (err) {
       console.log("팔로우 추가 오류", err);
     }
@@ -33,6 +45,7 @@ export default function Page() {
 
   useEffect(() => {
     if (!query) return;
+
     const fetchData = async () => {
       try {
         setisLoading(true);
@@ -84,8 +97,14 @@ export default function Page() {
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
             data.albums?.items?.map((item: any) => (
-              <div key={item.id} className="w-[100px] h-[120px] relative">
-                <Image src={item.images[0]?.url} alt={item.name} fill />
+              <div key={item.id} className="w-[100px] h-[100px]">
+                <Image
+                  src={item.images[0]?.url}
+                  alt={item.name}
+                  width={100}
+                  height={100}
+                  style={{ height: "100%" }}
+                />
                 <p className="truncate">{item.name}</p>
               </div>
             ))}
@@ -101,7 +120,7 @@ export default function Page() {
               .map((item: any) => (
                 <div
                   key={item?.id}
-                  className="w-[100px] h-[120px] pointer"
+                  className="w-[100px] h-[100px] pointer"
                   onClick={() => handleFollow(item?.id)}
                 >
                   <Image
@@ -113,11 +132,23 @@ export default function Page() {
                     alt={item?.name}
                     width={100}
                     height={100}
+                    style={{ height: "100%" }}
                   />
                   <p className="truncate">{item?.name}</p>
                 </div>
               ))}
         </div>
+        <ConfirmModal
+          showModal={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+          confirmFollow={confirmFollow}
+          message={message}
+        />
+        <AlertModal
+          showModal={showAlertModal}
+          onClose={() => setShowAlertModal(false)}
+          message={message}
+        />
       </div>
     </div>
   );
