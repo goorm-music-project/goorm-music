@@ -6,12 +6,14 @@ interface Props {
   onClose: () => void;
   confirmFollow: () => void;
   message: string;
+  isLoading: boolean;
 }
 export default function ConfirmModal({
   showModal,
   onClose,
   confirmFollow,
   message,
+  isLoading,
 }: Props) {
   return (
     <Modal showModal={showModal} onClose={onClose}>
@@ -22,12 +24,16 @@ export default function ConfirmModal({
             className="primaryBtn px-5 py-1.5 mr-2"
             onClick={() => {
               confirmFollow();
-              onClose();
             }}
+            disabled={isLoading}
           >
-            예
+            {isLoading ? "처리 중...." : "예"}
           </button>
-          <button className="errorBtn px-5 py-1.5" onClick={onClose}>
+          <button
+            className="errorBtn px-5 py-1.5"
+            onClick={onClose}
+            disabled={isLoading}
+          >
             취소
           </button>
         </div>

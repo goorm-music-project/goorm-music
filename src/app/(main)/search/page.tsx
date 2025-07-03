@@ -13,6 +13,7 @@ export default function Page() {
   const query = params.get("params") || "";
   const [data, setData] = useState<any>([]);
   const [isLoading, setisLoading] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [followId, setFollowId] = useState<number | null>(null);
   const [showAlertModal, setShowAlertModal] = useState(false);
@@ -26,7 +27,7 @@ export default function Page() {
 
   const confirmFollow = async () => {
     if (!followId) return;
-
+    setConfirmLoading(true);
     try {
       await fetch("/api/follow", {
         method: "PUT",
@@ -38,10 +39,12 @@ export default function Page() {
         }),
       });
       setMessage("Follow가 완료되었습니다.");
+      setShowConfirmModal(false);
       setShowAlertModal(true);
     } catch (err) {
       console.log("팔로우 추가 오류", err);
     }
+    setConfirmLoading(false);
   };
 
   useEffect(() => {
@@ -142,6 +145,7 @@ export default function Page() {
           onClose={() => setShowConfirmModal(false)}
           confirmFollow={confirmFollow}
           message={message}
+          isLoading={confirmLoading}
         />
         <AlertModal
           showModal={showAlertModal}
