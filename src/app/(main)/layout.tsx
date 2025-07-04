@@ -6,12 +6,16 @@ import InitUserIdState from "@/domains/common/components/InitUserIdState";
 import { useEffect } from "react";
 import axios from "axios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import MiniPlayer from "@/domains/layout/components/MiniPlayer";
+import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { selectedTrackId } = usePlayerSotre();
+
   useEffect(() => {
     const tryRefresh = async () => {
       const res = await fetch("/api/refresh-token", { method: "POST" });
@@ -34,11 +38,16 @@ export default function MainLayout({
   }, []);
 
   return (
-    <div className="min-h-screen relative pb-16">
+    <div className="min-h-screen relative">
       <MobileTopBar />
-      <div className="w-full p-4 fixed left-0 top-16 h-[86vh] overflow-y-auto overflow-x-hidden">
+      <div
+        className={`w-full p-4 fixed left-0 top-16 overflow-y-auto overflow-x-hidden ${
+          selectedTrackId ? "h-[calc(86vh-80px)]" : "h-[86vh]"
+        }`}
+      >
         {children}
       </div>
+      <MiniPlayer />
       <BottomNavBar />
       <InitUserIdState />
     </div>
