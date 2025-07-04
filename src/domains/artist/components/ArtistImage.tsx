@@ -24,7 +24,7 @@ export default function ArtistImage({ artistId }: Props) {
   }, [artistId]);
 
   return (
-    <div className="h-[350px] border relative">
+    <div className="h-[350px] relative">
       {artistData && (
         <>
           <div

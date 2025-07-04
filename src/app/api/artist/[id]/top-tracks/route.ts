@@ -17,6 +17,9 @@ export async function GET(
 ) {
   const { id } = await params;
   const artistId = id;
+  const url = new URL(req.url);
+  const mode = url.searchParams.get("mode");
+
   try {
     const token = await getAccessToken();
     const res = await axios.get(
@@ -31,14 +34,18 @@ export async function GET(
 
     const tracks = res.data.tracks as SpotifyTrack[];
 
-    return NextResponse.json(
-      tracks.map((track) => ({
-        imageUrl: track.album.images[0]?.url ?? "",
-        title: track.name,
-        artists: track.artists.map((artist) => artist.name),
-        trackId: track.id,
-      }))
-    );
+    if (mode === "allData") {
+      return NextResponse.json(res.data.tracks);
+    } else {
+      return NextResponse.json(
+        tracks.map((track) => ({
+          imageUrl: track.album.images[0]?.url ?? "",
+          title: track.name,
+          artists: track.artists.map((artist) => artist.name),
+          trackId: track.id,
+        }))
+      );
+    }
   } catch (err) {
     if (err instanceof AxiosError) {
       console.error(
