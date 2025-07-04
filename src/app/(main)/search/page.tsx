@@ -105,7 +105,12 @@ export default function Page() {
             data.albums?.items?.map((item: any) => (
               <div key={item.id} className="w-[100px] h-[120px]">
                 <div className="h-[100px] relative">
-                  <Image src={item.images[0]?.url} alt={item.name} fill />
+                  <Image
+                    src={item.images[0]?.url}
+                    alt={item.name}
+                    fill
+                    sizes="100px"
+                  />
                 </div>
                 <p className="truncate">{item.name}</p>
               </div>
@@ -134,6 +139,7 @@ export default function Page() {
                       }
                       alt={item?.name}
                       fill
+                      sizes="100px"
                     />
                   </div>
                   <p className="truncate">{item?.name}</p>
