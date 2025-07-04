@@ -4,6 +4,8 @@ import AlertModal from "@/domains/common/components/AlertModal";
 import CardComponent from "@/domains/common/components/CardComponent";
 import ConfirmModal from "@/domains/common/components/ConfirmModal";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,8 +22,14 @@ export default function Page() {
   const [followId, setFollowId] = useState<number | null>(null);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [message, setMessage] = useState("");
+  const { userId } = userSpotifyStore();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleFollow = async (id: number) => {
+    if (userId === "") {
+      setShowLoginModal(true);
+      return;
+    }
     setMessage("Follow 하시겠습니까?");
     setFollowId(id);
     setShowConfirmModal(true);
@@ -141,6 +149,11 @@ export default function Page() {
           showModal={showAlertModal}
           onClose={() => setShowAlertModal(false)}
           message={message}
+        />
+
+        <SuggestLoginModal
+          showModal={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
         />
       </div>
     </div>
