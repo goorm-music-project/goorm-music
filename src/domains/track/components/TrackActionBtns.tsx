@@ -4,6 +4,7 @@ import { FaPlay } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import LikedButton from "@/domains/common/components/LikedButton";
 import { useEffect, useState } from "react";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 interface TrackActionBtnsProps {
   trackId: string;
@@ -11,10 +12,10 @@ interface TrackActionBtnsProps {
 
 export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   useEffect(() => {
-    if (!trackId) return;
-
     const fetchLikedTracks = async () => {
+      if (!trackId || !isLoggedIn) return;
       try {
         const res = await fetch(`/api/isLiked?trackId=${trackId}`);
         const result = await res.json();
