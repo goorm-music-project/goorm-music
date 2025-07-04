@@ -33,9 +33,11 @@ export async function POST(req: NextRequest) {
 
     const ONE_HOUR = 60 * 60;
 
+    const isDev = process.env.NODE_ENV === "development";
+
     response.cookies.set("access_token", access_token, {
       httpOnly: true,
-      secure: true,
+      secure: !isDev,
       path: "/",
       maxAge: expires_in || ONE_HOUR,
       sameSite: "lax",
@@ -43,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     response.cookies.set("refresh_token", refresh_token, {
       httpOnly: true,
-      secure: true,
+      secure: !isDev,
       path: "/",
       maxAge: ONE_HOUR * 24 * 30,
       sameSite: "lax",
