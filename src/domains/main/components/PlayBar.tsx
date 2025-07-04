@@ -6,6 +6,7 @@ import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 
 interface Props {
   tracks: PlaylistItem[];
@@ -28,8 +29,13 @@ export default function PlayBar({
   const [selectTrack, setSelectTrack] = useState<string>("");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-
   const router = useRouter();
+  const { setSelectedTrackId } = usePlayerSotre();
+
+  const handleClickTrack = (trackId: string) => {
+    setSelectedTrackId(trackId);
+    router.push(`/track/${trackId}`);
+  };
 
   const handleShowPlayList = () => {
     setShowPlayListModal(true);
@@ -67,7 +73,7 @@ export default function PlayBar({
         <div
           key={`${item.track.id}_${idx}`}
           className="relative p-2 hover:bg-(--primary-blue-hover) group flex gap-2"
-          onClick={() => router.push(`/track/${item.track.id}`)}
+          onClick={() => handleClickTrack(item.track.id)}
         >
           {selectable && (
             <input
