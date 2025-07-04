@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import AlertModal from "@/domains/common/components/AlertModal";
 import CardComponent from "@/domains/common/components/CardComponent";
-import ConfirmModal from "@/domains/common/components/ConfirmModal";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
+import FollowPlaylistModal from "@/domains/playlist/components/FollowPlaylistModal";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -15,46 +14,23 @@ import React, { useEffect, useState } from "react";
 export default function Page() {
   const params = useSearchParams();
   const query = params.get("params") || "";
+  const { userId } = userSpotifyStore();
   const [data, setData] = useState<any>([]);
   const [isLoading, setisLoading] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [followId, setFollowId] = useState<number | null>(null);
-  const [showAlertModal, setShowAlertModal] = useState(false);
-  const [message, setMessage] = useState("");
-  const { userId } = userSpotifyStore();
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const handleFollow = async (id: number) => {
+  const [followId, setFollowId] = useState<number | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showFollowList, setShowFollowList] = useState(false);
+
+  const handleFollowPlaylist = async (id: number) => {
     if (userId === "") {
       setShowLoginModal(true);
       return;
     }
-    setMessage("Follow 하시겠습니까?");
+    setShowFollowList(true);
     setFollowId(id);
-    setShowConfirmModal(true);
-  };
-
-  const confirmFollow = async () => {
-    if (!followId) return;
-    setConfirmLoading(true);
-    try {
-      await fetch("/api/follow", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: followId,
-        }),
-      });
-      setMessage("Follow가 완료되었습니다.");
-      setShowConfirmModal(false);
-      setShowAlertModal(true);
-    } catch (err) {
-      console.log("팔로우 추가 오류", err);
-    }
-    setConfirmLoading(false);
+    // setMessage("Follow 하시겠습니까?");
+    // setShowConfirmModal(true);
   };
 
   useEffect(() => {
@@ -120,7 +96,7 @@ export default function Page() {
                 <div
                   key={item?.id}
                   className="w-[150px] h-[150px] pointer"
-                  onClick={() => handleFollow(item?.id)}
+                  onClick={() => handleFollowPlaylist(item?.id)}
                 >
                   <div className="h-[130px] relative">
                     <Image
@@ -138,22 +114,15 @@ export default function Page() {
                 </div>
               ))}
         </div>
-        <ConfirmModal
-          showModal={showConfirmModal}
-          onClose={() => setShowConfirmModal(false)}
-          confirmFollow={confirmFollow}
-          message={message}
-          isLoading={confirmLoading}
-        />
-        <AlertModal
-          showModal={showAlertModal}
-          onClose={() => setShowAlertModal(false)}
-          message={message}
-        />
 
         <SuggestLoginModal
           showModal={showLoginModal}
           onClose={() => setShowLoginModal(false)}
+        />
+        <FollowPlaylistModal
+          showModal={showFollowList}
+          onClose={() => setShowFollowList(false)}
+          followId={followId}
         />
       </div>
     </div>

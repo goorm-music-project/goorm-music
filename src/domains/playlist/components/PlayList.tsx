@@ -1,9 +1,9 @@
 "use client";
-import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import PlayListBox from "./PlayListBox";
 
 type Props = {
   playlists: Playlist[];
@@ -58,7 +58,8 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
 
       //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
       const res = await fetch("/api/playlist/getPlaylist");
-      const data = await res.json();
+      const json = await res.json();
+      const data = json.filter((v) => v.owner.id === userId);
       setPlaylists(data);
     } catch (err) {
       console.log("플리 추가 오류 ", err);
@@ -72,23 +73,11 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {playlists.map((playlist) => (
-        <div
+        <PlayListBox
           key={playlist.id}
-          className="flex gap-4 p-2 rounded border border-(--gray) cursor-pointer hover:bg-(--primary-blue-hover)"
-          onClick={() => handleAddPlayList(playlist.id)}
-        >
-          <Image
-            src={playlist.images?.[0]?.url || "/goorm_logo_blue.png"}
-            alt={playlist.name}
-            width={100}
-            height={100}
-            className="rounded"
-          />
-          <div className="place-content-center">
-            <h3>{playlist.name}</h3>
-            <p>{playlist.tracks.total} 곡</p>
-          </div>
-        </div>
+          playlist={playlist}
+          handleAddPlayList={handleAddPlayList}
+        />
       ))}
     </div>
   );
