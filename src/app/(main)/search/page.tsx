@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import AlertModal from "@/domains/common/components/AlertModal";
+import CardComponent from "@/domains/common/components/CardComponent";
 import ConfirmModal from "@/domains/common/components/ConfirmModal";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import PlayBar from "@/domains/main/components/PlayBar";
 import Image from "next/image";
 import Link from "next/link";
@@ -67,25 +69,17 @@ export default function Page() {
     fetchData();
   }, [query]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div>
       <div>
         <h2 className="mb-2">대표 아티스트</h2>
-        <div className="h-[15vh] overflow-y-auto">
+        <div className="h-[17vh] overflow-y-auto">
           {data &&
-            data.artists?.items?.slice(0, 1).map((item: any) => (
-              <div key={item.id}>
-                <Image
-                  src={item.images[0]?.url}
-                  alt={item.name}
-                  width={100}
-                  height={100}
-                />
-                <p className="truncate">{item.name}</p>
-              </div>
-            ))}
+            data.artists?.items
+              ?.slice(0, 1)
+              .map((item: any) => <CardComponent key={item.id} item={item} />)}
         </div>
       </div>
 
@@ -103,17 +97,7 @@ export default function Page() {
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
             data.albums?.items?.map((item: any) => (
-              <div key={item.id} className="w-[100px] h-[120px]">
-                <div className="h-[100px] relative">
-                  <Image
-                    src={item.images[0]?.url}
-                    alt={item.name}
-                    fill
-                    sizes="100px"
-                  />
-                </div>
-                <p className="truncate">{item.name}</p>
-              </div>
+              <CardComponent key={item.id} item={item} />
             ))}
         </div>
       </div>
@@ -127,10 +111,10 @@ export default function Page() {
               .map((item: any) => (
                 <div
                   key={item?.id}
-                  className="w-[100px] h-[120px] pointer"
+                  className="w-[150px] h-[150px] pointer"
                   onClick={() => handleFollow(item?.id)}
                 >
-                  <div className="h-[100px] relative">
+                  <div className="h-[130px] relative">
                     <Image
                       src={
                         item?.images?.length > 0
@@ -139,7 +123,7 @@ export default function Page() {
                       }
                       alt={item?.name}
                       fill
-                      sizes="100px"
+                      sizes="150px"
                     />
                   </div>
                   <p className="truncate">{item?.name}</p>
