@@ -1,7 +1,8 @@
 "use client";
+import CardComponent from "@/domains/common/components/CardComponent";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { Playlist } from "@/domains/playlist/types/Playlist";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
+  const { userId } = userSpotifyStore();
   const [listData, setListData] = useState<Playlist[]>([]);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
@@ -27,7 +29,8 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
     const fetchData = async () => {
       const res = await fetch("/api/playlist/getPlaylist");
       const data = await res.json();
-      setListData(data);
+      const myPlaylist = data.filter((v) => v.owner.id === userId);
+      setListData(myPlaylist);
     };
     fetchData();
   }, [isLoggedIn]);
@@ -66,15 +69,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
             listData.map((data) => (
               <SwiperSlide key={data.id} style={{ width: "150px" }}>
                 <Link href={`/playlist/${data.id}`}>
-                  <div>
-                    <Image
-                      src={data.images?.[0]?.url || "/goorm_logo_blue.png"}
-                      alt={data.name}
-                      width={150}
-                      height={150}
-                    />
-                    <p className="truncate pt-1">{data.name}</p>
-                  </div>
+                  <CardComponent key={data.id} item={data} />
                 </Link>
               </SwiperSlide>
             ))

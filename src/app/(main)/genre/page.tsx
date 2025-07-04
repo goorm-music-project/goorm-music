@@ -15,7 +15,7 @@ export default function Page() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
   const fetchData = async (genre: string) => {
-    const res = await fetch(`/api/jenreRecoList?genre=${genre}`);
+    const res = await fetch(`/api/getGenreList?genre=${genre}`);
     const json = await res.json();
 
     const data = json

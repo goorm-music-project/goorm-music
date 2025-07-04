@@ -1,5 +1,4 @@
 "use client";
-
 import RecoListWrapper from "@/domains/main/components/RecoListWrapper";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import MyPlayList from "@/domains/main/components/MyPlayList";
