@@ -42,7 +42,7 @@ export default function MainLayout({
       <MobileTopBar />
       <div
         className={`w-full p-4 fixed left-0 top-16 overflow-y-auto overflow-x-hidden ${
-          selectedTrackId ? "h-[calc(86vh-100px)]" : "h-[86vh]"
+          selectedTrackId ? "h-[calc(86vh-80px)]" : "h-[86vh]"
         }`}
       >
         {children}
