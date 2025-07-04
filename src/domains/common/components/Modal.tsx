@@ -22,7 +22,7 @@ export default function Modal({ showModal, onClose, children }: ModalProps) {
   }, [showModal, onClose, dialog]);
 
   return (
-    <dialog ref={dialogRef} className="relative rounded m-auto">
+    <dialog ref={dialogRef} className="relative rounded m-auto w-[90%]">
       <button className="absolute right-3 top-3" onClick={onClose}>
         <FaX />
       </button>

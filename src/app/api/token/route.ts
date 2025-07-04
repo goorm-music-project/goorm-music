@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const code = body.code;
 
   const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!;
-  const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET!;
+  const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
   const redirect_uri = "http://127.0.0.1:3000/callback";
   const payload = new URLSearchParams({
     grant_type: "authorization_code",
@@ -33,9 +33,11 @@ export async function POST(req: NextRequest) {
 
     const ONE_HOUR = 60 * 60;
 
+    const isDev = process.env.NODE_ENV === "development";
+
     response.cookies.set("access_token", access_token, {
       httpOnly: true,
-      secure: true,
+      secure: !isDev,
       path: "/",
       maxAge: expires_in || ONE_HOUR,
       sameSite: "lax",
@@ -43,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     response.cookies.set("refresh_token", refresh_token, {
       httpOnly: true,
-      secure: true,
+      secure: !isDev,
       path: "/",
       maxAge: ONE_HOUR * 24 * 30,
       sameSite: "lax",
