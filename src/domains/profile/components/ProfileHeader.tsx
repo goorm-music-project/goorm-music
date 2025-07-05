@@ -1,22 +1,14 @@
-// src/domains/profile/components/ProfileHeader.tsx
+"use client";
+import { useProfileStore } from "../stores/useProfileStore";
 
-import { Profile } from "../types/Profile";
+export default function ProfileHeader() {
+  const profile = useProfileStore((s) => s.profile);
 
-interface ProfileHeaderProps {
-  profile: Profile;
-  onEditProfile?: () => void;
-  onFollowToggle?: () => void;
-}
+  if (!profile) return null;
 
-export default function ProfileHeader({
-  profile,
-  onEditProfile,
-  onFollowToggle,
-}: ProfileHeaderProps) {
   return (
     <div className="flex flex-col items-center py-8 bg-gradient-to-b from-blue-50 to-white rounded-b-2xl">
       <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden mb-4">
-        {/* 프로필 이미지 */}
         {profile.profileImageUrl ? (
           <img
             src={profile.profileImageUrl}
@@ -47,14 +39,9 @@ export default function ProfileHeader({
           <div className="text-xs text-gray-500">팔로잉</div>
         </div>
       </div>
-      {/* 프로필 소개 */}
       <div className="mt-4 text-gray-700">{profile.bio}</div>
-      {/* 내 프로필일 때만 편집 버튼 */}
       {profile.isMe ? (
-        <button
-          className="mt-4 px-5 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600"
-          onClick={onEditProfile}
-        >
+        <button className="mt-4 px-5 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600">
           프로필 편집
         </button>
       ) : (
@@ -66,7 +53,6 @@ export default function ProfileHeader({
                 : "bg-blue-500 text-white border-blue-500 hover:bg-blue-600"
             }
           `}
-          onClick={onFollowToggle}
         >
           {profile.isFollowing ? "팔로우 취소" : "팔로우"}
         </button>

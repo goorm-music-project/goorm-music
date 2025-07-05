@@ -1,59 +1,43 @@
-// src/domains/profile/components/PlaylistList.tsx
+"use client";
+import { useProfileStore } from "../stores/useProfileStore";
 
-import { Playlist } from "../types/Playlist";
+export default function PlaylistList() {
+  const playlists = useProfileStore((s) => s.playlists);
 
-interface PlaylistListProps {
-  playlists: Playlist[];
-}
-
-export default function PlaylistList({ playlists }: PlaylistListProps) {
-  if (playlists.length === 0) {
+  if (!playlists || playlists.length === 0) {
     return (
-      <div className="text-gray-500 py-8 text-center">
+      <div className="py-8 text-center text-gray-500">
         플레이리스트가 없습니다.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="space-y-4">
       {playlists.map((playlist) => (
         <div
           key={playlist.id}
-          className="flex items-center bg-white rounded-xl shadow px-4 py-3 justify-between"
+          className="flex items-center p-4 border rounded-lg hover:shadow-md bg-white"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-lg bg-gray-200 overflow-hidden flex items-center justify-center">
-              {playlist.coverImageUrl ? (
-                <img
-                  src={playlist.coverImageUrl}
-                  alt={playlist.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-400 text-2xl">🎵</span>
-              )}
-            </div>
-            <div>
-              <div className="font-semibold">{playlist.name}</div>
-              <div className="text-gray-500 text-sm">
-                {playlist.description}
-              </div>
-              <div className="text-gray-400 text-xs mt-1">
-                {playlist.trackCount}곡
-              </div>
+          <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mr-4 overflow-hidden">
+            {playlist.coverImageUrl ? (
+              <img
+                src={playlist.coverImageUrl}
+                alt={playlist.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-gray-400 text-2xl">🎵</span>
+            )}
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold">{playlist.name}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {playlist.description}
             </div>
           </div>
-          <div>
-            {playlist.isPublic ? (
-              <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
-                공개
-              </span>
-            ) : (
-              <span className="text-xs px-2 py-1 bg-gray-200 text-gray-500 rounded-full">
-                비공개
-              </span>
-            )}
+          <div className="text-xs text-gray-400 ml-4">
+            {playlist.trackCount}곡
           </div>
         </div>
       ))}

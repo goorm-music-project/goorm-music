@@ -7,4 +7,5 @@ export interface Track {
   albumCoverUrl: string | null;
   duration: number; // 초 단위(예: 220 = 3:40)
   isLiked: boolean;
+  coverImageUrl?: string;
 }

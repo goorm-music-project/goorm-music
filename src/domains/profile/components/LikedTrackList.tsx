@@ -1,57 +1,42 @@
-// src/domains/profile/components/LikedTrackList.tsx
+"use client";
+import { useProfileStore } from "../stores/useProfileStore";
 
-import { Track } from "../types/Track";
+export default function LikedTrackList() {
+  const likedTracks = useProfileStore((s) => s.likedTracks);
 
-interface LikedTrackListProps {
-  tracks: Track[];
-}
-
-function formatTime(sec: number) {
-  const m = Math.floor(sec / 60);
-  const s = String(sec % 60).padStart(2, "0");
-  return `${m}:${s}`;
-}
-
-export default function LikedTrackList({ tracks }: LikedTrackListProps) {
-  if (tracks.length === 0) {
+  if (!likedTracks || likedTracks.length === 0) {
     return (
-      <div className="text-gray-500 py-8 text-center">
+      <div className="py-8 text-center text-gray-500">
         좋아요한 곡이 없습니다.
       </div>
     );
   }
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col">
-        {tracks.map((track, i) => (
-          <div
-            key={track.id}
-            className="flex items-center border-b py-2 px-2 hover:bg-gray-50"
-          >
-            <div className="w-8 text-center text-gray-400">{i + 1}</div>
-            <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden mx-2">
-              {track.albumCoverUrl ? (
-                <img
-                  src={track.albumCoverUrl}
-                  alt={track.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-xl text-gray-400">🎵</span>
-              )}
-            </div>
-            <div className="flex-1">
-              <div className="font-semibold">{track.title}</div>
-              <div className="text-gray-500 text-xs">{track.artist}</div>
-            </div>
-            <div className="text-gray-500 text-xs w-12 text-right">
-              {formatTime(track.duration)}
-            </div>
-            <div className="pl-2 text-red-400 text-lg">♥</div>
+    <div className="space-y-2">
+      {likedTracks.map((track) => (
+        <div
+          key={track.id}
+          className="flex items-center p-3 rounded-lg hover:bg-gray-50"
+        >
+          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mr-4">
+            {track.coverImageUrl ? (
+              <img
+                src={track.coverImageUrl}
+                alt={track.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-gray-400 text-xl">🎶</span>
+            )}
           </div>
-        ))}
-      </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold truncate">{track.title}</div>
+            <div className="text-xs text-gray-500 truncate">{track.artist}</div>
+          </div>
+          <div className="ml-4 text-xs text-gray-400">{track.duration}</div>
+        </div>
+      ))}
     </div>
   );
 }

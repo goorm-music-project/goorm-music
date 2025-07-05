@@ -1,54 +1,51 @@
-// src/domains/profile/components/ProfileTabMenu.tsx
 "use client";
+import { useProfileStore } from "../stores/useProfileStore";
+import PlaylistList from "./PlaylistList";
+import LikedTrackList from "./LikedTrackList";
+import FollowingPlaylist from "./FollowingPlaylist";
 
-import { useState } from "react";
-
-type TabKey = "playlist" | "liked" | "following";
-
-interface ProfileTabMenuProps {
-  playlist: React.ReactNode;
-  liked: React.ReactNode;
-  following: React.ReactNode;
-}
-
-const TAB_LABELS: Record<TabKey, string> = {
-  playlist: "플레이리스트",
-  liked: "좋아요",
-  following: "팔로우",
-};
-
-export default function ProfileTabMenu({
-  playlist,
-  liked,
-  following,
-}: ProfileTabMenuProps) {
-  const [tab, setTab] = useState<TabKey>("playlist");
+export default function ProfileTabMenu() {
+  const tab = useProfileStore((s) => s.tab);
+  const setTab = useProfileStore((s) => s.setTab);
 
   return (
-    <div className="mt-8">
-      <div className="flex w-full bg-gray-100 rounded-xl overflow-hidden mb-4">
-        {Object.entries(TAB_LABELS).map(([key, label]) => (
-          <button
-            key={key}
-            className={`flex-1 py-2 text-center font-semibold text-sm transition
-              ${
-                tab === key
-                  ? "bg-blue-500 text-white"
-                  : "text-gray-600 hover:bg-gray-200"
-              }
-            `}
-            onClick={() => setTab(key as TabKey)}
-          >
-            {label}
-          </button>
-        ))}
+    <div>
+      <div className="grid w-full grid-cols-3 bg-gray-100 rounded-lg mb-6 overflow-hidden">
+        <button
+          onClick={() => setTab("playlists")}
+          className={`py-2 text-sm font-semibold ${
+            tab === "playlists"
+              ? "bg-blue-500 text-white"
+              : "text-gray-700 hover:bg-blue-50"
+          }`}
+        >
+          플레이리스트
+        </button>
+        <button
+          onClick={() => setTab("liked")}
+          className={`py-2 text-sm font-semibold ${
+            tab === "liked"
+              ? "bg-blue-500 text-white"
+              : "text-gray-700 hover:bg-blue-50"
+          }`}
+        >
+          좋아요
+        </button>
+        <button
+          onClick={() => setTab("following")}
+          className={`py-2 text-sm font-semibold ${
+            tab === "following"
+              ? "bg-blue-500 text-white"
+              : "text-gray-700 hover:bg-blue-50"
+          }`}
+        >
+          팔로우
+        </button>
       </div>
-      {/* 탭별 콘텐츠 */}
-      <div>
-        {tab === "playlist" && playlist}
-        {tab === "liked" && liked}
-        {tab === "following" && following}
-      </div>
+
+      {tab === "playlists" && <PlaylistList />}
+      {tab === "liked" && <LikedTrackList />}
+      {tab === "following" && <FollowingPlaylist />}
     </div>
   );
 }
