@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const access_token = await getAccessToken();
-  console.log("✅✅", id);
+
   try {
     const res = await axios.get(
       `https://api.spotify.com/v1/artists/${id}/albums?include_groups=album,single&market=KR&limit=10`,

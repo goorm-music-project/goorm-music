@@ -44,7 +44,7 @@ export default function ArtistTopTracks({ artistId }: Props) {
   }, [artistId]);
 
   return (
-    <div>
+    <div className="my-4">
       <h1>아티스트의 인기 음악을 들어보세요.</h1>
       <div>{topTracks && <PlayBar tracks={topTracks} />}</div>
     </div>
