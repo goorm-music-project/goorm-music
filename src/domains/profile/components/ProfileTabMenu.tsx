@@ -1,51 +1,46 @@
-"use client";
-import { useProfileStore } from "../stores/useProfileStore";
-import PlaylistList from "./PlaylistList";
-import LikedTrackList from "./LikedTrackList";
-import FollowingPlaylist from "./FollowingPlaylist";
+import { FaMusic, FaHeart, FaUsers } from "react-icons/fa";
 
-export default function ProfileTabMenu() {
-  const tab = useProfileStore((s) => s.tab);
-  const setTab = useProfileStore((s) => s.setTab);
-
-  return (
-    <div>
-      <div className="grid w-full grid-cols-3 bg-gray-100 rounded-lg mb-6 overflow-hidden">
-        <button
-          onClick={() => setTab("playlists")}
-          className={`py-2 text-sm font-semibold ${
-            tab === "playlists"
-              ? "bg-blue-500 text-white"
-              : "text-gray-700 hover:bg-blue-50"
-          }`}
-        >
-          플레이리스트
-        </button>
-        <button
-          onClick={() => setTab("liked")}
-          className={`py-2 text-sm font-semibold ${
-            tab === "liked"
-              ? "bg-blue-500 text-white"
-              : "text-gray-700 hover:bg-blue-50"
-          }`}
-        >
-          좋아요
-        </button>
-        <button
-          onClick={() => setTab("following")}
-          className={`py-2 text-sm font-semibold ${
-            tab === "following"
-              ? "bg-blue-500 text-white"
-              : "text-gray-700 hover:bg-blue-50"
-          }`}
-        >
-          팔로우
-        </button>
-      </div>
-
-      {tab === "playlists" && <PlaylistList />}
-      {tab === "liked" && <LikedTrackList />}
-      {tab === "following" && <FollowingPlaylist />}
-    </div>
-  );
+interface Props {
+  tab: "playlists" | "liked" | "following";
+  onTabChange: (tab: "playlists" | "liked" | "following") => void;
 }
+
+const ProfileTabMenu = ({ tab, onTabChange }: Props) => (
+  <div className="flex w-full mt-8 border-b">
+    <button
+      onClick={() => onTabChange("playlists")}
+      className={`flex-1 py-3 text-base font-semibold flex justify-center items-center gap-1 border-b-2 transition ${
+        tab === "playlists"
+          ? "border-blue-500 text-blue-600"
+          : "border-transparent text-gray-500"
+      }`}
+    >
+      <FaMusic />
+      플레이리스트
+    </button>
+    <button
+      onClick={() => onTabChange("liked")}
+      className={`flex-1 py-3 text-base font-semibold flex justify-center items-center gap-1 border-b-2 transition ${
+        tab === "liked"
+          ? "border-blue-500 text-blue-600"
+          : "border-transparent text-gray-500"
+      }`}
+    >
+      <FaHeart />
+      좋아요
+    </button>
+    <button
+      onClick={() => onTabChange("following")}
+      className={`flex-1 py-3 text-base font-semibold flex justify-center items-center gap-1 border-b-2 transition ${
+        tab === "following"
+          ? "border-blue-500 text-blue-600"
+          : "border-transparent text-gray-500"
+      }`}
+    >
+      <FaUsers />
+      팔로우
+    </button>
+  </div>
+);
+
+export default ProfileTabMenu;

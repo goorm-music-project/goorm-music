@@ -1,62 +1,50 @@
-"use client";
-import { useProfileStore } from "../stores/useProfileStore";
+import { Profile } from "../types/Profile";
 
-export default function ProfileHeader() {
-  const profile = useProfileStore((s) => s.profile);
+interface Props {
+  profile: Profile;
+  onEdit: () => void;
+}
 
-  if (!profile) return null;
-
-  return (
-    <div className="flex flex-col items-center py-8 bg-gradient-to-b from-blue-50 to-white rounded-b-2xl">
-      <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden mb-4">
-        {profile.profileImageUrl ? (
-          <img
-            src={profile.profileImageUrl}
-            alt="profile"
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl text-gray-400">
-            👤
-          </div>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-xl">{profile.nickname}</span>
-        <span className="text-gray-500">@{profile.username}</span>
-      </div>
-      <div className="flex gap-4 mt-2">
-        <div className="text-center">
-          <div className="font-bold">
-            {profile.followerCount.toLocaleString()}
-          </div>
-          <div className="text-xs text-gray-500">팔로워</div>
-        </div>
-        <div className="text-center">
-          <div className="font-bold">
-            {profile.followingCount.toLocaleString()}
-          </div>
-          <div className="text-xs text-gray-500">팔로잉</div>
-        </div>
-      </div>
-      <div className="mt-4 text-gray-700">{profile.bio}</div>
-      {profile.isMe ? (
-        <button className="mt-4 px-5 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600">
-          프로필 편집
-        </button>
+const ProfileHeader = ({ profile, onEdit }: Props) => (
+  <div className="flex items-center gap-6">
+    <div className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-4xl font-bold text-blue-500">
+      {profile.profileImageUrl ? (
+        <img
+          src={profile.profileImageUrl}
+          alt="프로필"
+          className="w-24 h-24 rounded-full object-cover"
+        />
       ) : (
-        <button
-          className={`mt-4 px-5 py-2 rounded-lg text-sm font-semibold border transition
-            ${
-              profile.isFollowing
-                ? "bg-white text-blue-500 border-blue-500 hover:bg-blue-50"
-                : "bg-blue-500 text-white border-blue-500 hover:bg-blue-600"
-            }
-          `}
-        >
-          {profile.isFollowing ? "팔로우 취소" : "팔로우"}
-        </button>
+        profile.nickname[0] // 이니셜
       )}
     </div>
-  );
-}
+    <div className="flex-1">
+      <div className="text-2xl font-bold">{profile.nickname}</div>
+      <div className="text-gray-600">@{profile.username}</div>
+      <div className="flex gap-4 mt-1 text-gray-500 font-semibold">
+        <span>
+          {profile.followerCount} <span className="font-normal">팔로워</span>
+        </span>
+        <span>·</span>
+        <span>
+          {profile.followingCount} <span className="font-normal">팔로잉</span>
+        </span>
+      </div>
+    </div>
+    {profile.isMe && (
+      <button
+        className="h-10 px-5 rounded-lg bg-blue-500 text-white font-bold text-base hover:bg-blue-600"
+        onClick={onEdit}
+      >
+        프로필 편집
+      </button>
+    )}
+    {!profile.isMe && (
+      <button className="h-10 px-5 rounded-lg bg-blue-100 text-blue-700 font-bold text-base">
+        {profile.isFollowing ? "팔로잉" : "팔로우"}
+      </button>
+    )}
+  </div>
+);
+
+export default ProfileHeader;
