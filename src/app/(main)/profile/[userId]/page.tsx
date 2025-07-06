@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileHeader from "@/domains/profile/components/ProfileHeader";
 import GenreTags from "@/domains/profile/components/GenreTags";
 import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
@@ -10,110 +10,82 @@ import { Profile } from "@/domains/profile/types/Profile";
 import { Playlist } from "@/domains/profile/types/Playlist";
 import { Track } from "@/domains/profile/types/Track";
 
-const user: Profile = {
-  id: "1",
-  nickname: "김뮤직",
-  username: "musiclover2024",
-  profileImageUrl: null,
-  bio: "음악을 사랑하는 사람입니다. 다양한 장르의 음악을 즐겨 듣고 플레이리스트를 만드는 것을 좋아해요! 🎵",
-  followerCount: 1234,
-  followingCount: 567,
-  playlistCount: 2,
-  likedTrackCount: 3,
-  followingPlaylistCount: 2,
-  genres: ["K-Pop", "Hip Hop", "R&B", "Pop", "Jazz", "Electronic"],
-  isMe: true,
-  isFollowing: false,
-};
-
-const myPlaylists: Playlist[] = [
-  {
-    id: "1",
-    name: "내가 좋아하는 K-Pop",
-    description: "최신 K-Pop 히트곡들을 모아놨어요",
-    coverImageUrl: null,
-    trackCount: 25,
-    isPublic: true,
-    ownerId: "1",
-    ownerNickname: "김뮤직",
-  },
-  {
-    id: "2",
-    name: "밤에 듣기 좋은 음악",
-    description: "조용한 밤에 어울리는 감성적인 곡들",
-    coverImageUrl: null,
-    trackCount: 18,
-    isPublic: true,
-    ownerId: "1",
-    ownerNickname: "김뮤직",
-  },
-];
-
-const likedSongs: Track[] = [
-  {
-    id: "1",
-    title: "Blinding Lights",
-    artist: "The Weeknd",
-    duration: 200,
-    albumCoverUrl: null,
-    isLiked: true,
-  },
-  {
-    id: "2",
-    title: "Stay",
-    artist: "The Kid LAROI, Justin Bieber",
-    duration: 141,
-    albumCoverUrl: null,
-    isLiked: true,
-  },
-  {
-    id: "3",
-    title: "Good 4 U",
-    artist: "Olivia Rodrigo",
-    duration: 178,
-    albumCoverUrl: null,
-    isLiked: true,
-  },
-];
-
-const followedPlaylists: Playlist[] = [
-  {
-    id: "3",
-    name: "팔로우 플레이리스트 이름",
-    description: "설명",
-    coverImageUrl: null,
-    trackCount: 9,
-    isPublic: true,
-    ownerId: "2",
-    ownerNickname: "다른유저",
-  },
-  {
-    id: "4",
-    name: "또 다른 팔로우",
-    description: "설명2",
-    coverImageUrl: null,
-    trackCount: 7,
-    isPublic: true,
-    ownerId: "3",
-    ownerNickname: "또다른유저",
-  },
-];
-
 export default function ProfilePage() {
+  // 탭 관리
   const [tab, setTab] = useState<"playlists" | "liked" | "following">(
     "playlists"
   );
 
+  // 실제 데이터 상태
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [myPlaylists, setMyPlaylists] = useState<Playlist[]>([]);
+  const [likedSongs, setLikedSongs] = useState<Track[]>([]);
+  const [followedPlaylists, setFollowedPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 프로필/플레이리스트/좋아요/팔로우 데이터 fetch
+  useEffect(() => {
+    async function fetchAll() {
+      setLoading(true);
+      try {
+        // 프로필 정보
+        const resProfile = await fetch("/api/userData", { method: "POST" });
+        const profileData = await resProfile.json();
+        setProfile({
+          id: profileData.userId,
+          nickname: profileData.display_name,
+          username: profileData.userId,
+          profileImageUrl: null, // 필요 시 데이터 구조 맞게
+          bio: "", // bio는 별도 관리 필요
+          followerCount: 0, // 별도 구현 필요
+          followingCount: 0, // 별도 구현 필요
+          playlistCount: 0, // 별도 구현 필요
+          likedTrackCount: 0, // 별도 구현 필요
+          followingPlaylistCount: 0, // 별도 구현 필요
+          genres: [], // 별도 구현 필요
+          isMe: true,
+          isFollowing: false,
+        });
+
+        // 내 플레이리스트
+        const resPlaylists = await fetch("/api/playlist/getPlaylist");
+        const playlistsData = await resPlaylists.json();
+        setMyPlaylists(playlistsData);
+
+        // 좋아요 트랙
+        const resLiked = await fetch("/api/likeList");
+        const likedData = await resLiked.json();
+        setLikedSongs(likedData);
+
+        // 팔로우 플레이리스트 (존재 시)
+        // 만약 없으면 이 부분 생략
+        const resFollowed = await fetch("/api/followingPlaylist");
+        if (resFollowed.ok) {
+          const followedData = await resFollowed.json();
+          setFollowedPlaylists(followedData);
+        }
+      } catch {
+        alert("데이터 로드에 실패했습니다.");
+      }
+      setLoading(false);
+    }
+
+    fetchAll();
+  }, []);
+
   const handleEdit = () => alert("프로필 편집 모달!");
+
+  if (loading) return <div>로딩중...</div>;
+  if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-32">
       <div className="bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-2xl mx-auto px-4 pt-10 pb-8">
-          <ProfileHeader profile={user} onEdit={handleEdit} />
+          <ProfileHeader profile={profile} onEdit={handleEdit} />
           <div className="mt-6">
             <GenreTags
-              genres={user.genres}
+              genres={profile.genres}
               onEdit={() => alert("장르 편집 모달!")}
             />
           </div>
