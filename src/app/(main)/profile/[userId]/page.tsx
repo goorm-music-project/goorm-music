@@ -8,7 +8,7 @@ import LikedTrackList from "@/domains/profile/components/LikedTrackList";
 import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
 import { Profile } from "@/domains/profile/types/Profile";
 import { Playlist } from "@/domains/profile/types/Playlist";
-import { Track } from "@/domains/profile/types/Track";
+import { Track, SpotifyLikedTrack } from "@/domains/profile/types/Track";
 
 export default function ProfilePage() {
   // 탭 관리
@@ -54,8 +54,21 @@ export default function ProfilePage() {
 
         // 좋아요 트랙
         const resLiked = await fetch("/api/likeList");
+        if (!resLiked.ok) throw new Error("likeList fetch failed");
         const likedData = await resLiked.json();
-        setLikedSongs(likedData);
+        const likedTracks: Track[] = (likedData as SpotifyLikedTrack[]).map(
+          (item) => ({
+            id: item.track.id,
+            title: item.track.name,
+            artist: item.track.artists
+              .map((a: { name: string }) => a.name)
+              .join(", "),
+            albumCoverUrl: item.track.album?.images?.[0]?.url || null,
+            duration: Math.floor(item.track.duration_ms / 1000),
+            isLiked: true,
+          })
+        );
+        setLikedSongs(likedTracks);
 
         // 팔로우 플레이리스트 (존재 시)
         // 만약 없으면 이 부분 생략

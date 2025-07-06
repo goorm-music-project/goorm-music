@@ -33,7 +33,7 @@ const ProfileHeader = ({ profile, onEdit }: Props) => (
     </div>
     {profile.isMe && (
       <button
-        className="h-10 px-5 rounded-lg bg-blue-500 text-white font-bold text-base hover:bg-blue-600"
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold text-base rounded px-4 py-2 min-w-[110px] whitespace-nowrap"
         onClick={onEdit}
       >
         프로필 편집
