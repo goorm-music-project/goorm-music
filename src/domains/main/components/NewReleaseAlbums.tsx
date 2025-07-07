@@ -4,9 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-// import "swiper/css/free-mode";
-// import "swiper/css/pagination";
-// import { FreeMode, Pagination } from "swiper/modules";
+import Link from "next/link";
 
 type Album = {
   id: string;
@@ -40,16 +38,18 @@ export default function NewReleaseAlbum() {
           {albums.map((album) => (
             <SwiperSlide key={album.id} style={{ width: "150px" }}>
               <div>
-                <Image
-                  src={album.images[0]?.url}
-                  alt={album.name}
-                  width={150}
-                  height={150}
-                />
-                <p className="truncate my-1">{album.name}</p>
-                <p className="truncate">
-                  {album.artists.map((a) => a.name).join(", ")}
-                </p>
+                <Link href={`/album/${album.id}`}>
+                  <Image
+                    src={album.images[0]?.url}
+                    alt={album.name}
+                    width={150}
+                    height={150}
+                  />
+                  <p className="truncate my-1">{album.name}</p>
+                  <p className="truncate">
+                    {album.artists.map((a) => a.name).join(", ")}
+                  </p>
+                </Link>
               </div>
             </SwiperSlide>
           ))}
