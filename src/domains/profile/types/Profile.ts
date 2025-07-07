@@ -1,17 +1,59 @@
-// src/domains/profile/types/Profile.ts
-
 export interface Profile {
   id: string;
   nickname: string;
-  username: string; // @musiclover2024
+  username: string;
   profileImageUrl: string | null;
-  bio: string; // 자기소개
+  bio: string;
   followerCount: number;
   followingCount: number;
   playlistCount: number;
   likedTrackCount: number;
   followingPlaylistCount: number;
   genres: string[];
-  isMe: boolean; // 본인 여부
-  isFollowing: boolean; // 내가 이 유저 팔로우 중인지(타인 프로필만)
+  isMe: boolean;
+  isFollowing: boolean;
 }
+
+export interface Playlist {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface GenreTagsProps {
+  userId: string;
+  genres: string[];
+  onSave?: (genres: string[]) => void;
+}
+
+export interface Playlist {
+  id: string;
+  name: string;
+  description: string;
+  coverImageUrl: string | null;
+  trackCount: number;
+  isPublic: boolean;
+  ownerId: string;
+  ownerNickname: string;
+}
+
+export interface Track {
+  id: string;
+  title: string;
+  artist: string;
+  albumCoverUrl: string | null;
+  duration: number;
+  isLiked: boolean;
+  coverImageUrl?: string;
+}
+
+export type SpotifyLikedTrack = {
+  added_at: string;
+  track: {
+    id: string;
+    name: string;
+    artists: { name: string }[];
+    album?: { images?: { url: string }[] };
+    duration_ms: number;
+  };
+};

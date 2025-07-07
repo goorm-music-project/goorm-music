@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from "@/domains/common/lib/firebase";
 import axios from "axios";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+// 유저 정보 조회 (POST)
 export async function POST() {
   const cookieAwait = await cookies();
   const access_token = cookieAwait.get("access_token")?.value;
@@ -24,12 +25,51 @@ export async function POST() {
 
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
-    console.log("검사하기");
     const userExists = userSnap.exists();
 
-    return NextResponse.json({ userId, display_name, email, userExists });
+    // ⭐️ 여기에 장르 필드 추가 반환
+    let genres: string[] = [];
+    if (userExists) {
+      genres = userSnap.data().genres || [];
+    }
+
+    return NextResponse.json({
+      userId,
+      display_name,
+      email,
+      userExists,
+      genres,
+    });
   } catch (err: any) {
     console.error("❌❌❌❌", err.response?.data || err.message);
     return new Response("Failed to fetch user profile", { status: 500 });
+  }
+}
+
+// 장르 저장/수정 (PATCH)
+export async function PATCH(req: Request) {
+  try {
+    const cookieAwait = await cookies();
+    const access_token = cookieAwait.get("access_token")?.value;
+    if (!access_token) {
+      return new Response("No access_token", { status: 401 });
+    }
+
+    // body에서 userId, genres 추출
+    const { userId, genres } = await req.json();
+
+    if (!userId || !Array.isArray(genres)) {
+      return new Response("userId, genres required", { status: 400 });
+    }
+
+    const userRef = doc(db, "users", userId);
+
+    // genres 필드만 업데이트
+    await updateDoc(userRef, { genres });
+
+    return NextResponse.json({ success: true, genres });
+  } catch (err: any) {
+    console.error("❌❌❌❌", err.response?.data || err.message);
+    return new Response("Failed to update genres", { status: 500 });
   }
 }
