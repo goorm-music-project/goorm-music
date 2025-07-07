@@ -1,5 +1,3 @@
-// src/domains/profile/types/Playlist.ts
-
 export interface Playlist {
   id: string;
   name: string;
