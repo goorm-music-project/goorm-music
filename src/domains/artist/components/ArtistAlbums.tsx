@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import Link from "next/link";
 
 interface Props {
   artistId: string;
@@ -34,7 +35,7 @@ export default function ArtistAlbums({ artistId }: Props) {
 
   return (
     <div>
-      <h2>아티스트의 앨범을 만나보세요.</h2>
+      <h1>아티스트의 앨범을 만나보세요.</h1>
       {ablums && (
         <Swiper
           slidesPerView={"auto"}
@@ -50,11 +51,13 @@ export default function ArtistAlbums({ artistId }: Props) {
               key={track.images?.[0].url + track.name}
               className="!w-[150px]"
             >
-              <TrackCard
-                imageUrl={track.images?.[0].url}
-                name={track.name}
-                artists={[track.artists[0].name]}
-              />
+              <Link href={`/album/${track.id}`}>
+                <TrackCard
+                  imageUrl={track.images?.[0].url}
+                  name={track.name}
+                  artists={[track.artists[0].name]}
+                />
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>
