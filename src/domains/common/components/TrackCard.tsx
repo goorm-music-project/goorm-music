@@ -4,7 +4,7 @@ interface TrackCardProps {
   imageUrl: string;
   name: string;
   artists: string[];
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export default function TrackCard({
