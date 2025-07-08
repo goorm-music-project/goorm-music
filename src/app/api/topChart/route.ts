@@ -1,10 +1,10 @@
-import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const access_token = await getAccessToken();
+    const access_token = (await cookies()).get("public_access_token")?.value;
 
     // 최신 멜론차트 TOP 100 플레이리스트
     const playlistId = "7rLPjbAZIeK3aUCSbFlWo5";

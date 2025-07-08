@@ -5,6 +5,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import LikedButton from "@/domains/common/components/LikedButton";
 import { useEffect, useState } from "react";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 interface TrackActionBtnsProps {
   trackId: string;
@@ -17,8 +18,8 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
     const fetchLikedTracks = async () => {
       if (!trackId || !isLoggedIn) return;
       try {
-        const res = await fetch(`/api/isLiked?trackId=${trackId}`);
-        const result = await res.json();
+        const res = await authAxios.get(`/api/isLiked?trackId=${trackId}`);
+        const result = res.data;
 
         setIsLiked(result.data);
       } catch (err) {

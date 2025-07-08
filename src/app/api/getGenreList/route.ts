@@ -1,10 +1,10 @@
 import { genreList } from "@/domains/common/constants/genre";
-import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const access_token = await getAccessToken();
+  const access_token = (await cookies()).get("public_access_token")?.value;
   const { searchParams } = new URL(req.url);
   const genreParmas = searchParams.get("genre") || "팝";
   const genre = genreList.find((v) => v.ko === genreParmas)?.en;

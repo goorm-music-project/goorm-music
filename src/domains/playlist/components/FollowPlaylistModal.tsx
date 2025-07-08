@@ -5,6 +5,7 @@ import { Playlist } from "../types/Playlist";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import AlertModal from "@/domains/common/components/AlertModal";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 interface Props {
   showModal: boolean;
@@ -27,8 +28,8 @@ export default function FollowPlaylistModal({
   const fetchPlaylists = async () => {
     try {
       setIsLoading(true);
-      const res = await fetch("/api/playlist/getPlaylist");
-      const data = await res.json();
+      const res = await authAxios.get("/api/playlist/getPlaylist");
+      const data = res.data;
       const myPlaylist = data.filter(
         (v: { owner: { id: string } }) => v.owner.id !== userId
       );
@@ -43,14 +44,8 @@ export default function FollowPlaylistModal({
   const confirmFollow = async () => {
     if (!followId) return;
     try {
-      await fetch("/api/follow", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: followId,
-        }),
+      await authAxios.put("/api/follow", {
+        id: followId,
       });
       setMessage("Follow가 완료되었습니다.");
       fetchPlaylists();

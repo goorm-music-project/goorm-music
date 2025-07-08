@@ -1,7 +1,7 @@
-import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import Genius from "genius-lyrics-api";
+import { cookies } from "next/headers";
 
 type SpotifyArtist = {
   id: string;
@@ -24,7 +24,7 @@ export async function GET(
   const trackId = id;
 
   try {
-    const token = await getAccessToken();
+    const token = (await cookies()).get("public_access_token")?.value;
 
     const trackRes = await axios.get(
       `https://api.spotify.com/v1/tracks/${trackId}`,

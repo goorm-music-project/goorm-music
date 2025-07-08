@@ -24,7 +24,7 @@ export async function POST() {
 
   try {
     const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!;
-    const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
+    const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET!;
 
     const payload = new URLSearchParams({
       grant_type: "refresh_token",

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import React, { useEffect, useState } from "react";
@@ -30,10 +31,10 @@ export default function ArtistTopTracks({ artistId }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
+        const res = await appAxios.get(
           `/api/artist/${artistId}/top-tracks?mode=allData`
         );
-        const json = await res.json();
+        const json = await res.data;
         const data = mapTrackData(json);
         setTopTracks(data);
       } catch (err) {

@@ -5,6 +5,7 @@ import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 interface Props {
   showModal: boolean;
@@ -33,32 +34,20 @@ export default function AddNewPlayListModal({
     }
     try {
       setIsLoading(true);
-      const addPlaylistRes = await fetch("/api/playlist/addPlaylist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          name,
-          description,
-          isPublic,
-        }),
+      const addPlaylistRes = await authAxios.post("/api/playlist/addPlaylist", {
+        userId,
+        name,
+        description,
+        isPublic,
       });
-      const playlistId = await addPlaylistRes.json();
+      const playlistId = await addPlaylistRes.data;
 
-      await fetch("/api/playlist/addTrack", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ playlistId, track }),
-      });
+      await authAxios.post("/api/playlist/addTrack", { playlistId, track });
 
       //TODO : 신규 트랙 추가 후 0곡 출력 오류
 
-      const res = await fetch("/api/playlist/getPlaylist");
-      const data = await res.json();
+      const res = await authAxios.get("/api/playlist/getPlaylist");
+      const data = await res.data;
       setPlaylists(data);
 
       setName("");

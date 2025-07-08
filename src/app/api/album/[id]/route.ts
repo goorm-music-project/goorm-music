@@ -1,5 +1,5 @@
-import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios from "axios";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const access_token = await getAccessToken();
+  const access_token = (await cookies()).get("public_access_token")?.value;
 
   try {
     const res = await axios.get(`https://api.spotify.com/v1/albums/${id}`, {

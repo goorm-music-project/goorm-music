@@ -1,4 +1,5 @@
 "use client";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
@@ -11,8 +12,8 @@ export default function Page() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("/api/playlist/getPlaylist");
-      const data = await res.json();
+      const res = await authAxios.get("/api/playlist/getPlaylist");
+      const data = res.data;
       const myPlaylist = data.filter((v) => v.owner.id === userId);
       setListData(myPlaylist);
     };

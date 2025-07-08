@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import Link from "next/link";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 interface Props {
   artistId: string;
@@ -23,8 +24,8 @@ export default function ArtistAlbums({ artistId }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/artist/${artistId}/albums`);
-        const data = await res.json();
+        const res = await appAxios.get(`/api/artist/${artistId}/albums`);
+        const data = await res.data;
         setAblums(data);
       } catch (err) {
         console.log("아티스트 앨범 불러오기 오류", err);

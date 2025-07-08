@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Link from "next/link";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 type Album = {
   id: string;
@@ -17,9 +18,7 @@ export default function NewReleaseAlbum() {
   const [albums, setAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
-    fetch("/api/newReleases")
-      .then((res) => res.json())
-      .then((data) => setAlbums(data));
+    appAxios.get("/api/newReleases").then((res) => setAlbums(res.data));
   }, []);
 
   return (
