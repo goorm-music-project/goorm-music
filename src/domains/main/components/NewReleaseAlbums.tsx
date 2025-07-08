@@ -24,7 +24,7 @@ export default function NewReleaseAlbum() {
   return (
     <main className="mb-4">
       <h1>최신 앨범을 만나보세요.</h1>
-      <div className="w-[100vw]">
+      <div>
         <Swiper
           slidesPerView={"auto"}
           spaceBetween={30}

@@ -49,7 +49,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
           나만의 플레이리스트를 만들어보세요.
         </h1>
       )}
-      <div className="w-[100vw]">
+      <div>
         <Swiper
           slidesPerView={"auto"}
           spaceBetween={30}

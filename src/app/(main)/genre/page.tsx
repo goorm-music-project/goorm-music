@@ -47,7 +47,7 @@ export default function Page() {
   return (
     <div>
       <h1>장르별 음악들을 확인해보세요.</h1>
-      <div className="my-2 w-[100vw]">
+      <div className="my-2">
         <Swiper
           slidesPerView={"auto"}
           spaceBetween={10}
