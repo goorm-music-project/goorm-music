@@ -1,6 +1,6 @@
 "use client";
-import CardComponent from "@/domains/common/components/CardComponent";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import TrackCard from "@/domains/common/components/TrackCard";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { Playlist } from "@/domains/playlist/types/Playlist";
@@ -70,7 +70,11 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
             listData.map((data) => (
               <SwiperSlide key={data.id} style={{ width: "150px" }}>
                 <Link href={`/playlist/${data.id}`}>
-                  <CardComponent key={data.id} item={data} />
+                  <TrackCard
+                    key={data.id}
+                    imageUrl={data.images?.[0]?.url || "/goorm_logo_blue.png"}
+                    name={data.name}
+                  />
                 </Link>
               </SwiperSlide>
             ))
