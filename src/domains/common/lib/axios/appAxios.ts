@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getCookie } from "../cookieUtils";
-import { getAccessToken } from "../getAccessToken";
+import { getPublicAccessToken } from "../getPublicAccessToken";
 
 const appAxios = axios.create({
   baseURL: "",
@@ -11,7 +11,7 @@ appAxios.interceptors.request.use(
   async (config) => {
     let token = getCookie("public_access_token");
     if (!token) {
-      token = await getAccessToken();
+      token = await getPublicAccessToken();
     }
 
     if (config.headers) {
