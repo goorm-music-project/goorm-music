@@ -1,4 +1,5 @@
 "use client";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -22,16 +23,12 @@ export default function JenreRecoList() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const genreRes = await fetch("/api/getGenres", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-      const genreData = await genreRes.json();
+      const genreRes = await authAxios.post("/api/getGenres", { userId });
+      const genreData = genreRes.data;
       const genreArr = genreData.genres;
       const genre = genreArr[Math.floor(Math.random() * genreArr.length)];
-      const res = await fetch(`/api/jenreRecoList?genre=${genre}`);
-      const json = await res.json();
+      const res = await authAxios.get(`/api/jenreRecoList?genre=${genre}`);
+      const json = res.data;
       const data = json.slice(0, 10);
       setDatas(data);
     };

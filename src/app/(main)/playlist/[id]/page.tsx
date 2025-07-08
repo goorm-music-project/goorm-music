@@ -1,5 +1,5 @@
 "use client";
-import appAxios from "@/domains/common/lib/axios/appAxios";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
 import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
 import PlayListEditBox from "@/domains/playlist/components/PlayListEditBox";
@@ -49,20 +49,12 @@ export default function Page() {
       return;
     }
     try {
-      const res = await fetch("/api/playlist/editPlaylistDetail", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          name,
-          description,
-          isPublic,
-        }),
+      await authAxios.put("/api/playlist/editPlaylistDetail", {
+        id,
+        name,
+        description,
+        isPublic,
       });
-      const data = res.json();
-      console.log(data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -77,16 +69,12 @@ export default function Page() {
     }
 
     try {
-      await fetch("/api/playlist/removePlaylistItem", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      await authAxios.delete("/api/playlist/removePlaylistItem", {
+        data: {
           id,
           tracks: deleteTracks,
           snapshot_id: snapshotId,
-        }),
+        },
       });
       alert("트랙이 삭제되었습니다.");
       fetchData();
@@ -108,7 +96,7 @@ export default function Page() {
   };
 
   const fetchData = async () => {
-    const res = await appAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
+    const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
     setListData(data);
     setSnapshotId(data.snapshot_id);

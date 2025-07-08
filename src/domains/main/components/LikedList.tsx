@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import PlayBar from "./PlayBar";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 export default function LikedList() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
   useEffect(() => {
-    fetch("/api/likeList")
-      .then((res) => res.json())
-      .then((data) => setDatas(data));
+    authAxios.get("/api/likeList").then((res) => setDatas(res.data));
   }, []);
 
   return (

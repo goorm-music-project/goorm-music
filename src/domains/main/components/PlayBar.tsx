@@ -7,6 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 interface Props {
   tracks: PlaylistItem[];
@@ -50,8 +51,8 @@ export default function PlayBar({
     const fetchLikedTracks = async () => {
       const trackIds = tracks.map((t) => t.track.id);
       try {
-        const res = await fetch(`/api/isLiked?trackId=${trackIds}`);
-        const result = await res.json();
+        const res = await authAxios.get(`/api/isLiked?trackId=${trackIds}`);
+        const result = await res.data;
 
         const map: Record<string, boolean> = {};
         trackIds.forEach((id, idx) => {

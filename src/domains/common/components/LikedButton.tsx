@@ -2,6 +2,7 @@ import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import React, { useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
+import authAxios from "../lib/axios/authAxios";
 
 interface LikedButtonProps {
   trackId: string;
@@ -30,10 +31,9 @@ export default function LikedButton({
     }
     const liked = !isLiked;
     setIsLiked(liked);
-    await fetch("/api/like", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ trackId, liked }),
+    await authAxios.post("/api/like", {
+      trackId,
+      liked,
     });
   };
 

@@ -4,6 +4,7 @@ import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayListBox from "./PlayListBox";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 type Props = {
   playlists: Playlist[];
@@ -20,8 +21,8 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
     const fetchPlaylists = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch("/api/playlist/getPlaylist");
-        const data = await res.json();
+        const res = await authAxios.get("/api/playlist/getPlaylist");
+        const data = await res.data;
         const myPlaylist = data.filter((v) => v.owner.id === userId);
         setPlaylists(myPlaylist);
       } catch (error) {
@@ -35,8 +36,10 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
   }, [setPlaylists, userId]);
 
   const handleAddPlayList = async (playlistId: string) => {
-    const res = await fetch(`/api/playlist/getPlaylistDetail?id=${playlistId}`);
-    const detailData = await res.json();
+    const res = await authAxios.get(
+      `/api/playlist/getPlaylistDetail?id=${playlistId}`
+    );
+    const detailData = res.data;
 
     const alreadyExists = detailData.tracks.items.some(
       (item: { track: { uri: string } }) => item.track.uri === track
@@ -48,17 +51,11 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
 
     try {
       setIsLoading(true);
-      await fetch("/api/playlist/addTrack", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ playlistId, track }),
-      });
+      await authAxios.post("/api/playlist/addTrack", { playlistId, track });
 
       //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
-      const res = await fetch("/api/playlist/getPlaylist");
-      const json = await res.json();
+      const res = await authAxios.get("/api/playlist/getPlaylist");
+      const json = res.data;
       const data = json.filter((v) => v.owner.id === userId);
       setPlaylists(data);
     } catch (err) {

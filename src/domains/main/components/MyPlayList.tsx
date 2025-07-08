@@ -1,6 +1,7 @@
 "use client";
 import CardComponent from "@/domains/common/components/CardComponent";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import Link from "next/link";
@@ -27,8 +28,8 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
   useEffect(() => {
     if (!isLoggedIn) return;
     const fetchData = async () => {
-      const res = await fetch("/api/playlist/getPlaylist");
-      const data = await res.json();
+      const res = await authAxios.get("/api/playlist/getPlaylist");
+      const data = await res.data;
       const myPlaylist = data.filter((v) => v.owner.id === userId);
       setListData(myPlaylist);
     };
