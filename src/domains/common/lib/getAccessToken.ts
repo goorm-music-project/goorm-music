@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setCookie } from "./cookieUtils";
 
 export const getAccessToken = async (): Promise<string | null> => {
   const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!;
@@ -23,6 +24,15 @@ export const getAccessToken = async (): Promise<string | null> => {
       },
     }
   );
+
+  const { access_token, expires_in } = res.data;
+
+  if (!access_token) {
+    console.error("Failed to retrieve access token");
+    return null;
+  }
+
+  setCookie("public_access_token", access_token, expires_in);
 
   return res.data.access_token;
 };
