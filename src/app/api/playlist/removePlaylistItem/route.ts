@@ -6,6 +6,9 @@ import { NextResponse } from "next/server";
 export async function DELETE(req: Request) {
   const cookieAwait = await cookies();
   const access_token = cookieAwait.get("access_token")?.value;
+  if (!access_token) {
+    return new Response("No access_token", { status: 401 });
+  }
   const { id, tracks, snapshot_id } = await req.json();
 
   try {

@@ -4,8 +4,10 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const cookieAwait = await cookies();
-  const access_token = cookieAwait.get("access_token")?.value;
+  const access_token = (await cookies()).get("access_token")?.value;
+  if (!access_token) {
+    return new Response("No access_token", { status: 401 });
+  }
   const { searchParams } = new URL(req.url);
   const genreParmas = searchParams.get("genre") || "팝";
   const genre = genreList.find((v) => v.ko === genreParmas)?.en;
