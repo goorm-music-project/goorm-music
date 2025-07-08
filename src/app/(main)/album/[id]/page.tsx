@@ -67,10 +67,10 @@ export default function Page() {
 
   return (
     <div>
-      <div className="">
+      <div className="md:flex">
         {albumData && (
           <>
-            <div className="flex flex-col gap-2 mb-4 items-center">
+            <div className="flex flex-col gap-2 mb-4 items-center md:w-[40%] md:mt-2">
               <Image
                 src={albumData.images[0].url}
                 alt={albumData.name}
@@ -84,7 +84,7 @@ export default function Page() {
                 </Link>
               </p>
             </div>
-            <div>
+            <div className="w-full">
               <h1>앨범 수록곡을 확인해보세요.</h1>
               {<PlayBar tracks={albumData.tracks} />}
             </div>
