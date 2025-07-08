@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from "@/domains/common/lib/firebase";
 import axios from "axios";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -21,13 +20,13 @@ export async function POST() {
       },
     });
 
-    const { id: userId, display_name, email } = res.data;
+    const { id: userId, display_name, email, images } = res.data;
+    const imageUrl = images && images.length > 0 ? images[0].url : null;
 
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
     const userExists = userSnap.exists();
 
-    // ⭐️ 여기에 장르 필드 추가 반환
     let genres: string[] = [];
     if (userExists) {
       genres = userSnap.data().genres || [];
@@ -39,6 +38,7 @@ export async function POST() {
       email,
       userExists,
       genres,
+      imageUrl,
     });
   } catch (err: any) {
     console.error("❌❌❌❌", err.response?.data || err.message);
@@ -55,7 +55,6 @@ export async function PATCH(req: Request) {
       return new Response("No access_token", { status: 401 });
     }
 
-    // body에서 userId, genres 추출
     const { userId, genres } = await req.json();
 
     if (!userId || !Array.isArray(genres)) {
@@ -64,7 +63,6 @@ export async function PATCH(req: Request) {
 
     const userRef = doc(db, "users", userId);
 
-    // genres 필드만 업데이트
     await updateDoc(userRef, { genres });
 
     return NextResponse.json({ success: true, genres });

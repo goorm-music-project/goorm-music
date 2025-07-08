@@ -14,7 +14,6 @@ import {
 } from "@/domains/profile/types/Profile";
 
 export default function ProfilePage() {
-  // 탭 관리
   const [tab, setTab] = useState<"playlists" | "liked" | "following">(
     "playlists"
   );
@@ -34,10 +33,10 @@ export default function ProfilePage() {
         id: profileData.userId,
         nickname: profileData.display_name,
         username: profileData.userId,
-        profileImageUrl: null,
+        imageUrl: profileData.imageUrl ?? null,
         genres: profileData.genres || [],
         isMe: true,
-      } as Profile);
+      });
 
       // 내 플레이리스트
       const resPlaylists = await fetch("/api/playlist/getPlaylist");
@@ -68,7 +67,7 @@ export default function ProfilePage() {
       );
       setLikedSongs(likedTracks);
 
-      // 팔로우 플레이리스트 (존재 시)
+      // 팔로우 플레이리스트
       const resFollowed = await fetch("/api/followingPlaylist");
       if (resFollowed.ok) {
         const followedData = await resFollowed.json();
@@ -87,6 +86,7 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
+  // 이하 동일 (이벤트 핸들러 등...)
   const handleEditPlaylist = async (
     playlistId: string,
     newName: string,
@@ -126,7 +126,6 @@ export default function ProfilePage() {
     }
   };
 
-  // **공개/비공개 전환**
   const handleTogglePublic = async (
     playlistId: string,
     newIsPublic: boolean

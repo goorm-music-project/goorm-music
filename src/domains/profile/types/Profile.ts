@@ -2,16 +2,9 @@ export interface Profile {
   id: string;
   nickname: string;
   username: string;
-  profileImageUrl: string | null;
-  bio: string;
-  followerCount: number;
-  followingCount: number;
-  playlistCount: number;
-  likedTrackCount: number;
-  followingPlaylistCount: number;
+  imageUrl: string | null;
   genres: string[];
   isMe: boolean;
-  isFollowing: boolean;
 }
 
 export interface Playlist {

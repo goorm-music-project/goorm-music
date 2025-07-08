@@ -1,4 +1,4 @@
-import { Playlist } from "../types/Playlist";
+import { Playlist } from "../types/Profile";
 
 interface Props {
   playlists: Playlist[];
