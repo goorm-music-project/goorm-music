@@ -31,7 +31,7 @@ function NavItem({
 
   return (
     <div
-      className="flex flex-col items-center text-sm"
+      className="flex flex-col items-center text-sm cursor-pointer"
       onClick={() => router.push(path)}
     >
       {icon}
