@@ -17,12 +17,14 @@ interface Props {
     uri: string,
     idx: number
   ) => void;
+  className?: string;
 }
 
 export default function PlayBar({
   tracks,
   selectable,
   handleChangeChk,
+  className,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
   const [showPlayListModal, setShowPlayListModal] = useState(false);
@@ -69,7 +71,7 @@ export default function PlayBar({
   }, [tracks]);
 
   return (
-    <div>
+    <div className={className ? "grid grid-cols-1 md:grid-cols-2 gap-2" : ""}>
       {tracks.map((item, idx) => (
         <div
           key={`${item.track.id}_${idx}`}

@@ -60,7 +60,7 @@ export default function Page() {
     <div>
       <div>
         <h2 className="mb-2">대표 아티스트</h2>
-        <div className="h-[17vh] overflow-y-auto">
+        <div className="h-[20vh] overflow-y-auto">
           {data &&
             data.artists?.items
               ?.slice(0, 1)
