@@ -1,4 +1,5 @@
 import { ArtistInfo } from "@/app/(main)/artist/[id]/page";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -12,8 +13,8 @@ export default function ArtistImage({ artistId }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`/api/artist/${artistId}/artist-info`);
-        const data = await res.json();
+        const res = await appAxios.get(`/api/artist/${artistId}/artist-info`);
+        const data = await res.data;
         setArtistData(data);
       } catch (err) {
         console.log("아티스트 정보 불러오기 오류", err);

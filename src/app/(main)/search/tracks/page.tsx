@@ -1,4 +1,5 @@
 "use client";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -10,10 +11,10 @@ export default function Page() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
+      const res = await appAxios.get(
         `/api/search/track?searchText=${encodeURIComponent(query)}`
       );
-      const json = await res.json();
+      const json = res.data;
       setDatas(json);
     };
     fetchData();

@@ -9,14 +9,15 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { FreeMode } from "swiper/modules";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 export default function Page() {
   const [isSelect, setIsSelect] = useState("발라드");
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
   const fetchData = async (genre: string) => {
-    const res = await fetch(`/api/getGenreList?genre=${genre}`);
-    const json = await res.json();
+    const res = await appAxios.get(`/api/getGenreList?genre=${genre}`);
+    const json = res.data;
 
     const data = json
       .map((v: any) => ({

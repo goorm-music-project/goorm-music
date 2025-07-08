@@ -9,6 +9,7 @@ import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { useRouter } from "next/navigation";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 type artistMoreTracksType = [
   {
@@ -31,9 +32,8 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
   useEffect(() => {
     const fetchTracks = async () => {
       try {
-        const res = await fetch(`/api/artist/${artistId}/top-tracks`);
-        if (!res.ok) throw new Error("아티스트 인기곡 불러오기 실패");
-        const data = await res.json();
+        const res = await appAxios.get(`/api/artist/${artistId}/top-tracks`);
+        const data = res.data as artistMoreTracksType;
         setTracks(data);
       } catch (err: unknown) {
         if (err instanceof Error) {

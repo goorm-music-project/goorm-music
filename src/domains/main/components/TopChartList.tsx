@@ -4,14 +4,13 @@ import { useEffect, useState } from "react";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 
 import PlayBar from "./PlayBar";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 export default function TopChartList() {
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
   useEffect(() => {
-    fetch("/api/topChart")
-      .then((res) => res.json())
-      .then((data) => setDatas(data));
+    appAxios.get("/api/topChart").then((res) => setDatas(res.data));
   }, []);
 
   return (

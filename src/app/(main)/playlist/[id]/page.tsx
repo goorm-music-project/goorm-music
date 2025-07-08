@@ -1,4 +1,5 @@
 "use client";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
 import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
 import PlayListEditBox from "@/domains/playlist/components/PlayListEditBox";
@@ -107,8 +108,8 @@ export default function Page() {
   };
 
   const fetchData = async () => {
-    const res = await fetch(`/api/playlist/getPlaylistDetail?id=${id}`);
-    const data = await res.json();
+    const res = await appAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
+    const data = res.data;
     setListData(data);
     setSnapshotId(data.snapshot_id);
     setName(data.name);

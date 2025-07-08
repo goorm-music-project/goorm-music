@@ -1,5 +1,5 @@
-import { getAccessToken } from "@/domains/common/lib/getAccessToken";
 import axios, { AxiosError } from "axios";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 type SpotifyTrack = {
@@ -21,13 +21,13 @@ export async function GET(
   const mode = url.searchParams.get("mode");
 
   try {
-    const token = await getAccessToken();
+    const access_token = (await cookies()).get("public_access_token")?.value;
     const res = await axios.get(
       `https://api.spotify.com/v1/artists/${artistId}/top-tracks`,
       {
         params: { market: "KR" },
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       }
     );

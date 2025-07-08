@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
@@ -47,8 +48,8 @@ export default function Page() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/album/${albumId}`);
-        const data = await res.json();
+        const res = await appAxios.get(`/api/album/${albumId}`);
+        const data = await res.data;
 
         setAlbumData({
           ...data,

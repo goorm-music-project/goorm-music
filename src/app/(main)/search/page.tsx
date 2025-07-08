@@ -3,6 +3,7 @@
 import CardComponent from "@/domains/common/components/CardComponent";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
 import FollowPlaylistModal from "@/domains/playlist/components/FollowPlaylistModal";
@@ -39,10 +40,10 @@ export default function Page() {
     const fetchData = async () => {
       try {
         setisLoading(true);
-        const res = await fetch(
+        const res = await appAxios.get(
           `/api/search?searchText=${encodeURIComponent(query)}`
         );
-        const json = await res.json();
+        const json = res.data;
         setData(json);
       } catch (err) {
         console.log("검색 오류", err);

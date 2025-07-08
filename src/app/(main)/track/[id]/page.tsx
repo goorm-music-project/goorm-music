@@ -8,6 +8,7 @@ import TrackActionBtns from "@/domains/track/components/TrackActionBtns";
 import TrackInfo from "@/domains/track/components/TrackInfo";
 import TrackLyrics from "@/domains/track/components/TrackLyrics";
 import ArtistMoreTracks from "@/domains/track/components/ArtistMoreTracks";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 interface TrackDetail {
   artists: string[]; // 아티스트 이름
@@ -28,9 +29,8 @@ export default function TrackDetailPage() {
   useEffect(() => {
     const fetchTrack = async () => {
       try {
-        const res = await fetch(`/api/track/${trackId}`);
-        if (!res.ok) throw new Error("트랙 상세 정보 불러오기 실패");
-        const data = await res.json();
+        const res = await appAxios.get(`/api/track/${trackId}`);
+        const data = res.data as TrackDetail;
         setTrack(data);
       } catch (err) {
         if (err instanceof Error) {
