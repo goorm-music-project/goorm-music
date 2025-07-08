@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Playlist } from "../types/Playlist";
+import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -16,17 +16,11 @@ const PlaylistList = ({
   onTogglePublic,
 }: Props) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [modal, setModal] = useState<null | {
-    playlist: Playlist;
-  }>(null);
-
-  // 수정 입력값
+  const [modal, setModal] = useState<null | { playlist: Playlist }>(null);
   const [editName, setEditName] = useState("");
   const [editDesc, setEditDesc] = useState("");
-
   const router = useRouter();
 
-  // 상세 진입
   const handleGoDetail = (playlistId: string) => {
     router.push(`/playlist/${playlistId}`);
   };
@@ -53,12 +47,23 @@ const PlaylistList = ({
           key={playlist.id}
           className="flex items-center bg-white rounded-xl p-4 shadow border gap-4 relative"
         >
-          {/* 앨범 커버 - 클릭하면 상세 */}
-          <div
-            className="w-16 h-16 rounded-lg bg-gray-200 flex-shrink-0 cursor-pointer"
-            onClick={() => handleGoDetail(playlist.id)}
-          />
-          {/* 정보 - 클릭하면 상세 */}
+          <div>
+            {/* 앨범 커버 */}
+            {playlist.images && playlist.images[0]?.url ? (
+              <img
+                src={playlist.images[0].url}
+                alt={playlist.name}
+                className="w-16 h-16 rounded-lg object-cover flex-shrink-0 cursor-pointer"
+                onClick={() => handleGoDetail(playlist.id)}
+              />
+            ) : (
+              <div
+                className="w-16 h-16 rounded-lg bg-gray-200 flex-shrink-0 cursor-pointer"
+                onClick={() => handleGoDetail(playlist.id)}
+              />
+            )}
+          </div>
+          {/* 정보 */}
           <div
             className="flex-grow cursor-pointer"
             onClick={() => handleGoDetail(playlist.id)}
@@ -67,7 +72,18 @@ const PlaylistList = ({
             <div className="text-xs text-gray-500 mb-1">
               {playlist.description}
             </div>
-            <div className="text-xs text-gray-400">{playlist.trackCount}곡</div>
+            <div className="text-xs text-gray-400">
+              {playlist.trackCount}곡
+              <span
+                className={`ml-2 px-2 py-1 rounded text-xs ${
+                  playlist.isPublic
+                    ? "bg-blue-100 text-blue-600"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
+                {playlist.isPublic ? "공개" : "비공개"}
+              </span>
+            </div>
           </div>
           {/* 햄버거(⋮) 버튼 */}
           <button

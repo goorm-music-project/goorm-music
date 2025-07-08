@@ -18,6 +18,7 @@ export interface Playlist {
   id: string;
   name: string;
   description: string;
+  isPublic: boolean;
 }
 
 export interface GenreTagsProps {
@@ -35,6 +36,7 @@ export interface Playlist {
   isPublic: boolean;
   ownerId: string;
   ownerNickname: string;
+  images?: { url: string }[];
 }
 
 export interface Track {

@@ -18,8 +18,6 @@ export default function ProfilePage() {
   const [tab, setTab] = useState<"playlists" | "liked" | "following">(
     "playlists"
   );
-
-  // 실제 데이터 상태
   const [profile, setProfile] = useState<Profile | null>(null);
   const [myPlaylists, setMyPlaylists] = useState<Playlist[]>([]);
   const [likedSongs, setLikedSongs] = useState<Track[]>([]);
@@ -37,21 +35,20 @@ export default function ProfilePage() {
         nickname: profileData.display_name,
         username: profileData.userId,
         profileImageUrl: null,
-        bio: "",
-        followerCount: 0,
-        followingCount: 0,
-        playlistCount: 0,
-        likedTrackCount: 0,
-        followingPlaylistCount: 0,
-        genres: profileData.genres || [], // ⭐️ 반드시 이렇게!
+        genres: profileData.genres || [],
         isMe: true,
-        isFollowing: false,
-      });
+      } as Profile);
 
       // 내 플레이리스트
       const resPlaylists = await fetch("/api/playlist/getPlaylist");
       const playlistsData = await resPlaylists.json();
-      setMyPlaylists(playlistsData);
+      setMyPlaylists(
+        (playlistsData ?? []).filter(Boolean).map((p) => ({
+          ...p,
+          isPublic: p.public,
+          images: Array.isArray(p.images) && p.images[0] ? p.images : [],
+        })) as Playlist[]
+      );
 
       // 좋아요 트랙
       const resLiked = await fetch("/api/likeList");
@@ -90,8 +87,6 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  // 플레이리스트 편집 등 아래 함수는 기존과 동일하게 유지
-
   const handleEditPlaylist = async (
     playlistId: string,
     newName: string,
@@ -117,11 +112,13 @@ export default function ProfilePage() {
   const handleDeletePlaylist = async (playlistId: string) => {
     if (!confirm("정말 삭제할까요?")) return;
     try {
-      const res = await fetch("/api/playlist/deletePlaylist", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: playlistId }),
-      });
+      const res = await fetch(
+        `/api/playlist/deletePlaylist?playlistId=${playlistId}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       if (!res.ok) throw new Error("삭제 실패");
       await fetchAll();
     } catch {
@@ -129,6 +126,7 @@ export default function ProfilePage() {
     }
   };
 
+  // **공개/비공개 전환**
   const handleTogglePublic = async (
     playlistId: string,
     newIsPublic: boolean

@@ -12,7 +12,6 @@ export default function ProfileHeader({ profile }: Props) {
         <div className="font-bold text-lg">{profile.nickname}</div>
         <div className="text-gray-500 text-sm">@{profile.username}</div>
       </div>
-      {/* 팔로워/팔로잉/편집 버튼 없음 */}
     </div>
   );
 }
