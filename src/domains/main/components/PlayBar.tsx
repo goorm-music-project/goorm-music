@@ -76,7 +76,6 @@ export default function PlayBar({
         <div
           key={`${item.track.id}_${idx}`}
           className="relative p-2 hover:bg-(--primary-blue-hover) group flex gap-2"
-          onClick={() => handleClickTrack(item.track.id)}
         >
           {selectable && (
             <input
@@ -86,7 +85,10 @@ export default function PlayBar({
               onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
             />
           )}
-          <div className="flex gap-3 w-full">
+          <div
+            className="flex gap-3 w-full"
+            onClick={() => handleClickTrack(item.track.id)}
+          >
             <Image
               src={item.track.album.images[0]?.url}
               alt={item.track.name}

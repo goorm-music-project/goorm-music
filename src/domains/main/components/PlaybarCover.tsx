@@ -22,7 +22,7 @@ export default function PlaybarCover({
   }, [likedMap, item.track.id]);
 
   return (
-    <div className="absolute left-0 top-0 w-full h-full">
+    <div className="absolute left-0 top-0 w-full h-full pointer-events-none">
       <div>
         <LikedButton
           trackId={item.track.id}
