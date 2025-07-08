@@ -82,7 +82,9 @@ export default function Page() {
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
             data.albums?.items?.map((item: any) => (
-              <CardComponent key={item.id} item={item} />
+              <Link href={`/album/${item.id}`} key={item.id}>
+                <CardComponent key={item.id} item={item} />
+              </Link>
             ))}
         </div>
       </div>
