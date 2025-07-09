@@ -41,13 +41,13 @@ export default function ProfilePage() {
 
       // 내 플레이리스트
       const resPlaylists = await fetch("/api/playlist/getPlaylist");
-      const playlistsData = await resPlaylists.json();
+      const playlistsData: Playlist[] = await resPlaylists.json();
       setMyPlaylists(
         (playlistsData ?? []).filter(Boolean).map((p) => ({
           ...p,
           isPublic: p.public,
           images: Array.isArray(p.images) && p.images[0] ? p.images : [],
-        })) as Playlist[]
+        }))
       );
 
       // 좋아요 트랙

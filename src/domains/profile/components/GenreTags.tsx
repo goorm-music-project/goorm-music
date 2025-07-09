@@ -2,18 +2,20 @@ import { useState } from "react";
 import { GenreTagsProps } from "@/domains/profile/types/Profile";
 
 const GENRES = [
-  "Pop",
-  "K-Pop",
-  "Rock",
-  "Hip-hop",
-  "Indie",
-  "Jazz",
-  "EDM",
-  "R&B",
-  "Ballad",
-  "Folk",
-  "Classical",
-  "Metal",
+  "발라드",
+  "팝",
+  "어쿠스틱",
+  "아이돌",
+  "락",
+  "알앤비",
+  "일렉트로닉",
+  "재즈",
+  "힙합",
+  "인디",
+  "성인가요",
+  "메탈",
+  "뉴에이지",
+  "클래식",
 ];
 
 async function patchUserGenres(userId: string, genres: string[]) {
@@ -33,11 +35,7 @@ export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
 
   const toggleGenre = (genre: string) => {
     setSelected((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : prev.length < 5
-        ? [...prev, genre]
-        : prev
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
     );
   };
 
@@ -56,19 +54,16 @@ export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
 
   return (
     <div>
-      {/* 현재 선택된 장르 표시 */}
       <div className="flex items-center gap-2 flex-wrap">
-        {selected.length === 0 && (
-          <span className="text-gray-400">선호 장르 없음</span>
-        )}
-        {selected.map((genre) => (
-          <span
-            key={genre}
-            className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
-          >
-            {genre}
-          </span>
-        ))}
+        {selected.length > 0 &&
+          selected.map((genre) => (
+            <span
+              key={genre}
+              className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
+            >
+              {genre}
+            </span>
+          ))}
         <button
           className="ml-2 text-xs text-blue-600 underline"
           onClick={() => setEditing(true)}
@@ -76,23 +71,29 @@ export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
           편집
         </button>
       </div>
-
-      {/* 모달 UI */}
       {editing && (
         <div className="fixed inset-0 bg-black/30 z-50 flex justify-center items-center">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-80">
-            <div className="font-semibold mb-3">선호 장르 선택 (최대 5개)</div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="font-semibold mb-3 text-center text-lg">
+              선호 장르 선택
+            </div>
+            <div className="grid grid-cols-3 gap-2">
               {GENRES.map((genre) => (
                 <button
                   key={genre}
-                  className={`px-3 py-1 rounded-full border ${
-                    selected.includes(genre)
-                      ? "bg-blue-500 text-white border-blue-500"
-                      : "bg-gray-100 text-gray-800 border-gray-300"
-                  }`}
-                  onClick={() => toggleGenre(genre)}
                   type="button"
+                  className={`
+                    flex items-center justify-center
+                    h-12 min-w-[90px] px-2 py-1
+                    rounded-full border text-base font-medium
+                    transition
+                    ${
+                      selected.includes(genre)
+                        ? "bg-blue-500 text-white border-blue-500"
+                        : "bg-white text-blue-500 border-blue-400"
+                    }
+                  `}
+                  onClick={() => toggleGenre(genre)}
                 >
                   {genre}
                 </button>
@@ -101,7 +102,10 @@ export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
             <div className="flex justify-end mt-4 gap-2">
               <button
                 className="px-3 py-1 text-gray-500 hover:text-black"
-                onClick={() => setEditing(false)}
+                onClick={() => {
+                  setSelected(genres || []);
+                  setEditing(false);
+                }}
                 disabled={loading}
               >
                 취소

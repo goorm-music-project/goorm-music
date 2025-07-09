@@ -13,7 +13,7 @@ export async function GET() {
 
   try {
     const res = await axios.get(
-      "https://api.spotify.com/v1/me/tracks?limit=5",
+      "https://api.spotify.com/v1/me/tracks?limit=50",
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
