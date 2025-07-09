@@ -23,7 +23,7 @@ export default function PlayListModal({
 }: Props) {
   return (
     <Modal showModal={showModal} onClose={onClose}>
-      <div className="w-[80vw] min-h-[300px] max-h-[500px] flex flex-col gap-2">
+      <div className="min-h-[300px] max-h-[500px] flex flex-col gap-2">
         <h2>플레이리스트 추가</h2>
         <div className="overflow-y-auto min-h-[220px]">
           <PlayList

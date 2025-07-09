@@ -63,7 +63,7 @@ export default function AddNewPlayListModal({
   if (isLoading) return <LoadingSpinner />;
   return (
     <Modal showModal={showModal} onClose={onClose}>
-      <div className="w-[80vw] h-[300px] flex flex-col gap-2">
+      <div className="h-[300px] flex flex-col gap-2">
         <h2>새 플레이리스트</h2>
         <div className="">
           <form onSubmit={handleAddNewPlaylist} id="addPlayList">

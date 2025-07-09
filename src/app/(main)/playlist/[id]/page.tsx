@@ -114,22 +114,24 @@ export default function Page() {
     <div>
       <h1>나의 플레이리스트</h1>
       {listData && (
-        <div className="flex flex-col gap-2 items-center">
-          <PlayListDetailInfo
-            listData={listData}
-            setIsEdit={setIsEdit}
-            handlePlaylistDelBtn={handlePlaylistDelBtn}
-          />
-          <PlayListEditBox
-            isEdit={isEdit}
-            name={name}
-            setName={setName}
-            description={description}
-            setDescription={setDescription}
-            isPublic={isPublic}
-            setIsPublic={setIsPublic}
-            handleEditPlaylist={handleEditPlaylist}
-          />
+        <div className="flex flex-col gap-2 items-center md:flex-row md:items-start">
+          <div className="md:flex flex-col md:mt-8 md:w-[40%]">
+            <PlayListDetailInfo
+              listData={listData}
+              setIsEdit={setIsEdit}
+              handlePlaylistDelBtn={handlePlaylistDelBtn}
+            />
+            <PlayListEditBox
+              isEdit={isEdit}
+              name={name}
+              setName={setName}
+              description={description}
+              setDescription={setDescription}
+              isPublic={isPublic}
+              setIsPublic={setIsPublic}
+              handleEditPlaylist={handleEditPlaylist}
+            />
+          </div>
           <div className="w-full">
             <button
               className="text-2xl block ml-auto"

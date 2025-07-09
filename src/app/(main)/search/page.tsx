@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import CardComponent from "@/domains/common/components/CardComponent";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import TrackCard from "@/domains/common/components/TrackCard";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
@@ -60,11 +60,17 @@ export default function Page() {
     <div>
       <div>
         <h2 className="mb-2">대표 아티스트</h2>
-        <div className="h-[17vh] overflow-y-auto">
+        <div className="h-[20vh] overflow-y-auto">
           {data &&
             data.artists?.items
               ?.slice(0, 1)
-              .map((item: any) => <CardComponent key={item.id} item={item} />)}
+              .map((item: any) => (
+                <TrackCard
+                  key={item.id}
+                  imageUrl={item.images?.[0]?.url}
+                  name={item.name}
+                />
+              ))}
         </div>
       </div>
 
@@ -82,7 +88,13 @@ export default function Page() {
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
             data.albums?.items?.map((item: any) => (
-              <CardComponent key={item.id} item={item} />
+              <Link href={`/album/${item.id}`} key={item.id}>
+                <TrackCard
+                  key={item.id}
+                  imageUrl={item.images?.[0]?.url}
+                  name={item.name}
+                />
+              </Link>
             ))}
         </div>
       </div>

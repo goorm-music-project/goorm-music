@@ -17,12 +17,14 @@ interface Props {
     uri: string,
     idx: number
   ) => void;
+  className?: string;
 }
 
 export default function PlayBar({
   tracks,
   selectable,
   handleChangeChk,
+  className,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
   const [showPlayListModal, setShowPlayListModal] = useState(false);
@@ -69,12 +71,11 @@ export default function PlayBar({
   }, [tracks]);
 
   return (
-    <div>
+    <div className={className ? "grid grid-cols-1 md:grid-cols-2 gap-2" : ""}>
       {tracks.map((item, idx) => (
         <div
           key={`${item.track.id}_${idx}`}
           className="relative p-2 hover:bg-(--primary-blue-hover) group flex gap-2"
-          onClick={() => handleClickTrack(item.track.id)}
         >
           {selectable && (
             <input
@@ -84,7 +85,10 @@ export default function PlayBar({
               onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
             />
           )}
-          <div className="flex gap-3 w-full">
+          <div
+            className="flex gap-3 w-full"
+            onClick={() => handleClickTrack(item.track.id)}
+          >
             <Image
               src={item.track.album.images[0]?.url}
               alt={item.track.name}

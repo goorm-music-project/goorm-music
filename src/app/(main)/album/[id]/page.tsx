@@ -67,24 +67,24 @@ export default function Page() {
 
   return (
     <div>
-      <div className="">
+      <div className="md:flex">
         {albumData && (
           <>
-            <div className="flex flex-col gap-2 mb-4 items-center">
+            <div className="flex flex-col gap-2 mb-4 items-center md:w-[40%] md:mt-2">
               <Image
                 src={albumData.images[0].url}
                 alt={albumData.name}
-                width={150}
-                height={150}
+                width={250}
+                height={250}
               />
-              <h2 className="truncate">{albumData.name}</h2>
-              <p className="truncate">
+              <h2 className="truncate w-full text-center">{albumData.name}</h2>
+              <p className="truncate w-full text-center">
                 <Link href={`/artist/${albumData.artists[0].id}`}>
                   {albumData.artists[0].name}
                 </Link>
               </p>
             </div>
-            <div>
+            <div className="w-full">
               <h1>앨범 수록곡을 확인해보세요.</h1>
               {<PlayBar tracks={albumData.tracks} />}
             </div>

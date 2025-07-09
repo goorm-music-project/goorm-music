@@ -23,7 +23,7 @@ export default function PlayListEditBox({
   handleEditPlaylist,
 }: Props) {
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col gap-4 items-center">
       <div>
         <input
           type="text"

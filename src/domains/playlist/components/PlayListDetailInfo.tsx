@@ -16,12 +16,12 @@ export default function PlayListDetailInfo({
   handlePlaylistDelBtn,
 }: Props) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 items-center">
       <Image
         src={listData.images?.[0]?.url || "/goorm_logo_blue.png"}
         alt={listData.name}
-        width={200}
-        height={200}
+        width={250}
+        height={250}
         className="rounded"
       />
       <div className="text-center">
