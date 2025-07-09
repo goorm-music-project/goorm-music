@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Profile } from "../types/Profile";
-import { Playlist } from "../types/Playlist";
-import { Track } from "../types/Track";
+import { Playlist } from "../types/Profile";
+import { Track } from "../types/Profile";
 
 type TabKey = "playlists" | "liked" | "following";
 

@@ -15,7 +15,9 @@ const ProfileTabMenu = ({ tab, onTabChange }: Props) => (
           : "border-transparent text-gray-500"
       }`}
     >
-      <FaMusic />
+      <span className="hidden sm:inline">
+        <FaMusic />
+      </span>
       플레이리스트
     </button>
     <button
@@ -26,7 +28,9 @@ const ProfileTabMenu = ({ tab, onTabChange }: Props) => (
           : "border-transparent text-gray-500"
       }`}
     >
-      <FaHeart />
+      <span className="hidden sm:inline">
+        <FaHeart />
+      </span>
       좋아요
     </button>
     <button
@@ -37,7 +41,9 @@ const ProfileTabMenu = ({ tab, onTabChange }: Props) => (
           : "border-transparent text-gray-500"
       }`}
     >
-      <FaUsers />
+      <span className="hidden sm:inline">
+        <FaUsers />
+      </span>
       팔로우
     </button>
   </div>

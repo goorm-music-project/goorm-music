@@ -1,30 +1,33 @@
+// src/domains/profile/components/ProfileHeader.tsx
+import React from "react";
 import { Profile } from "../types/Profile";
 
 interface Props {
   profile: Profile;
 }
 
-export default function ProfileHeader({ profile }: Props) {
+const ProfileHeader = ({ profile }: Props) => {
   return (
-    <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-4 py-4">
-      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center">
+    <div className="flex flex-col items-center">
+      <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden mb-3">
         {profile.imageUrl ? (
           <img
             src={profile.imageUrl}
-            alt="프로필 이미지"
+            alt={profile.nickname}
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="text-3xl text-gray-400"></span>
+          <div className="w-full h-full flex items-center justify-center text-4xl text-gray-400">
+            <span role="img" aria-label="user"></span>
+          </div>
         )}
       </div>
-
-      <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-        <div className="font-bold text-base sm:text-lg">{profile.nickname}</div>
-        <div className="text-gray-500 text-xs sm:text-sm">
-          @{profile.username}
-        </div>
+      <span className="text-2xl font-bold break-all">{profile.nickname}</span>
+      <div className="text-gray-500 text-sm mt-1 break-all">
+        @{profile.username}
       </div>
     </div>
   );
-}
+};
+
+export default ProfileHeader;

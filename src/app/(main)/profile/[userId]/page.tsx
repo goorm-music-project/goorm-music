@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import ProfileHeader from "@/domains/profile/components/ProfileHeader";
 import GenreTags from "@/domains/profile/components/GenreTags";
@@ -86,7 +87,7 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  // 이하 동일 (이벤트 핸들러 등...)
+  // 플레이리스트 관련 핸들러
   const handleEditPlaylist = async (
     playlistId: string,
     newName: string,
@@ -149,7 +150,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-32">
       <div className="bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-2xl mx-auto px-4 pt-10 pb-8">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 pt-10 pb-8">
           <ProfileHeader profile={profile} />
           <div className="mt-6">
             <GenreTags
@@ -164,7 +165,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <div className="max-w-2xl mx-auto px-4">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8">
         <ProfileTabMenu tab={tab} onTabChange={setTab} />
         {tab === "playlists" && (
           <PlaylistList

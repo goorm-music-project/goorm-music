@@ -47,7 +47,6 @@ export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
       await patchUserGenres(userId, selected);
       if (onSave) onSave(selected);
       setEditing(false);
-      // 성공 알림 필요시 alert 등
     } catch {
       alert("장르 저장에 실패했습니다.");
     } finally {

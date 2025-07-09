@@ -7,13 +7,6 @@ export interface Profile {
   isMe: boolean;
 }
 
-export interface Playlist {
-  id: string;
-  name: string;
-  description: string;
-  isPublic: boolean;
-}
-
 export interface GenreTagsProps {
   userId: string;
   genres: string[];
@@ -30,6 +23,7 @@ export interface Playlist {
   ownerId: string;
   ownerNickname: string;
   images?: { url: string }[];
+  public: boolean;
 }
 
 export interface Track {

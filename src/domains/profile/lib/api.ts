@@ -10,15 +10,8 @@ export async function fetchProfile(accessToken: string): Promise<Profile> {
     id: res.data.id,
     nickname: res.data.display_name,
     username: res.data.id,
-    profileImageUrl: res.data.images?.[0]?.url ?? null,
-    bio: "",
-    followerCount: res.data.followers?.total ?? 0,
-    followingCount: 0,
-    playlistCount: 0,
-    likedTrackCount: 0,
-    followingPlaylistCount: 0,
+    imageUrl: res.data.images?.[0]?.url ?? null,
     genres: [],
     isMe: true,
-    isFollowing: false,
   };
 }
