@@ -8,12 +8,14 @@ interface Props {
   listData: PlaylistDetail;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
   handlePlaylistDelBtn: () => void;
+  canEdit: boolean;
 }
 
 export default function PlayListDetailInfo({
   listData,
   setIsEdit,
   handlePlaylistDelBtn,
+  canEdit,
 }: Props) {
   return (
     <div className="flex flex-col gap-2 items-center">
@@ -24,14 +26,19 @@ export default function PlayListDetailInfo({
         height={250}
         className="rounded"
       />
-      <div className="text-center">
-        <button className="text-2xl" onClick={() => setIsEdit((prev) => !prev)}>
-          <TiPencil />
-        </button>
-        <button className="text-2xl" onClick={handlePlaylistDelBtn}>
-          <MdDelete />
-        </button>
-      </div>
+      {canEdit && (
+        <div className="text-center">
+          <button
+            className="text-2xl"
+            onClick={() => setIsEdit((prev) => !prev)}
+          >
+            <TiPencil />
+          </button>
+          <button className="text-2xl" onClick={handlePlaylistDelBtn}>
+            <MdDelete />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

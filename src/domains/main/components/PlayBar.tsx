@@ -18,6 +18,7 @@ interface Props {
     idx: number
   ) => void;
   className?: string;
+  canEdit?: boolean;
 }
 
 export default function PlayBar({
@@ -25,6 +26,7 @@ export default function PlayBar({
   selectable,
   handleChangeChk,
   className,
+  canEdit,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
   const [showPlayListModal, setShowPlayListModal] = useState(false);
@@ -77,14 +79,15 @@ export default function PlayBar({
           key={`${item.track.id}_${idx}`}
           className="relative p-2 hover:bg-(--primary-blue-hover) group flex gap-2"
         >
-          {selectable && (
-            <input
-              type="checkbox"
-              className="flex-none"
-              style={{ width: "18px" }}
-              onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
-            />
-          )}
+          {selectable ||
+            (!canEdit && (
+              <input
+                type="checkbox"
+                className="flex-none"
+                style={{ width: "18px" }}
+                onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
+              />
+            ))}
           <div
             className="flex gap-3 w-full"
             onClick={() => handleClickTrack(item.track.id)}
