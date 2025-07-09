@@ -77,8 +77,8 @@ export default function Page() {
                 width={250}
                 height={250}
               />
-              <h2 className="truncate">{albumData.name}</h2>
-              <p className="truncate">
+              <h2 className="truncate w-full text-center">{albumData.name}</h2>
+              <p className="truncate w-full text-center">
                 <Link href={`/artist/${albumData.artists[0].id}`}>
                   {albumData.artists[0].name}
                 </Link>
