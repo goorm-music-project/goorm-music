@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
 import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
 import PlayListEditBox from "@/domains/playlist/components/PlayListEditBox";
@@ -21,6 +22,8 @@ export default function Page() {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
+  const { userId } = userSpotifyStore();
+  const [canEdit, setCanEdit] = useState(false);
   const [listData, setListData] = useState<PlaylistDetail | null>(null);
   const [snapshotId, setSnapshotId] = useState<string>("");
   const [name, setName] = useState("");
@@ -99,6 +102,7 @@ export default function Page() {
   const fetchData = async () => {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
+    if (data.owner.id === userId) setCanEdit(true);
     setListData(data);
     setSnapshotId(data.snapshot_id);
     setName(data.name);
@@ -116,11 +120,16 @@ export default function Page() {
       <h1>나의 플레이리스트</h1>
       {listData && (
         <div className="flex flex-col gap-2 items-center md:flex-row md:items-start">
-          <div className="md:flex flex-col md:mt-8 md:w-[40%]">
+          <div
+            className={`md:flex flex-col md:w-[40%] ${
+              !canEdit ? "md:mt-2" : "md:mt-8"
+            }`}
+          >
             <PlayListDetailInfo
               listData={listData}
               setIsEdit={setIsEdit}
               handlePlaylistDelBtn={handlePlaylistDelBtn}
+              canEdit={canEdit}
             />
             <PlayListEditBox
               isEdit={isEdit}
@@ -134,17 +143,21 @@ export default function Page() {
             />
           </div>
           <div className="w-full">
-            <button
-              className="text-2xl block ml-auto"
-              onClick={handleTrackDelBtn}
-            >
-              <MdDelete />
-            </button>
+            {canEdit && (
+              <button
+                className="text-2xl block ml-auto"
+                onClick={handleTrackDelBtn}
+              >
+                <MdDelete />
+              </button>
+            )}
+
             {tracks && tracks.length > 0 ? (
               <PlayBar
                 tracks={tracks}
                 selectable={true}
                 handleChangeChk={handleChangeChk}
+                canEdit={canEdit}
               />
             ) : (
               <p className="text-sm text-gray-400 p-4">

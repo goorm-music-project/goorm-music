@@ -28,7 +28,7 @@ export default function PlaybarCover({
           trackId={item.track.id}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
-          className="absolute right-15 top-[36%]"
+          className="absolute right-15 top-[36%] pointer-events-auto"
         />
         <button
           className="text-2xl absolute right-5 top-[40%] text-(--primary-blue) pointer-events-auto"

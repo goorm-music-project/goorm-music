@@ -18,6 +18,7 @@ interface Props {
     idx: number
   ) => void;
   className?: string;
+  canEdit?: boolean;
 }
 
 export default function PlayBar({
@@ -25,6 +26,7 @@ export default function PlayBar({
   selectable,
   handleChangeChk,
   className,
+  canEdit,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
   const [showPlayListModal, setShowPlayListModal] = useState(false);
@@ -52,13 +54,27 @@ export default function PlayBar({
 
     const fetchLikedTracks = async () => {
       const trackIds = tracks.map((t) => t.track.id);
+      const sliceSize = 50;
+
+      const sliceIds = Array.from(
+        { length: Math.ceil(trackIds.length / sliceSize) },
+        (_, i) => trackIds.slice(i * sliceSize, i * sliceSize + sliceSize)
+      );
+
       try {
-        const res = await authAxios.get(`/api/isLiked?trackId=${trackIds}`);
-        const result = await res.data;
+        const resultArr: boolean[] = [];
+
+        for (const ids of sliceIds) {
+          const idsData = ids.join(",");
+          const res = await authAxios.get(`/api/isLiked?trackId=${idsData}`);
+          const result = await res.data;
+
+          resultArr.push(result);
+        }
 
         const map: Record<string, boolean> = {};
         trackIds.forEach((id, idx) => {
-          map[id] = result.data[idx];
+          map[id] = resultArr[idx];
         });
 
         setLikedMap(map);
@@ -75,9 +91,9 @@ export default function PlayBar({
       {tracks.map((item, idx) => (
         <div
           key={`${item.track.id}_${idx}`}
-          className="relative p-2 hover:bg-(--primary-blue-hover) group flex gap-2"
+          className="relative p-2 flex gap-2"
         >
-          {selectable && (
+          {selectable && canEdit && (
             <input
               type="checkbox"
               className="flex-none"

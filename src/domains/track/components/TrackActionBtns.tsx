@@ -28,7 +28,7 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
     };
 
     fetchLikedTracks();
-  }, [trackId]);
+  }, [trackId, isLoggedIn]);
 
   return (
     <div className="relative flex flex-col items-center mt-4">
