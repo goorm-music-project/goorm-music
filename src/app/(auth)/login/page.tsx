@@ -20,14 +20,20 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <Image src="/goorm_logo_blue.png" alt="로고" className="mt-10" width={320} height={320}/>
+    <div className="flex flex-col md:flex-row justify-center items-center h-screen gap-8 px-4">
+      <Image src="/goorm_logo_blue.png" alt="로고" width={320} height={320} />
       <button
         className="flex items-center border border-gray-800 px-8 py-4 rounded hover:bg-gray-100"
         onClick={handleLogin}
       >
-        <Image src="/spotify_logo.png" alt="spotify logo" className="mr-4" width={40} height={40}/>{" "}
-        spotify로 로그인하기
+        <Image
+          src="/spotify_logo.png"
+          alt="spotify logo"
+          className="mr-4"
+          width={40}
+          height={40}
+        />
+        <span className="text-lg font-semibold">spotify로 로그인하기</span>
       </button>
     </div>
   );
