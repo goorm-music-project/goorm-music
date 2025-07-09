@@ -102,7 +102,7 @@ export default function Page() {
   const fetchData = async () => {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
-    if (data.owner.id === userId) setCanEdit(true);
+    if (data.owner.id === userId) setCanEdit(false);
     setListData(data);
     setSnapshotId(data.snapshot_id);
     setName(data.name);
@@ -120,7 +120,11 @@ export default function Page() {
       <h1>나의 플레이리스트</h1>
       {listData && (
         <div className="flex flex-col gap-2 items-center md:flex-row md:items-start">
-          <div className="md:flex flex-col md:mt-8 md:w-[40%]">
+          <div
+            className={`md:flex flex-col md:w-[40%] ${
+              !canEdit ? "md:mt-2" : "md:mt-8"
+            }`}
+          >
             <PlayListDetailInfo
               listData={listData}
               setIsEdit={setIsEdit}
