@@ -74,8 +74,8 @@ export default function Page() {
               <Image
                 src={albumData.images[0].url}
                 alt={albumData.name}
-                width={150}
-                height={150}
+                width={250}
+                height={250}
               />
               <h2 className="truncate">{albumData.name}</h2>
               <p className="truncate">

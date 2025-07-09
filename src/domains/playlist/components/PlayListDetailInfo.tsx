@@ -20,8 +20,8 @@ export default function PlayListDetailInfo({
       <Image
         src={listData.images?.[0]?.url || "/goorm_logo_blue.png"}
         alt={listData.name}
-        width={200}
-        height={200}
+        width={250}
+        height={250}
         className="rounded"
       />
       <div className="text-center">
