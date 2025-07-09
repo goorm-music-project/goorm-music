@@ -21,8 +21,8 @@ export default function MainLayout({
     <div className="min-h-screen relative">
       {windowWidth && windowWidth < 768 ? <MobileTopBar /> : <DesktopTopBar />}
       <div
-        className={`p-4 fixed left-0 md:left-70 md:right-0 top-16 md:top-25 overflow-y-auto overflow-x-hidden ${
-          selectedTrackId ? "h-[calc(86vh-80px)]" : "h-[86vh]"
+        className={`w-full md:w-auto p-4 fixed left-0 top-16 overflow-y-auto overflow-x-hidden md:top-25 md:left-70 md:right-0 ${
+          selectedTrackId ? "h-[calc(86vh-80px)] md:h-[calc(86vh-20px)] " : "h-[86vh]"
         }`}
       >
         {children}
