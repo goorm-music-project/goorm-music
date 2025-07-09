@@ -102,7 +102,7 @@ export default function Page() {
   const fetchData = async () => {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
-    if (data.owner.id === userId) setCanEdit(false);
+    if (data.owner.id === userId) setCanEdit(true);
     setListData(data);
     setSnapshotId(data.snapshot_id);
     setName(data.name);
