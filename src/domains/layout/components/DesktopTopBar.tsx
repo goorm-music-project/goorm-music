@@ -45,7 +45,8 @@ export default function DesktopTopBar() {
         </button>
       </form>
       <FaUser
-        className="text-blue-300 text-xl cursor-pointer w-10 h-10"
+        size={30}
+        className="text-blue-300 text-xl cursor-pointer"
         onClick={() => router.push(`/profile/${userId}`)}
       />
     </div>
