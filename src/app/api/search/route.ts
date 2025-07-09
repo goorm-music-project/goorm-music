@@ -2,6 +2,17 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+export interface TrackItem {
+  id: string;
+  name: string;
+  uri: string;
+  artists: { name: string }[];
+  album: {
+    name: string;
+    images: { url: string }[];
+  };
+}
+
 export async function GET(req: Request) {
   const access_token = (await cookies()).get("public_access_token")?.value;
 
@@ -27,7 +38,7 @@ export async function GET(req: Request) {
       }
     );
     const json = res.data;
-    const formatted = json.tracks?.items.map((v: any) => ({
+    const formatted = json.tracks?.items.map((v: TrackItem) => ({
       track: v,
     }));
     const data = {

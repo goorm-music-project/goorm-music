@@ -68,7 +68,7 @@ export default function PlayBar({
     };
 
     fetchLikedTracks();
-  }, [tracks]);
+  }, [tracks, userId]);
 
   return (
     <div className={className ? "grid grid-cols-1 md:grid-cols-2 gap-2" : ""}>

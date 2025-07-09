@@ -18,7 +18,7 @@ export default function Page() {
       setListData(myPlaylist);
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   return (
     <div>

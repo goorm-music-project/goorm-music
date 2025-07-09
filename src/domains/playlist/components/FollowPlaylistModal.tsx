@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Modal from "@/domains/common/components/Modal";
 import React, { useEffect, useState } from "react";
 import PlayListBox from "./PlayListBox";
@@ -59,12 +60,12 @@ export default function FollowPlaylistModal({
     if (!userId || !followId) return;
 
     fetchPlaylists();
-  }, [setPlaylists, userId, followId]);
+  }, [followId, userId]);
 
   return (
     <>
       <Modal showModal={showModal} onClose={onClose}>
-        <div className="w-[80vw] h-[400px] flex flex-col gap-2">
+        <div className="h-[400px] flex flex-col gap-2">
           <h2>Follow 한 플레이리스트</h2>
           {isExist && (
             <p className="text-(--error-red)">
@@ -74,6 +75,10 @@ export default function FollowPlaylistModal({
           <div className="overflow-y-auto min-h-[220px] h-[320px]">
             {isLoading ? (
               <LoadingSpinner />
+            ) : playlists.length === 0 ? (
+              <div className="text-sm text-gray-500 text-center mt-8">
+                follow한 플레이리스트가 없습니다.
+              </div>
             ) : (
               <div className="flex flex-col gap-4">
                 {playlists.map((playlist) => (

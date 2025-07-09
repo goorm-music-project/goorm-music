@@ -1,6 +1,7 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { TrackItem } from "../route";
 
 export async function GET(req: Request) {
   const access_token = (await cookies()).get("public_access_token")?.value;
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
       }
     );
     const json = res.data;
-    const data = json.tracks?.items.map((v: any) => ({
+    const data = json.tracks?.items.map((v: TrackItem) => ({
       track: v,
     }));
     return NextResponse.json(data);

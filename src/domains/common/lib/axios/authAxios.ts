@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 const authAxios = axios.create({
@@ -35,7 +36,7 @@ authAxios.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await axios.post("/api/refresh-token", null, {
+        await axios.post("/api/refresh-token", null, {
           withCredentials: true,
         });
 

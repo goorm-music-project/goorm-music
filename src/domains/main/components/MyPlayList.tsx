@@ -34,7 +34,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
       setListData(myPlaylist);
     };
     fetchData();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, userId]);
 
   return (
     <div>
