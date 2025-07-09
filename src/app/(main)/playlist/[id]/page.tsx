@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import PlayBar from "@/domains/main/components/PlayBar";

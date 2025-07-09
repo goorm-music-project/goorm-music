@@ -1,13 +1,14 @@
 "use client";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
+import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function Page() {
   const params = useSearchParams();
   const query = params.get("query") || "";
-  const [datas, setDatas] = useState<any>([]);
+  const [datas, setDatas] = useState<PlaylistItem[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
