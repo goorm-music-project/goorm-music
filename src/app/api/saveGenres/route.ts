@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     await setDoc(
       userRef,
       {
-        preferredGenres: genres,
+        genres: genres,
         updateAt: Date.now(),
       },
       {
