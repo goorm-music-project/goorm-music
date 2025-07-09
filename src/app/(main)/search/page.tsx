@@ -30,8 +30,6 @@ export default function Page() {
     }
     setShowFollowList(true);
     setFollowId(id);
-    // setMessage("Follow 하시겠습니까?");
-    // setShowConfirmModal(true);
   };
 
   useEffect(() => {
