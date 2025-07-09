@@ -30,8 +30,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
     const fetchData = async () => {
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const data = await res.data;
-      const myPlaylist = data.filter((v) => v.owner.id === userId);
-      setListData(myPlaylist);
+      setListData(data);
     };
     fetchData();
   }, [isLoggedIn, userId]);
