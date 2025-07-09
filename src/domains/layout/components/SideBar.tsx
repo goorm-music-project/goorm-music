@@ -19,9 +19,7 @@ type PlayListType = {
 export default function SideBar() {
   const [playList, setPlayList] = useState<PlayListType[]>([]);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
-  const userId = userSpotifyStore((state) => state.userId);
   const router = useRouter();
-  console.log(isLoggedIn, userId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +27,7 @@ export default function SideBar() {
       const data = (await res.data) as PlayListType[];
       setPlayList(data);
     };
-    if (isLoggedIn) fetchData();
+    fetchData();
   }, []);
 
   return (
