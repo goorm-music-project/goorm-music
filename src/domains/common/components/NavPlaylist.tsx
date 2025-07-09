@@ -1,6 +1,5 @@
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +8,6 @@ import { FaPlus } from "react-icons/fa6";
 
 export default function NavPlaylist() {
   const { isLoggedIn, userId } = userSpotifyStore();
-  const { playlistStore } = usePlaylistStore();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
@@ -38,7 +36,7 @@ export default function NavPlaylist() {
       }
     };
     fetchData();
-  }, [isLoggedIn, userId, playlistStore]);
+  }, [isLoggedIn, userId]);
 
   return (
     <div className="hidden w-full mt-2 h-[80vh] overflow-y-auto md:block ">

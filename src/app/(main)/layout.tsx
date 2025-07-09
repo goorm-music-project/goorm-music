@@ -3,11 +3,11 @@
 import BottomNavBar from "@/domains/layout/components/BottomNavBar";
 import MobileTopBar from "@/domains/layout/components/MobileTopBar";
 import InitUserIdState from "@/domains/common/components/InitUserIdState";
-import { useEffect } from "react";
-import axios from "axios";
-import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import MiniPlayer from "@/domains/layout/components/MiniPlayer";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import { useWindowWidth } from "@/domains/common/hooks/useWindowWidth";
+import DesktopTopBar from "@/domains/layout/components/DesktopTopBar";
+import SideBar from "@/domains/layout/components/SideBar";
 
 export default function MainLayout({
   children,
@@ -15,40 +15,20 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const { selectedTrackId } = usePlayerSotre();
-
-  useEffect(() => {
-    const tryRefresh = async () => {
-      const res = await fetch("/api/refresh-token", { method: "POST" });
-
-      if (res.status === 200) {
-        const userData = await axios.post("/api/userData");
-        const { userId } = userData.data;
-
-        if (userId) {
-          userSpotifyStore.getState().setUserId(userId);
-          userSpotifyStore.getState().setIsLoggedIn(true);
-        }
-      } else {
-        userSpotifyStore.getState().setUserId("");
-        userSpotifyStore.getState().setIsLoggedIn(false);
-      }
-    };
-
-    tryRefresh();
-  }, []);
+  const windowWidth = useWindowWidth();
 
   return (
     <div className="min-h-screen relative">
-      <MobileTopBar />
+      {windowWidth && windowWidth < 768 ? <MobileTopBar /> : <DesktopTopBar />}
       <div
-        className={`w-full p-4 fixed left-0 top-16 overflow-y-auto overflow-x-hidden ${
-          selectedTrackId ? "h-[calc(86vh-80px)]" : "h-[86vh]"
+        className={`w-full md:w-auto p-4 fixed left-0 top-16 overflow-y-auto overflow-x-hidden md:top-25 md:left-70 md:right-0 ${
+          selectedTrackId ? "h-[calc(86vh-80px)] md:h-[calc(86vh-20px)] " : "h-[86vh]"
         }`}
       >
         {children}
       </div>
       <MiniPlayer />
-      <BottomNavBar />
+      {windowWidth && windowWidth < 768 ? <BottomNavBar /> : <SideBar />}
       <InitUserIdState />
     </div>
   );
