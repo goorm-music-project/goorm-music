@@ -14,7 +14,9 @@ export default function Page() {
     const fetchData = async () => {
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const data = res.data;
-      const myPlaylist = data.filter((v) => v.owner.id === userId);
+      const myPlaylist = data.filter(
+        (v: { owner: { id: string | null } }) => v.owner.id === userId
+      );
       setListData(myPlaylist);
     };
     fetchData();
