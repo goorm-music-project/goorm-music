@@ -20,7 +20,8 @@ export async function POST() {
       },
     });
 
-    const { id: userId, display_name, email } = res.data;
+    const { id: userId, display_name, email, images } = res.data;
+    const imageUrl = images && images.length > 0 ? images[0].url : null;
 
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
@@ -37,6 +38,7 @@ export async function POST() {
       display_name,
       email,
       userExists,
+      imageUrl,
       genres,
     });
   } catch (err: any) {
