@@ -53,7 +53,6 @@ export default function ProfilePage() {
     }
   };
 
-  // 데이터 전체 fetch
   async function fetchAll() {
     setLoading(true);
     try {
@@ -138,14 +137,7 @@ export default function ProfilePage() {
       </div>
       <div className="px-4">
         <ProfileTabMenu tab={tab} onTabChange={setTab} />
-        {tab === "playlists" && (
-          <PlaylistList
-            playlists={myPlaylists}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onTogglePublic={() => {}}
-          />
-        )}
+        {tab === "playlists" && <PlaylistList playlists={myPlaylists} />}
         {tab === "liked" && (
           <LikedTrackList tracks={likedSongs} onUnlike={handleUnlikeTrack} />
         )}
@@ -153,7 +145,6 @@ export default function ProfilePage() {
           <FollowingPlaylist
             playlists={followedPlaylists}
             onUnfollow={handleUnfollowPlaylist}
-            // 상세페이지 이동을 원하면 onClick 콜백도 props로 넘길 수 있음!
           />
         )}
       </div>
