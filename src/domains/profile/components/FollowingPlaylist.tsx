@@ -9,7 +9,7 @@ const FollowingPlaylist = ({ playlists }: Props) => (
     {playlists.map((pl) => (
       <div
         key={pl.id}
-        className="flex items-center bg-white rounded-xl p-3 sm:p-4 shadow border gap-3 w-full"
+        className="flex items-center rounded-xl p-3 sm:p-4 shadow border gap-3 w-full"
       >
         <img
           src={pl.coverImageUrl || "/default-cover.png"}

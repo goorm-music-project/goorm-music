@@ -26,9 +26,9 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
       {/* 닉네임, 이메일 */}
       <div className="flex flex-col justify-center">
         <span className="text-lg sm:text-xl font-bold">{profile.nickname}</span>
-        <span className="text-sm sm:text-base text-gray-500">
+        <div className="break-all text-gray-400 text-base mt-1 w-full">
           {profile.username}
-        </span>
+        </div>
       </div>
     </div>
   );

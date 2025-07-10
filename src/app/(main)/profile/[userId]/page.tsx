@@ -148,11 +148,11 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 pb-32">
+    <div className="min-h-screen bg-white text-gray-900 pb-24">
       <div className="bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8 pt-10 pb-8">
+        <div className="px-4 pb-8">
           <ProfileHeader profile={profile} />
-          <div className="mt-6">
+          <div className="mt-4">
             <GenreTags
               userId={profile.id}
               genres={profile.genres}
@@ -165,7 +165,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 md:px-8">
+      <div className="px-4">
         <ProfileTabMenu tab={tab} onTabChange={setTab} />
         {tab === "playlists" && (
           <PlaylistList

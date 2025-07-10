@@ -6,7 +6,7 @@ interface Props {
 }
 
 const ProfileTabMenu = ({ tab, onTabChange }: Props) => (
-  <div className="flex w-full mt-8 border-b">
+  <div className="flex justify-between text-sm font-medium border-b mb-2 whitespace-nowrap">
     <button
       onClick={() => onTabChange("playlists")}
       className={`flex-1 py-3 text-base font-semibold flex justify-center items-center gap-1 border-b-2 transition ${
