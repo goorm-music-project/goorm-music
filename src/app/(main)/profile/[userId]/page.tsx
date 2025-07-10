@@ -83,10 +83,19 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  const myPlaylists = allPlaylists.filter((pl) => pl.owner?.id === profile.id);
-  const followedPlaylists = allPlaylists.filter(
-    (pl) => pl.owner?.id !== profile.id
-  );
+  const myPlaylists = allPlaylists
+    .filter((pl) => pl.owner?.id === profile.id)
+    .map((pl) => ({
+      ...pl,
+      coverImageUrl: pl.images?.[0]?.url || null,
+    }));
+
+  const followedPlaylists = allPlaylists
+    .filter((pl) => pl.owner?.id !== profile.id)
+    .map((pl) => ({
+      ...pl,
+      coverImageUrl: pl.images?.[0]?.url || null,
+    }));
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-24">
