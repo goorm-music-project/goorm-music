@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import ProfileHeader from "@/domains/profile/components/ProfileHeader";
 import GenreTags from "@/domains/profile/components/GenreTags";
 import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
@@ -16,16 +15,12 @@ import {
 } from "@/domains/profile/types/Profile";
 
 export default function ProfilePage() {
-  const params = useParams();
-  const urlUserId = params?.userId as string | undefined;
-  const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [allPlaylists, setAllPlaylists] = useState<Playlist[]>([]);
+  const [likedSongs, setLikedSongs] = useState<Track[]>([]);
   const [tab, setTab] = useState<"playlists" | "liked" | "following">(
     "playlists"
   );
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [myPlaylists, setMyPlaylists] = useState<Playlist[]>([]);
-  const [likedSongs, setLikedSongs] = useState<Track[]>([]);
-  const [followedPlaylists, setFollowedPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
 
   const handleUnlikeTrack = async (trackId: string) => {
@@ -41,18 +36,9 @@ export default function ProfilePage() {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/userData", { method: "POST" });
-      const data = await res.json();
-      setLoggedInUserId(data.userId);
-    })();
-  }, []);
-
   async function fetchAll() {
     setLoading(true);
     try {
-      // 프로필 정보 (현재 보고 있는 user)
       const resProfile = await fetch("/api/userData", { method: "POST" });
       const profileData = await resProfile.json();
       setProfile({
@@ -61,20 +47,13 @@ export default function ProfilePage() {
         username: profileData.userId,
         imageUrl: profileData.imageUrl ?? null,
         genres: profileData.genres || [],
-        isMe: loggedInUserId === urlUserId,
+        isMe: true,
       });
 
-      // 플레이리스트 전체
       const resPlaylists = await fetch("/api/playlist/getPlaylist");
       const playlistsData: Playlist[] = await resPlaylists.json();
+      setAllPlaylists(playlistsData);
 
-      // 소유/팔로우 구분 (owner.id 기준)
-      setMyPlaylists(playlistsData.filter((p) => p.owner?.id === urlUserId));
-      setFollowedPlaylists(
-        playlistsData.filter((p) => p.owner?.id !== urlUserId)
-      );
-
-      // 좋아요 트랙
       const resLiked = await fetch("/api/likeList");
       if (!resLiked.ok) throw new Error("likeList fetch failed");
       const likedData = await resLiked.json();
@@ -91,9 +70,6 @@ export default function ProfilePage() {
         })
       );
       setLikedSongs(likedTracks);
-
-      const resFollowed = await fetch("/api/followingPlaylist");
-      if (resFollowed.ok) setFollowedPlaylists(await resFollowed.json());
     } catch {
       alert("데이터 로드에 실패했습니다.");
     }
@@ -101,68 +77,16 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    if (urlUserId) fetchAll();
-    // eslint-disable-next-line
-  }, [urlUserId, loggedInUserId]);
+    fetchAll();
+  }, []);
 
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  const handleEditPlaylist = async (
-    playlistId: string,
-    newName: string,
-    newDesc: string
-  ) => {
-    try {
-      const res = await fetch("/api/playlist/editPlaylistDetail", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: playlistId,
-          name: newName,
-          description: newDesc,
-        }),
-      });
-      if (!res.ok) throw new Error("수정 실패");
-      await fetchAll();
-    } catch {
-      alert("플레이리스트 수정에 실패했습니다.");
-    }
-  };
-
-  const handleDeletePlaylist = async (playlistId: string) => {
-    if (!confirm("정말 삭제할까요?")) return;
-    try {
-      const res = await fetch(
-        `/api/playlist/deletePlaylist?playlistId=${playlistId}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (!res.ok) throw new Error("삭제 실패");
-      await fetchAll();
-    } catch {
-      alert("플레이리스트 삭제에 실패했습니다.");
-    }
-  };
-
-  const handleTogglePublic = async (
-    playlistId: string,
-    newIsPublic: boolean
-  ) => {
-    try {
-      const res = await fetch("/api/playlist/editPlaylistDetail", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: playlistId, isPublic: newIsPublic }),
-      });
-      if (!res.ok) throw new Error("공개/비공개 변경 실패");
-      await fetchAll();
-    } catch {
-      alert("공개/비공개 전환에 실패했습니다.");
-    }
-  };
+  const myPlaylists = allPlaylists.filter((pl) => pl.owner?.id === profile.id);
+  const followedPlaylists = allPlaylists.filter(
+    (pl) => pl.owner?.id !== profile.id
+  );
 
   return (
     <div className="min-h-screen bg-white text-gray-900 pb-24">
@@ -187,9 +111,9 @@ export default function ProfilePage() {
         {tab === "playlists" && (
           <PlaylistList
             playlists={myPlaylists}
-            onEdit={handleEditPlaylist}
-            onDelete={handleDeletePlaylist}
-            onTogglePublic={handleTogglePublic}
+            onEdit={() => {}}
+            onDelete={() => {}}
+            onTogglePublic={() => {}}
           />
         )}
         {tab === "liked" && (
