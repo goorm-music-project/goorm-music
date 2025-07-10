@@ -158,7 +158,6 @@ export default function Page() {
             ) : (
               <FollowBtn followId={id as string} />
             )}
-            {/* {pageName === "follow" && <FollowBtn followId={id as string} />} */}
 
             {tracks && tracks.length > 0 ? (
               <PlayBar
