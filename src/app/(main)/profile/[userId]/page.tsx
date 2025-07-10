@@ -25,6 +25,21 @@ export default function ProfilePage() {
   );
   const [loading, setLoading] = useState(true);
 
+  const handleUnfollowPlaylist = async (playlistId: string) => {
+    if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
+    try {
+      await fetch(`/api/playlist/unfollow`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playlistId }),
+      });
+      setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
+    } catch {
+      alert("삭제에 실패했습니다.");
+    }
+  };
+
+  // 좋아요 취소
   const handleUnlikeTrack = async (trackId: string) => {
     try {
       await fetch("/api/likeList", {
@@ -38,6 +53,7 @@ export default function ProfilePage() {
     }
   };
 
+  // 데이터 전체 fetch
   async function fetchAll() {
     setLoading(true);
     try {
@@ -87,6 +103,7 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
+  // 내 플레이리스트와 팔로우 플레이리스트 구분
   const myPlaylists = allPlaylists
     .filter((pl) => pl.owner?.id === profile.id)
     .map((pl) => ({
@@ -133,7 +150,11 @@ export default function ProfilePage() {
           <LikedTrackList tracks={likedSongs} onUnlike={handleUnlikeTrack} />
         )}
         {tab === "following" && (
-          <FollowingPlaylist playlists={followedPlaylists} />
+          <FollowingPlaylist
+            playlists={followedPlaylists}
+            onUnfollow={handleUnfollowPlaylist}
+            // 상세페이지 이동을 원하면 onClick 콜백도 props로 넘길 수 있음!
+          />
         )}
       </div>
     </div>
