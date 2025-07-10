@@ -10,9 +10,8 @@ import {
   PlaylistDetail,
   PlaylistItem,
 } from "@/domains/playlist/types/Playlist";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaMinus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
 export interface DeleteInfo {
@@ -23,9 +22,7 @@ export interface DeleteInfo {
 export default function Page() {
   const router = useRouter();
   const params = useParams();
-  const searchParmas = useSearchParams();
   const id = params.id;
-  const pageName = searchParmas.get("page");
   const { userId } = userSpotifyStore();
   const [canEdit, setCanEdit] = useState(false);
   const [listData, setListData] = useState<PlaylistDetail | null>(null);
@@ -159,15 +156,9 @@ export default function Page() {
                 <MdDelete />
               </button>
             ) : (
-              <button
-                className="errorBtn px-1.5 py-1 flex gap-2 items-center text-white ml-auto"
-                onClick={handlePlaylistDelBtn}
-              >
-                <FaMinus />
-                팔로우 취소
-              </button>
+              <FollowBtn followId={id as string} />
             )}
-            {pageName === "follow" && <FollowBtn followId={id as string} />}
+            {/* {pageName === "follow" && <FollowBtn followId={id as string} />} */}
 
             {tracks && tracks.length > 0 ? (
               <PlayBar

@@ -88,7 +88,7 @@ export default function Page() {
             data?.playlists?.items
               ?.filter((item: any) => item !== null)
               .map((item: any) => (
-                <Link href={`/playlist/${item.id}?page=follow`} key={item.id}>
+                <Link href={`/playlist/${item.id}`} key={item.id}>
                   <div key={item.id} className="w-[150px] h-[150px] pointer">
                     <div className="h-[130px] relative">
                       <Image
