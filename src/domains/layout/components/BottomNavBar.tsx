@@ -3,10 +3,22 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaMusic, FaHome, FaUser } from "react-icons/fa";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 export default function BottomNavBar() {
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  // Zustand에서 로그인 상태와 userId 불러오기
+  const { isLoggedIn, userId } = userSpotifyStore();
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClickMyPage = () => {
+    if (isLoggedIn && userId) {
+      router.push(`/profile/${userId}`);
+    } else {
+      setShowModal(true);
+    }
+  };
 
   return (
     <>
@@ -28,7 +40,7 @@ export default function BottomNavBar() {
 
         <div
           className="flex flex-col items-center text-sm cursor-pointer"
-          onClick={() => setShowModal(true)}
+          onClick={handleClickMyPage}
         >
           <FaUser size={20} />
           <span className="mt-1">마이 페이지</span>

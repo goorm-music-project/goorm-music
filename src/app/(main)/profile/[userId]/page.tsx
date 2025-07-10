@@ -13,8 +13,10 @@ import {
   Profile,
   Playlist,
 } from "@/domains/profile/types/Profile";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 export default function ProfilePage() {
+  const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [allPlaylists, setAllPlaylists] = useState<Playlist[]>([]);
   const [likedSongs, setLikedSongs] = useState<Track[]>([]);
@@ -77,9 +79,11 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
+    if (!isLoggedIn) return;
     fetchAll();
-  }, []);
+  }, [isLoggedIn]);
 
+  if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
