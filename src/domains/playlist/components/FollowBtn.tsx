@@ -1,21 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import authAxios from "@/domains/common/lib/axios/authAxios";
-import AlertModal from "@/domains/common/components/AlertModal";
 
 interface Props {
   followId: string;
+  setShowLoginModal: Dispatch<SetStateAction<boolean>>;
+  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
+  setMessage: Dispatch<SetStateAction<string>>;
 }
 
-export default function FollowBtn({ followId }: Props) {
+export default function FollowBtn({
+  followId,
+  setShowLoginModal,
+  setShowAlertModal,
+  setMessage,
+}: Props) {
   const { userId } = userSpotifyStore();
   const [isExist, setIsExist] = useState(false);
-  const [message, setMessage] = useState("");
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showAlertModal, setShowAlertModal] = useState(false);
 
   const confirmFollow = async () => {
     if (userId === "") {
@@ -68,14 +71,7 @@ export default function FollowBtn({ followId }: Props) {
 
   return (
     <div>
-      <div
-        className={`flex px-2 ${isExist ? "justify-between" : "justify-end"}`}
-      >
-        {isExist && (
-          <p className="text-(--error-red)">
-            * 이미 Follow한 플레이리스트 입니다.
-          </p>
-        )}
+      <div className="flex px-2 justify-end">
         {isExist ? (
           <button
             className="errorBtn px-1.5 py-1 flex gap-2 items-center text-white"
@@ -94,16 +90,6 @@ export default function FollowBtn({ followId }: Props) {
           </button>
         )}
       </div>
-
-      <SuggestLoginModal
-        showModal={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
-      <AlertModal
-        showModal={showAlertModal}
-        onClose={() => setShowAlertModal(false)}
-        message={message}
-      />
     </div>
   );
 }

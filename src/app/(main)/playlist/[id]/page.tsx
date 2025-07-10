@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+import AlertModal from "@/domains/common/components/AlertModal";
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
@@ -33,6 +35,9 @@ export default function Page() {
   const [isEdit, setIsEdit] = useState(false);
   const [tracks, setTracks] = useState<PlaylistItem[]>([]);
   const [deleteTracks, setDeleteTracks] = useState<DeleteInfo[]>([]);
+  const [message, setMessage] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
   const handleChangeChk = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -122,7 +127,8 @@ export default function Page() {
 
   return (
     <div>
-      <h1>나의 플레이리스트</h1>
+      {canEdit && <h1>나의 플레이리스트</h1>}
+
       {listData && (
         <div className="flex flex-col gap-2 items-center md:flex-row md:items-start">
           <div
@@ -156,7 +162,12 @@ export default function Page() {
                 <MdDelete />
               </button>
             ) : (
-              <FollowBtn followId={id as string} />
+              <FollowBtn
+                followId={id as string}
+                setShowLoginModal={setShowLoginModal}
+                setShowAlertModal={setShowAlertModal}
+                setMessage={setMessage}
+              />
             )}
 
             {tracks && tracks.length > 0 ? (
@@ -174,6 +185,15 @@ export default function Page() {
           </div>
         </div>
       )}
+      <SuggestLoginModal
+        showModal={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
+      <AlertModal
+        showModal={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        message={message}
+      />
     </div>
   );
 }
