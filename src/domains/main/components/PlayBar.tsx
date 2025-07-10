@@ -69,7 +69,7 @@ export default function PlayBar({
           const res = await authAxios.get(`/api/isLiked?trackId=${idsData}`);
           const result = await res.data;
 
-          resultArr.push(result);
+          resultArr.push(...result.data);
         }
 
         const map: Record<string, boolean> = {};
