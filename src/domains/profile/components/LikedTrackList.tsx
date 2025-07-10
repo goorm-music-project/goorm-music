@@ -2,9 +2,10 @@ import { Track } from "../types/Profile";
 
 interface Props {
   tracks: Track[];
+  onUnlike: (trackId: string) => void;
 }
 
-const LikedTrackList = ({ tracks }: Props) => (
+const LikedTrackList = ({ tracks, onUnlike }: Props) => (
   <div>
     {tracks.map((track) => (
       <div
@@ -24,7 +25,15 @@ const LikedTrackList = ({ tracks }: Props) => (
           {Math.floor(track.duration / 60)}:
           {(track.duration % 60).toString().padStart(2, "0")}
         </span>
-        {track.isLiked && <span className="ml-2 text-pink-500">♥</span>}
+        {track.isLiked && (
+          <button
+            onClick={() => onUnlike(track.id)}
+            className="ml-2 text-pink-500 text-lg focus:outline-none"
+            aria-label="좋아요 취소"
+          >
+            ♥
+          </button>
+        )}
       </div>
     ))}
   </div>

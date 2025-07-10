@@ -23,6 +23,18 @@ export default function ProfilePage() {
   const [likedSongs, setLikedSongs] = useState<Track[]>([]);
   const [followedPlaylists, setFollowedPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
+  const handleUnlikeTrack = async (trackId: string) => {
+    try {
+      await fetch("/api/likeList", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trackId }),
+      });
+      setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
+    } catch {
+      alert("좋아요 취소 실패");
+    }
+  };
 
   async function fetchAll() {
     setLoading(true);
@@ -175,7 +187,9 @@ export default function ProfilePage() {
             onTogglePublic={handleTogglePublic}
           />
         )}
-        {tab === "liked" && <LikedTrackList tracks={likedSongs} />}
+        {tab === "liked" && (
+          <LikedTrackList tracks={likedSongs} onUnlike={handleUnlikeTrack} />
+        )}
         {tab === "following" && (
           <FollowingPlaylist playlists={followedPlaylists} />
         )}
