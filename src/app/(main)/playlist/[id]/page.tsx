@@ -1,8 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+import AlertModal from "@/domains/common/components/AlertModal";
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
+import FollowBtn from "@/domains/playlist/components/FollowBtn";
 import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
 import PlayListEditBox from "@/domains/playlist/components/PlayListEditBox";
 import {
@@ -32,6 +35,9 @@ export default function Page() {
   const [isEdit, setIsEdit] = useState(false);
   const [tracks, setTracks] = useState<PlaylistItem[]>([]);
   const [deleteTracks, setDeleteTracks] = useState<DeleteInfo[]>([]);
+  const [message, setMessage] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
   const handleChangeChk = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -102,11 +108,15 @@ export default function Page() {
   const fetchData = async () => {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
-    if (data.owner.id === userId) setCanEdit(true);
+    if (data.owner.id === userId) {
+      setCanEdit(true);
+      setDescription(data.description);
+    } else {
+      setDescription(data.owner.display_name);
+    }
     setListData(data);
     setSnapshotId(data.snapshot_id);
     setName(data.name);
-    setDescription(data.description);
     setIsPublic(data.public);
     setTracks([...data.tracks.items]);
   };
@@ -117,7 +127,8 @@ export default function Page() {
 
   return (
     <div>
-      <h1>나의 플레이리스트</h1>
+      {canEdit && <h1>나의 플레이리스트</h1>}
+
       {listData && (
         <div className="flex flex-col gap-2 items-center md:flex-row md:items-start">
           <div
@@ -143,13 +154,20 @@ export default function Page() {
             />
           </div>
           <div className="w-full">
-            {canEdit && (
+            {canEdit ? (
               <button
                 className="text-2xl block ml-auto"
                 onClick={handleTrackDelBtn}
               >
                 <MdDelete />
               </button>
+            ) : (
+              <FollowBtn
+                followId={id as string}
+                setShowLoginModal={setShowLoginModal}
+                setShowAlertModal={setShowAlertModal}
+                setMessage={setMessage}
+              />
             )}
 
             {tracks && tracks.length > 0 ? (
@@ -167,6 +185,15 @@ export default function Page() {
           </div>
         </div>
       )}
+      <SuggestLoginModal
+        showModal={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
+      <AlertModal
+        showModal={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        message={message}
+      />
     </div>
   );
 }
