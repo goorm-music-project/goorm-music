@@ -27,8 +27,8 @@ export default function SideBar() {
       const data = (await res.data) as PlayListType[];
       setPlayList(data);
     };
-    fetchData();
-  }, []);
+    if (isLoggedIn) fetchData();
+  }, [isLoggedIn]);
 
   return (
     <div className="fixed top-25 left-0 w-65 h-full bg-(--primary-blue) z-50 p-4 text-white">
