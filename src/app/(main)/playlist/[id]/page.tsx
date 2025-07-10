@@ -3,14 +3,16 @@
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
+import FollowBtn from "@/domains/playlist/components/FollowBtn";
 import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
 import PlayListEditBox from "@/domains/playlist/components/PlayListEditBox";
 import {
   PlaylistDetail,
   PlaylistItem,
 } from "@/domains/playlist/types/Playlist";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { FaMinus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
 export interface DeleteInfo {
@@ -21,7 +23,9 @@ export interface DeleteInfo {
 export default function Page() {
   const router = useRouter();
   const params = useParams();
+  const searchParmas = useSearchParams();
   const id = params.id;
+  const pageName = searchParmas.get("page");
   const { userId } = userSpotifyStore();
   const [canEdit, setCanEdit] = useState(false);
   const [listData, setListData] = useState<PlaylistDetail | null>(null);
@@ -102,11 +106,15 @@ export default function Page() {
   const fetchData = async () => {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
-    if (data.owner.id === userId) setCanEdit(true);
+    if (data.owner.id === userId) {
+      setCanEdit(true);
+      setDescription(data.description);
+    } else {
+      setDescription(data.owner.display_name);
+    }
     setListData(data);
     setSnapshotId(data.snapshot_id);
     setName(data.name);
-    setDescription(data.description);
     setIsPublic(data.public);
     setTracks([...data.tracks.items]);
   };
@@ -143,14 +151,23 @@ export default function Page() {
             />
           </div>
           <div className="w-full">
-            {canEdit && (
+            {canEdit ? (
               <button
                 className="text-2xl block ml-auto"
                 onClick={handleTrackDelBtn}
               >
                 <MdDelete />
               </button>
+            ) : (
+              <button
+                className="errorBtn px-1.5 py-1 flex gap-2 items-center text-white ml-auto"
+                onClick={handlePlaylistDelBtn}
+              >
+                <FaMinus />
+                팔로우 취소
+              </button>
             )}
+            {pageName === "follow" && <FollowBtn followId={id as string} />}
 
             {tracks && tracks.length > 0 ? (
               <PlayBar

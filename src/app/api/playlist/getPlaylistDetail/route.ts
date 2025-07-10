@@ -3,8 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const cookieAwait = await cookies();
-  const access_token = cookieAwait.get("access_token")?.value;
+  const access_token = (await cookies()).get("public_access_token")?.value;
   const { searchParams } = new URL(req.url);
   const playlistId = searchParams.get("id");
 

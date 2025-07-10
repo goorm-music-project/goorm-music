@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
-import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import TrackCard from "@/domains/common/components/TrackCard";
 import appAxios from "@/domains/common/lib/axios/appAxios";
-import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import PlayBar from "@/domains/main/components/PlayBar";
-import FollowPlaylistModal from "@/domains/playlist/components/FollowPlaylistModal";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -15,22 +12,9 @@ import React, { useEffect, useState } from "react";
 export default function Page() {
   const params = useSearchParams();
   const query = params.get("params") || "";
-  const { userId } = userSpotifyStore();
+
   const [data, setData] = useState<any>([]);
   const [isLoading, setisLoading] = useState(false);
-
-  const [followId, setFollowId] = useState<number | null>(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showFollowList, setShowFollowList] = useState(false);
-
-  const handleFollowPlaylist = async (id: number) => {
-    if (userId === "") {
-      setShowLoginModal(true);
-      return;
-    }
-    setShowFollowList(true);
-    setFollowId(id);
-  };
 
   useEffect(() => {
     if (!query) return;
@@ -104,37 +88,25 @@ export default function Page() {
             data?.playlists?.items
               ?.filter((item: any) => item !== null)
               .map((item: any) => (
-                <div
-                  key={item?.id}
-                  className="w-[150px] h-[150px] pointer"
-                  onClick={() => handleFollowPlaylist(item?.id)}
-                >
-                  <div className="h-[130px] relative">
-                    <Image
-                      src={
-                        item?.images?.length > 0
-                          ? item.images[0].url
-                          : "/goorm_logo_blue.png"
-                      }
-                      alt={item?.name}
-                      fill
-                      sizes="150px"
-                    />
+                <Link href={`/playlist/${item.id}?page=follow`} key={item.id}>
+                  <div key={item.id} className="w-[150px] h-[150px] pointer">
+                    <div className="h-[130px] relative">
+                      <Image
+                        src={
+                          item?.images?.length > 0
+                            ? item.images[0].url
+                            : "/goorm_logo_blue.png"
+                        }
+                        alt={item?.name}
+                        fill
+                        sizes="150px"
+                      />
+                    </div>
+                    <p className="truncate">{item?.name}</p>
                   </div>
-                  <p className="truncate">{item?.name}</p>
-                </div>
+                </Link>
               ))}
         </div>
-
-        <SuggestLoginModal
-          showModal={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-        />
-        <FollowPlaylistModal
-          showModal={showFollowList}
-          onClose={() => setShowFollowList(false)}
-          followId={followId}
-        />
       </div>
     </div>
   );
