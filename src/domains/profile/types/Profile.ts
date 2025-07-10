@@ -21,6 +21,9 @@ export interface Playlist {
   trackCount: number;
   isPublic: boolean;
   ownerId: string;
+  owner: {
+    id: string;
+  };
   ownerNickname: string;
   images?: { url: string }[];
   public: boolean;
