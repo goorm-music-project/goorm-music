@@ -32,6 +32,7 @@ export default function ProfilePage() {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playlistId }),
+        credentials: "include", // 쿠키 포함
       });
       setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
     } catch {
@@ -46,6 +47,7 @@ export default function ProfilePage() {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ trackId }),
+        credentials: "include", // 쿠키 포함 필수
       });
       setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
     } catch {
@@ -56,7 +58,10 @@ export default function ProfilePage() {
   async function fetchAll() {
     setLoading(true);
     try {
-      const resProfile = await fetch("/api/userData", { method: "POST" });
+      const resProfile = await fetch("/api/userData", {
+        method: "POST",
+        credentials: "include", // 쿠키 포함
+      });
       const profileData = await resProfile.json();
       setProfile({
         id: profileData.userId,
@@ -67,11 +72,15 @@ export default function ProfilePage() {
         isMe: true,
       });
 
-      const resPlaylists = await fetch("/api/playlist/getPlaylist");
+      const resPlaylists = await fetch("/api/playlist/getPlaylist", {
+        credentials: "include",
+      });
       const playlistsData: Playlist[] = await resPlaylists.json();
       setAllPlaylists(playlistsData);
 
-      const resLiked = await fetch("/api/likeList");
+      const resLiked = await fetch("/api/likeList", {
+        credentials: "include",
+      });
       if (!resLiked.ok) throw new Error("likeList fetch failed");
       const likedData = await resLiked.json();
       const likedTracks: Track[] = (likedData as SpotifyLikedTrack[]).map(
