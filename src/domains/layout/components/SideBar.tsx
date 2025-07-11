@@ -2,30 +2,25 @@
 
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { Playlist } from "@/domains/playlist/types/Playlist";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { FaMusic } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { FaListUl } from "react-icons/fa";
 
-type PlayListType = {
-  id: string;
-  name: string;
-  owner: {
-    id: string;
-  };
-};
-
 export default function SideBar() {
-  const [playList, setPlayList] = useState<PlayListType[]>([]);
+  const [playList, setPlayList] = useState<Playlist[]>([]);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const router = useRouter();
+  const userId = userSpotifyStore((state) => state.userId);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await authAxios.get("/api/playlist/getPlaylist");
-      const data = (await res.data) as PlayListType[];
-      setPlayList(data);
+      const data = res.data as Playlist[];
+      const myPlaylist = data.filter((v) => v.owner.id === userId);
+      setPlayList(myPlaylist);
     };
     if (isLoggedIn) fetchData();
   }, [isLoggedIn]);
