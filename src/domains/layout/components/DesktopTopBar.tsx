@@ -5,17 +5,18 @@ import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 
 export default function DesktopTopBar() {
   const [searchText, setSearchText] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const router = useRouter();
   const userId = userSpotifyStore((state) => state.userId);
+  const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!searchText.trim()) return;
-
     router.push(`/search?params=${encodeURIComponent(searchText)}`);
   };
 
@@ -47,7 +48,18 @@ export default function DesktopTopBar() {
       <FaUser
         size={30}
         className="text-blue-300 text-xl cursor-pointer"
-        onClick={() => router.push(`/profile/${userId}`)}
+        onClick={() => {
+          if (!isLoggedIn) {
+            setShowLoginModal(true);
+          } else {
+            router.push(`/profile/${userId}`);
+          }
+        }}
+      />
+
+      <SuggestLoginModal
+        showModal={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
       />
     </div>
   );
