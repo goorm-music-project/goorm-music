@@ -45,9 +45,11 @@ export default function AddNewPlayListModal({
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
 
       //TODO : 신규 트랙 추가 후 0곡 출력 오류
-
       const res = await authAxios.get("/api/playlist/getPlaylist");
-      const data = await res.data;
+      const json = await res.data;
+      const data = json.filter(
+        (v: { owner: { id: string } }) => v.owner.id === userId
+      );
       setPlaylists(data);
 
       setName("");

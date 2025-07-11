@@ -23,7 +23,7 @@ export default function PlayListBox({ playlist, handleAddPlayList }: Props) {
       />
       <div className="place-content-center">
         <h3>{playlist.name}</h3>
-        <p>{playlist.tracks.total} 곡</p>
+        <p>{playlist.description}</p>
       </div>
     </div>
   );

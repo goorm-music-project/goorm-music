@@ -1,12 +1,13 @@
 export interface Playlist {
   id: string;
   name: string;
+  description: string;
   images: { url: string }[];
   tracks: { total: number };
   public: boolean;
   owner: {
     id: string;
-  }
+  };
 }
 
 export interface AddNewPlaylistProps {
