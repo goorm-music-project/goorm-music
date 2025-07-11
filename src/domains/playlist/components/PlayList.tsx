@@ -22,7 +22,7 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
       setIsLoading(true);
       try {
         const res = await authAxios.get("/api/playlist/getPlaylist");
-        const data = await res.data;
+        const data = res.data as Playlist[];
         const myPlaylist = data.filter((v) => v.owner.id === userId);
         setPlaylists(myPlaylist);
       } catch (error) {
@@ -55,7 +55,7 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
 
       //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
       const res = await authAxios.get("/api/playlist/getPlaylist");
-      const json = res.data;
+      const json = res.data as Playlist[];
       const data = json.filter((v) => v.owner.id === userId);
       setPlaylists(data);
     } catch (err) {

@@ -1,11 +1,13 @@
 "use client";
 
-import { FaPlay } from "react-icons/fa";
-import { HiOutlineDotsVertical } from "react-icons/hi";
 import LikedButton from "@/domains/common/components/LikedButton";
 import { useEffect, useState } from "react";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import { FaPlus } from "react-icons/fa";
+import PlayListModal from "@/domains/playlist/components/PlayListModal";
+import { Playlist } from "@/domains/playlist/types/Playlist";
+import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
 
 interface TrackActionBtnsProps {
   trackId: string;
@@ -13,7 +15,11 @@ interface TrackActionBtnsProps {
 
 export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const [showPlayListModal, setShowPlayListModal] = useState<boolean>(false);
+  const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
+
   useEffect(() => {
     const fetchLikedTracks = async () => {
       if (!trackId || !isLoggedIn) return;
@@ -32,6 +38,20 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
 
   return (
     <div className="relative flex flex-col items-center mt-4">
+      <PlayListModal
+        showModal={showPlayListModal}
+        onClose={() => setShowPlayListModal(false)}
+        playlists={playlists}
+        setPlaylists={setPlaylists}
+        onShowNewPlaylist={() => setShowAddNewPlayListModal(true)}
+        track={"spotify:track:" + trackId}
+      />
+      <AddNewPlayListModal
+        showModal={showAddNewPlayListModal}
+        onClose={() => setShowAddNewPlayListModal(false)}
+        setPlaylists={setPlaylists}
+        track={trackId}
+      />
       <div className="flex text-(--primary-blue)">
         <LikedButton
           trackId={trackId}
@@ -39,8 +59,11 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
           setIsLiked={setIsLiked}
           className="ml-5 mr-5"
         />
-        <FaPlay size={30} className="ml-5 mr-5" />
-        <HiOutlineDotsVertical size={30} className="ml-5 mr-5 cursor-pointer" />
+        <FaPlus
+          size={30}
+          className="ml-5 mr-5 cursor-pointer"
+          onClick={() => setShowPlayListModal(true)}
+        />
       </div>
     </div>
   );

@@ -4,6 +4,9 @@ export interface Playlist {
   images: { url: string }[];
   tracks: { total: number };
   public: boolean;
+  owner: {
+    id: string;
+  }
 }
 
 export interface AddNewPlaylistProps {
