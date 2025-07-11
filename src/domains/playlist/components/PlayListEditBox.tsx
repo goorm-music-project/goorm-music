@@ -8,7 +8,6 @@ interface Props {
   description: string;
   setDescription: React.Dispatch<SetStateAction<string>>;
   isPublic: string;
-  setIsPublic: React.Dispatch<SetStateAction<string>>;
   handleEditPlaylist: () => void;
 }
 
@@ -19,7 +18,6 @@ export default function PlayListEditBox({
   description,
   setDescription,
   isPublic,
-  setIsPublic,
   handleEditPlaylist,
 }: Props) {
   return (
@@ -42,20 +40,14 @@ export default function PlayListEditBox({
           onChange={(e) => setDescription(e.target.value)}
           style={{ border: isEdit ? "" : "none" }}
         />
-        <select
+        <input
+          type="text"
           className="text-center"
           name="public"
-          value={isPublic}
-          disabled={!isEdit}
-          onChange={(e) => setIsPublic(e.target.value)}
-          style={{
-            appearance: isEdit ? "auto" : "none",
-            border: isEdit ? "" : "none",
-          }}
-        >
-          <option value="true">공개</option>
-          <option value="false">비공개</option>
-        </select>
+          value={isPublic ? "공개" : "비공개"}
+          disabled={true}
+          style={{ border: "none" }}
+        />
       </div>
       {isEdit ? (
         <button className="text-2xl" onClick={handleEditPlaylist}>
