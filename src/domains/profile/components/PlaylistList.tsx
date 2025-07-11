@@ -12,6 +12,22 @@ const PlaylistList = ({ playlists }: Props) => {
     router.push(`/playlist/${playlistId}`);
   };
 
+  const getTrackCount = (playlist: Playlist) => {
+    if ("trackCount" in playlist && typeof playlist.trackCount === "number") {
+      return playlist.trackCount;
+    }
+    if ("tracks" in playlist && typeof playlist.tracks?.total === "number") {
+      return playlist.tracks.total;
+    }
+    return 0;
+  };
+
+  const getIsPublic = (playlist: Playlist) => {
+    if ("isPublic" in playlist) return !!playlist.isPublic;
+    if ("public" in playlist) return !!playlist.public;
+    return false;
+  };
+
   return (
     <div className="flex flex-col gap-6 mt-6">
       {playlists.map((playlist) => (
@@ -31,12 +47,25 @@ const PlaylistList = ({ playlists }: Props) => {
             <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gray-200 flex-shrink-0" />
           )}
 
+          {/* 정보 */}
           <div className="flex-1 basis-0 min-w-0 max-w-full">
             <div className="font-bold text-sm sm:text-base mb-1 truncate">
               {playlist.name}
             </div>
             <div className="text-xs sm:text-sm text-gray-500 mb-1 truncate">
               {playlist.description}
+            </div>
+            <div className="text-xs sm:text-sm text-gray-400 truncate">
+              {getTrackCount(playlist)}곡
+              <span
+                className={`ml-2 px-2 py-1 rounded text-xs sm:text-sm ${
+                  getIsPublic(playlist)
+                    ? "bg-blue-100 text-blue-600"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
+                {getIsPublic(playlist) ? "공개" : "비공개"}
+              </span>
             </div>
           </div>
         </div>

@@ -18,15 +18,18 @@ export interface Playlist {
   name: string;
   description: string;
   coverImageUrl: string | null;
-  trackCount: number;
-  isPublic: boolean;
+  trackCount?: number;
+  isPublic?: boolean;
+  public?: boolean;
   ownerId: string;
   owner: {
     id: string;
   };
   ownerNickname: string;
   images?: { url: string }[];
-  public: boolean;
+  tracks?: {
+    total?: number;
+  };
 }
 
 export interface Track {
