@@ -11,6 +11,7 @@ export interface GenreTagsProps {
   userId: string;
   genres: string[];
   onSave?: (genres: string[]) => void;
+  showEditButton?: boolean;
 }
 
 export interface Playlist {
@@ -30,6 +31,7 @@ export interface Playlist {
   tracks?: {
     total?: number;
   };
+  isMe: boolean;
 }
 
 export interface Track {

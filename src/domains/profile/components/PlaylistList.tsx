@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   playlists: Playlist[];
+  isMe: boolean;
 }
 
 const PlaylistList = ({ playlists }: Props) => {
