@@ -172,7 +172,8 @@ export default function ProfilePage() {
 
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
-      <div className="bg-gradient-to-b from-blue-50 to-white">
+      {/* 이 부분의 배경을 아래와 같이 통일 */}
+      <div className="bg-[var(--background)]">
         <div className="px-4 pb-8">
           <ProfileHeader
             profile={profile}
