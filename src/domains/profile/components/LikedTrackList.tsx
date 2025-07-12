@@ -8,27 +8,29 @@ interface Props {
 }
 
 const LikedTrackList = ({ tracks, onUnlike }: Props) => (
-  <div className="flex flex-col gap-4 mt-6">
+  <div className="flex flex-col gap-4 md:gap-6 mt-6">
     {tracks.length === 0 ? (
       <EmptyMessage message="좋아요한 곡이 없습니다." />
     ) : (
       tracks.map((track) => (
         <div
           key={track.id}
-          className="flex items-center gap-3 py-2 border-b last:border-b-0"
+          className="flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b last:border-b-0"
         >
           <Image
             src={track.albumCoverUrl || "/default-cover.png"}
-            className="rounded"
+            className="w-12 h-12 md:w-16 md:h-16 rounded"
             alt={track.title}
             width={48}
             height={48}
           />
           <div>
-            <div className="font-bold">{track.title}</div>
-            <div className="text-xs text-gray-500">{track.artist}</div>
+            <div className="font-bold text-sm md:text-base">{track.title}</div>
+            <div className="text-xs md:text-sm text-gray-500">
+              {track.artist}
+            </div>
           </div>
-          <span className="ml-auto text-xs text-gray-400">
+          <span className="ml-auto text-xs md:text-sm text-gray-400">
             {Math.floor(track.duration / 60)}:
             {(track.duration % 60).toString().padStart(2, "0")}
           </span>
