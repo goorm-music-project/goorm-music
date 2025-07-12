@@ -4,6 +4,18 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import { cookies } from "next/headers";
 
+interface SpotifyPlaylist {
+  public: boolean;
+  id: string;
+  name: string;
+  description?: string;
+  images?: { url: string }[];
+  owner?: {
+    id: string;
+    display_name?: string;
+  };
+}
+
 export async function GET(
   req: Request,
   { params }: { params: { userId: string } }
@@ -12,45 +24,66 @@ export async function GET(
   if (!userId) return new NextResponse("No userId", { status: 400 });
 
   try {
-    // 1. Firestore에서 유저 검색
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
 
-    // 2. 존재하면 그대로 반환
+    let userData;
+
     if (userSnap.exists()) {
-      const userData = userSnap.data();
-      return NextResponse.json({ userId, ...userData });
+      userData = userSnap.data();
+    } else {
+      const cookieStore = await cookies();
+      const access_token = cookieStore.get("access_token")?.value;
+
+      if (!access_token)
+        return new NextResponse("No access_token", { status: 401 });
+
+      const resUser = await axios.get(
+        `https://api.spotify.com/v1/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      );
+
+      const { id, display_name, images } = resUser.data;
+
+      userData = {
+        userId: id,
+        display_name: display_name || "",
+        imageUrl: images?.[0]?.url || null,
+        genres: [],
+      };
+
+      await setDoc(userRef, userData);
     }
 
-    // 3. Firestore에 없으면 → Spotify에서 가져오기
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const access_token = cookieStore.get("access_token")?.value;
-    if (!access_token)
-      return new NextResponse("No access_token", { status: 401 });
 
-    // 4. Spotify Public User Profile 조회
-    const res = await axios.get(`https://api.spotify.com/v1/users/${userId}`, {
-      headers: { Authorization: `Bearer ${access_token}` },
+    let playlists: SpotifyPlaylist[] = [];
+
+    if (access_token) {
+      try {
+        const resPlaylists = await axios.get(
+          `https://api.spotify.com/v1/users/${userId}/playlists`,
+          {
+            headers: { Authorization: `Bearer ${access_token}` },
+          }
+        );
+        playlists = resPlaylists.data.items.filter(
+          (pl: SpotifyPlaylist) => pl.public === true
+        );
+      } catch (e) {
+        console.error("Error fetching playlists:", e);
+      }
+    }
+
+    return NextResponse.json({
+      ...userData,
+      playlists,
     });
-    const { id, display_name, images } = res.data;
-
-    // 5. Firestore에 신규 저장 (email, 장르는 비워둠)
-    const userData = {
-      userId: id,
-      display_name: display_name || "",
-      imageUrl: images?.[0]?.url || null,
-      genres: [], // 기본값 (public 정보 없음)
-      // 추가 필드 자유롭게
-    };
-    await setDoc(userRef, userData);
-
-    // 6. 그 정보 반환
-    return NextResponse.json(userData);
-  } catch (err: any) {
-    console.error(
-      "❌ Error fetching user:",
-      err?.response?.data || err?.message
-    );
+  } catch (err: unknown) {
+    console.error("❌ Error fetching user:", err);
     return new NextResponse("Error fetching user", { status: 500 });
   }
 }
