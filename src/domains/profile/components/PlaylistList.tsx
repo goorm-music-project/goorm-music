@@ -32,14 +32,14 @@ const PlaylistList = ({ playlists }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 mt-6">
+    <div className="flex flex-col gap-6 md:gap-4 mt-6">
       {playlists.length === 0 ? (
         <EmptyMessage message="플레이리스트가 없습니다." />
       ) : (
         playlists.map((playlist) => (
           <div
             key={playlist.id}
-            className="flex items-center bg-white rounded-xl p-2 sm:p-4 shadow border gap-2 sm:gap-4 cursor-pointer transition hover:bg-blue-50"
+            className="flex items-center bg-white rounded-xl p-2 md:p-4 shadow border gap-2 md:gap-4 cursor-pointer transition hover:bg-blue-50"
             onClick={() => handleGoDetail(playlist.id)}
           >
             {/* 앨범 커버 */}
@@ -47,26 +47,26 @@ const PlaylistList = ({ playlists }: Props) => {
               <Image
                 src={playlist.images[0].url}
                 alt={playlist.name}
-                className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
+                className="w-12 h-12 md:w-16 md:h-16 rounded-lg object-cover flex-shrink-0"
                 width={64}
                 height={64}
               />
             ) : (
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gray-200 flex-shrink-0" />
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-lg bg-gray-200 flex-shrink-0" />
             )}
 
             {/* 정보 */}
             <div className="flex-1 basis-0 min-w-0 max-w-full">
-              <div className="font-bold text-sm sm:text-base mb-1 truncate">
+              <div className="font-bold text-sm md:text-base mb-1 truncate">
                 {playlist.name}
               </div>
-              <div className="text-xs sm:text-sm text-gray-500 mb-1 truncate">
+              <div className="text-xs md:text-sm text-gray-500 mb-1 truncate">
                 {playlist.description}
               </div>
-              <div className="text-xs sm:text-sm text-gray-400 truncate">
+              <div className="text-xs md:text-sm text-gray-400 truncate">
                 {getTrackCount(playlist)}곡
                 <span
-                  className={`ml-2 px-2 py-1 rounded text-xs sm:text-sm ${
+                  className={`ml-2 px-2 py-1 rounded text-xs md:text-sm ${
                     getIsPublic(playlist)
                       ? "bg-blue-100 text-blue-600"
                       : "bg-gray-200 text-gray-600"
