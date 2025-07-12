@@ -32,7 +32,7 @@ const PlaylistList = ({ playlists }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 md:gap-4 mt-6">
+    <div className="flex flex-col gap-2 md:gap-2 mt-6">
       {playlists.length === 0 ? (
         <EmptyMessage message="플레이리스트가 없습니다." />
       ) : (

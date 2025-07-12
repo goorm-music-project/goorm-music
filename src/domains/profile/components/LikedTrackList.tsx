@@ -8,14 +8,14 @@ interface Props {
 }
 
 const LikedTrackList = ({ tracks, onUnlike }: Props) => (
-  <div className="flex flex-col gap-4 md:gap-6 mt-6">
+  <div className="flex flex-col gap-2 md:gap-6 mt-6">
     {tracks.length === 0 ? (
       <EmptyMessage message="좋아요한 곡이 없습니다." />
     ) : (
       tracks.map((track) => (
         <div
           key={track.id}
-          className="flex items-center gap-4 md:gap-6 py-3 md:py-4 border-b last:border-b-0"
+          className="flex items-center gap-4 md:gap-6 py-3 md:py-2 border-b last:border-b-0"
         >
           <Image
             src={track.albumCoverUrl || "/default-cover.png"}
