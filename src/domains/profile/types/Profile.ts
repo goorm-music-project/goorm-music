@@ -25,7 +25,8 @@ export interface Playlist {
   public?: boolean;
   ownerId: string;
   owner: {
-    id: string;
+    id?: string;
+    display_name?: string;
   };
   ownerNickname: string;
   images?: { url: string }[];
