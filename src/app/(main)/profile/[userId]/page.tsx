@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import ProfileHeader from "@/domains/profile/components/ProfileHeader";
 import GenreTags from "@/domains/profile/components/GenreTags";
-import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
 import PlaylistList from "@/domains/profile/components/PlaylistList";
 import LikedTrackList from "@/domains/profile/components/LikedTrackList";
 import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
@@ -15,6 +14,7 @@ import {
 } from "@/domains/profile/types/Profile";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { useParams } from "next/navigation";
+import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
 
 export default function ProfilePage() {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
@@ -26,18 +26,18 @@ export default function ProfilePage() {
   const [tab, setTab] = useState<"playlists" | "liked" | "following">(
     "playlists"
   );
-
   const [loading, setLoading] = useState(true);
 
-  // 1. userId 라우트에서 가져오기
+  // 라우트 파라미터에서 userId 가져오기
   const params = useParams();
   const userId = Array.isArray(params?.userId)
     ? params?.userId[0]
     : params?.userId;
 
-  // 2. 내 프로필인지 타인 프로필인지 판별
+  // 내 프로필 여부 판단
   const isMe = myUserId !== null && profile?.id === myUserId;
 
+  // 플레이리스트 언팔로우 핸들러
   const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
     if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
     try {
@@ -53,6 +53,7 @@ export default function ProfilePage() {
     }
   };
 
+  // 좋아요 취소 핸들러
   const handleUnlikeTrack = async (trackId: string): Promise<void> => {
     try {
       await fetch("/api/likeList", {
@@ -67,11 +68,10 @@ export default function ProfilePage() {
     }
   };
 
-  // 데이터 패칭
+  // 데이터 패칭 함수
   async function fetchAll(): Promise<void> {
     setLoading(true);
     try {
-      // 내 프로필이면 /api/userData, 아니면 /api/users/[userId]
       let profileData: {
         userId: string;
         display_name?: string;
@@ -79,6 +79,7 @@ export default function ProfilePage() {
         imageUrl?: string | null;
         genres?: string[];
       };
+
       if (myUserId && userId === myUserId) {
         const resProfile = await fetch("/api/userData", {
           method: "POST",
@@ -99,14 +100,14 @@ export default function ProfilePage() {
         isMe: myUserId === profileData.userId,
       });
 
-      // 플레이리스트(내/타인 구분 없음, 단, 아래에서 필터링)
+      // 플레이리스트 불러오기
       const resPlaylists = await fetch("/api/playlist/getPlaylist", {
         credentials: "include",
       });
       const playlistsData: Playlist[] = await resPlaylists.json();
       setAllPlaylists(playlistsData);
 
-      // 좋아요 리스트 (내 프로필만)
+      // 좋아요 리스트는 내 프로필일 때만 불러오기
       if (myUserId && userId === myUserId) {
         const resLiked = await fetch("/api/likeList", {
           credentials: "include",
@@ -123,7 +124,7 @@ export default function ProfilePage() {
         }));
         setLikedSongs(likedTracks);
       } else {
-        setLikedSongs([]); // 타인 프로필에서는 안 보임
+        setLikedSongs([]); // 타인 프로필에서는 좋아요 리스트 비움
       }
     } catch {
       alert("데이터 로드에 실패했습니다.");
@@ -134,14 +135,14 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!isLoggedIn || !userId) return;
     fetchAll();
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, userId]);
 
   if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  // 내 프로필이면 전체, 타인이면 공개(공개 필드가 없으면 true로 처리)만
+  // 공개 여부 필터링 및 커버 이미지 처리
   const myPlaylists = allPlaylists
     .filter(
       (pl) =>
@@ -153,7 +154,7 @@ export default function ProfilePage() {
       coverImageUrl: pl.images?.[0]?.url || null,
     }));
 
-  // 팔로우/좋아요 리스트도 내 프로필일 때만
+  // 팔로우 플레이리스트(내 프로필일 때만)
   const followedPlaylists = isMe
     ? allPlaylists
         .filter((pl) => pl.owner?.id !== profile.id)
@@ -167,7 +168,7 @@ export default function ProfilePage() {
     <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
       <div className="bg-gradient-to-b from-blue-50 to-white">
         <div className="px-4 pb-8">
-          <ProfileHeader profile={profile} />
+          <ProfileHeader profile={profile} showSensitiveInfo={isMe} />
           <div className="mt-4">
             <GenreTags
               userId={profile.id}
@@ -177,14 +178,13 @@ export default function ProfilePage() {
                   prev ? { ...prev, genres: newGenres } : prev
                 )
               }
-              showEditButton={isMe} // 타인 프로필이면 false!
+              showEditButton={isMe}
             />
           </div>
         </div>
       </div>
       <div className="px-4">
         <ProfileTabMenu tab={tab} onTabChange={setTab} />
-
         {tab === "playlists" && (
           <PlaylistList playlists={myPlaylists} isMe={isMe} />
         )}

@@ -1,12 +1,14 @@
-// /domains/profile/components/ProfileHeader.tsx
-
 import { Profile } from "@/domains/profile/types/Profile";
 
 interface ProfileHeaderProps {
   profile: Profile;
+  showSensitiveInfo?: boolean;
 }
 
-export default function ProfileHeader({ profile }: ProfileHeaderProps) {
+export default function ProfileHeader({
+  profile,
+  showSensitiveInfo = false,
+}: ProfileHeaderProps) {
   return (
     <div className="flex items-center gap-4 py-4 px-2 sm:px-4">
       {/* 프로필 이미지 */}
@@ -23,12 +25,14 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
           </div>
         )}
       </div>
-      {/* 닉네임, 이메일 */}
+      {/* 닉네임 및 이메일 (민감정보는 showSensitiveInfo true일 때만 표시) */}
       <div className="flex flex-col justify-center">
         <span className="text-lg sm:text-xl font-bold">{profile.nickname}</span>
-        <div className="break-all text-gray-400 text-base mt-1 w-full">
-          {profile.username}
-        </div>
+        {showSensitiveInfo && (
+          <div className="break-all text-gray-400 text-base mt-1 w-full">
+            {profile.username}
+          </div>
+        )}
       </div>
     </div>
   );
