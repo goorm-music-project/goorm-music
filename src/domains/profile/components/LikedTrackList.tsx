@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Track } from "../types/Profile";
+import EmptyMessage from "./EmptyMessage";
 
 interface Props {
   tracks: Track[];
@@ -7,11 +8,9 @@ interface Props {
 }
 
 const LikedTrackList = ({ tracks, onUnlike }: Props) => (
-  <div>
+  <div className="flex flex-col gap-4 mt-6">
     {tracks.length === 0 ? (
-      <div className="text-center text-gray-400 py-12">
-        좋아요한 곡이 없습니다.
-      </div>
+      <EmptyMessage message="좋아요한 곡이 없습니다." />
     ) : (
       tracks.map((track) => (
         <div
