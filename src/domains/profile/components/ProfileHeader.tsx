@@ -1,3 +1,5 @@
+// src/domains/profile/components/ProfileHeader.tsx
+
 import { Profile } from "@/domains/profile/types/Profile";
 import Image from "next/image";
 
@@ -17,9 +19,9 @@ export default function ProfileHeader({
   onCopyProfileLink,
 }: ProfileHeaderProps) {
   return (
-    <div className="flex items-center gap-4 py-4 px-2 sm:px-4">
+    <div className="flex items-center gap-6 py-6 px-4 md:px-8 w-full">
       {/* 프로필 이미지 */}
-      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+      <div className="w-20 h-20 md:w-28 md:h-28 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
         {profile.imageUrl ? (
           <Image
             src={profile.imageUrl}
@@ -27,8 +29,8 @@ export default function ProfileHeader({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-2xl bg-gray-100">
-            <span>{profile.nickname[0] || "U"}</span>
+          <div className="w-full h-full flex items-center justify-center text-gray-400 text-4xl">
+            {profile.nickname[0] || "U"}
           </div>
         )}
       </div>
