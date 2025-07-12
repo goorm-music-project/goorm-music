@@ -32,7 +32,7 @@ export default function ProfilePage() {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playlistId }),
-        credentials: "include", // 쿠키 포함
+        credentials: "include",
       });
       setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
     } catch {
@@ -40,14 +40,13 @@ export default function ProfilePage() {
     }
   };
 
-  // 좋아요 취소
   const handleUnlikeTrack = async (trackId: string) => {
     try {
       await fetch("/api/likeList", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ trackId }),
-        credentials: "include", // 쿠키 포함 필수
+        credentials: "include",
       });
       setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
     } catch {
@@ -60,7 +59,7 @@ export default function ProfilePage() {
     try {
       const resProfile = await fetch("/api/userData", {
         method: "POST",
-        credentials: "include", // 쿠키 포함
+        credentials: "include",
       });
       const profileData = await resProfile.json();
       setProfile({
@@ -111,7 +110,6 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  // 내 플레이리스트와 팔로우 플레이리스트 구분
   const myPlaylists = allPlaylists
     .filter((pl) => pl.owner?.id === profile.id)
     .map((pl) => ({
@@ -127,7 +125,7 @@ export default function ProfilePage() {
     }));
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 pb-24">
+    <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
       <div className="bg-gradient-to-b from-blue-50 to-white">
         <div className="px-4 pb-8">
           <ProfileHeader profile={profile} />
