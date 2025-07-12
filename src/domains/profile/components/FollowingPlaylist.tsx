@@ -1,5 +1,6 @@
 import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
+import EmptyMessage from "./EmptyMessage";
 
 interface Props {
   playlists: Playlist[];
@@ -12,9 +13,7 @@ const FollowingPlaylist = ({ playlists, onUnfollow }: Props) => {
   return (
     <div className="flex flex-col gap-4 mt-6">
       {playlists.length === 0 ? (
-        <div className="text-center text-gray-400 py-12">
-          팔로우한 플레이리스트가 없습니다.
-        </div>
+        <EmptyMessage message="팔로우한 플레이리스트가 없습니다." />
       ) : (
         playlists.map((pl) => (
           <div
