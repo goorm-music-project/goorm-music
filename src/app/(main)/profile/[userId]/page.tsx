@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ProfileHeader from "@/domains/profile/components/ProfileHeader";
 import GenreTags from "@/domains/profile/components/GenreTags";
 import PlaylistList from "@/domains/profile/components/PlaylistList";
@@ -36,6 +36,17 @@ export default function ProfilePage() {
     : params?.userId;
 
   const isMe = myUserId !== null && profile?.id === myUserId;
+
+  // 공개 플레이리스트 개수 계산
+  const publicPlaylistsCount = allPlaylists.filter((pl) => pl.public).length;
+
+  // 프로필 링크 복사 핸들러
+  const handleCopyProfileLink = useCallback(() => {
+    if (!profile) return;
+    const profileUrl = `${window.location.origin}/profile/${profile.id}`;
+    navigator.clipboard.writeText(profileUrl);
+    alert("프로필 링크가 복사되었습니다!");
+  }, [profile]);
 
   // 플레이리스트 언팔로우
   const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
@@ -93,15 +104,12 @@ export default function ProfilePage() {
         isMe: myUserId === profileData.userId,
       });
 
-      // 모든 플레이리스트 가져오기 (내 프로필만 authAxios로)
+      // 모든 플레이리스트 가져오기 (내 프로필/타인 프로필 분기)
       let playlistsData: Playlist[];
-
       if (myUserId && userId === myUserId) {
-        // 내 프로필: 내 플레이리스트 전체
         const resPlaylists = await authAxios.get("/api/playlist/getPlaylist");
         playlistsData = resPlaylists.data;
       } else {
-        // 타인 프로필: 해당 유저의 공개 플레이리스트 전체
         const resPlaylists = await appAxios.get(
           `/api/users/${userId}/playlists`
         );
@@ -166,7 +174,13 @@ export default function ProfilePage() {
     <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
       <div className="bg-gradient-to-b from-blue-50 to-white">
         <div className="px-4 pb-8">
-          <ProfileHeader profile={profile} showSensitiveInfo={isMe} />
+          <ProfileHeader
+            profile={profile}
+            showSensitiveInfo={isMe}
+            isMe={isMe}
+            publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
+            onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
+          />
           <div className="mt-4">
             <GenreTags
               userId={profile.id}
