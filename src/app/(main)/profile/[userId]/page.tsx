@@ -6,6 +6,7 @@ import GenreTags from "@/domains/profile/components/GenreTags";
 import PlaylistList from "@/domains/profile/components/PlaylistList";
 import LikedTrackList from "@/domains/profile/components/LikedTrackList";
 import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
+import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
 import {
   Track,
   Profile,
@@ -14,7 +15,8 @@ import {
 } from "@/domains/profile/types/Profile";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { useParams } from "next/navigation";
-import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
+import authAxios from "@/domains/common/lib/axios/authAxios";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 export default function ProfilePage() {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
@@ -28,24 +30,19 @@ export default function ProfilePage() {
   );
   const [loading, setLoading] = useState(true);
 
-  // URL 파라미터 userId 가져오기
   const params = useParams();
   const userId = Array.isArray(params?.userId)
     ? params.userId[0]
     : params?.userId;
 
-  // 내 프로필 여부 확인
   const isMe = myUserId !== null && profile?.id === myUserId;
 
   // 플레이리스트 언팔로우
   const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
     if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
     try {
-      await fetch(`/api/playlist/unfollow`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playlistId }),
-        credentials: "include",
+      await authAxios.delete(`/api/playlist/unfollow`, {
+        data: { playlistId },
       });
       setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
     } catch {
@@ -56,11 +53,8 @@ export default function ProfilePage() {
   // 좋아요 취소
   const handleUnlikeTrack = async (trackId: string): Promise<void> => {
     try {
-      await fetch("/api/likeList", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ trackId }),
-        credentials: "include",
+      await authAxios.delete("/api/likeList", {
+        data: { trackId },
       });
       setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
     } catch {
@@ -80,17 +74,14 @@ export default function ProfilePage() {
         genres?: string[];
       };
 
+      // 내 프로필
       if (myUserId && userId === myUserId) {
-        // 내 프로필일 경우
-        const resProfile = await fetch("/api/userData", {
-          method: "POST",
-          credentials: "include",
-        });
-        profileData = await resProfile.json();
+        const resProfile = await authAxios.post("/api/userData");
+        profileData = resProfile.data;
       } else {
-        // 타인 프로필일 경우
-        const resProfile = await fetch(`/api/users/${userId}`);
-        profileData = await resProfile.json();
+        // 타인 프로필
+        const resProfile = await appAxios.get(`/api/users/${userId}`);
+        profileData = resProfile.data;
       }
 
       setProfile({
@@ -102,20 +93,26 @@ export default function ProfilePage() {
         isMe: myUserId === profileData.userId,
       });
 
-      // 모든 플레이리스트 가져오기
-      const resPlaylists = await fetch("/api/playlist/getPlaylist", {
-        credentials: "include",
-      });
-      const playlistsData: Playlist[] = await resPlaylists.json();
+      // 모든 플레이리스트 가져오기 (내 프로필만 authAxios로)
+      let playlistsData: Playlist[];
+
+      if (myUserId && userId === myUserId) {
+        // 내 프로필: 내 플레이리스트 전체
+        const resPlaylists = await authAxios.get("/api/playlist/getPlaylist");
+        playlistsData = resPlaylists.data;
+      } else {
+        // 타인 프로필: 해당 유저의 공개 플레이리스트 전체
+        const resPlaylists = await appAxios.get(
+          `/api/users/${userId}/playlists`
+        );
+        playlistsData = resPlaylists.data;
+      }
       setAllPlaylists(playlistsData);
 
-      // 좋아요 리스트는 내 프로필일 때만
+      // 좋아요 리스트는 내 프로필만
       if (myUserId && userId === myUserId) {
-        const resLiked = await fetch("/api/likeList", {
-          credentials: "include",
-        });
-        if (!resLiked.ok) throw new Error("likeList fetch failed");
-        const likedData = (await resLiked.json()) as SpotifyLikedTrack[];
+        const resLiked = await authAxios.get("/api/likeList");
+        const likedData = resLiked.data as SpotifyLikedTrack[];
         const likedTracks: Track[] = likedData.map((item) => ({
           id: item.track.id,
           title: item.track.name,
@@ -156,7 +153,6 @@ export default function ProfilePage() {
       coverImageUrl: pl.images?.[0]?.url || null,
     }));
 
-  // 팔로잉 플레이리스트는 내 프로필일 때만
   const followedPlaylists = isMe
     ? allPlaylists
         .filter((pl) => pl.owner?.id !== profile.id)
