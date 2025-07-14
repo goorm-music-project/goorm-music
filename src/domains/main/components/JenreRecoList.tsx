@@ -54,6 +54,7 @@ export default function JenreRecoList() {
               key={item.id}
               style={{ width: "150px" }}
               onClick={() => router.push(`/track/${item.id}`)}
+              className="cursor-pointer"
             >
               <div>
                 <Image

@@ -91,7 +91,7 @@ export default function PlayBar({
       {tracks.map((item, idx) => (
         <div
           key={`${item.track.id}_${idx}`}
-          className="relative p-2 flex gap-2"
+          className="relative p-2 flex gap-2 cursor-pointer"
         >
           {selectable && canEdit && (
             <input

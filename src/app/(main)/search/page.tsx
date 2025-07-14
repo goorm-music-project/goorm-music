@@ -1,19 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import TrackCard from "@/domains/common/components/TrackCard";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
+import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
 
-export default function Page() {
+type dataType = {
+  artists: {
+    items: Array<{
+      id: string;
+      name: string;
+      images: { url: string }[];
+    }>;
+  };
+  tracks: PlaylistItem[];
+  albums: {
+    items: Array<{
+      id: string;
+      name: string;
+      images: { url: string }[];
+    }>;
+  };
+  playlists: {
+    items: Array<{
+      id: string;
+      name: string;
+      images: { url: string }[];
+    }>;
+  };
+};
+
+// useSearchParams를 사용하는 컴포넌트를 분리
+function SearchContent() {
   const params = useSearchParams();
   const query = params.get("params") || "";
-
-  const [data, setData] = useState<any>([]);
+  const router = useRouter();
+  const [data, setData] = useState<dataType>();
   const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
@@ -46,11 +73,12 @@ export default function Page() {
           {data &&
             data.artists?.items
               ?.slice(0, 1)
-              .map((item: any) => (
+              .map((item) => (
                 <TrackCard
                   key={item.id}
                   imageUrl={item.images?.[0]?.url}
                   name={item.name}
+                  onClick={() => router.push(`/artist/${item.id}`)}
                 />
               ))}
         </div>
@@ -69,7 +97,7 @@ export default function Page() {
         <h2 className="my-2">앨범</h2>
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
-            data.albums?.items?.map((item: any) => (
+            data.albums?.items?.map((item) => (
               <Link href={`/album/${item.id}`} key={item.id}>
                 <TrackCard
                   key={item.id}
@@ -86,8 +114,8 @@ export default function Page() {
         <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
           {data &&
             data?.playlists?.items
-              ?.filter((item: any) => item !== null)
-              .map((item: any) => (
+              ?.filter((item) => item !== null)
+              .map((item) => (
                 <Link href={`/playlist/${item.id}`} key={item.id}>
                   <div key={item.id} className="w-[150px] h-[150px] pointer">
                     <div className="h-[130px] relative">
@@ -109,5 +137,13 @@ export default function Page() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <SearchContent />
+    </Suspense>
   );
 }

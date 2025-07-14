@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  const { userId } = params;
+  const { userId } = await params;
   const cookieStore = await cookies();
   const access_token = cookieStore.get("access_token")?.value;
 

@@ -25,9 +25,10 @@ export default function DesktopTopBar() {
       <Image
         src="/goorm_logo_blue.png"
         alt="로고"
-        className="mr-3"
+        className="mr-3 cursor-pointer"
         width={100}
         height={100}
+        onClick={() => router.push("/")}
       />
       <form
         className="flex items-center rounded-full px-4 py-2 w-full max-w-[550px] border-2 border-(--primary-blue)"
