@@ -28,6 +28,7 @@ export default function DesktopTopBar() {
         className="mr-3"
         width={100}
         height={100}
+        onClick={() => router.push("/")}
       />
       <form
         className="flex items-center rounded-full px-4 py-2 w-full max-w-[550px] border-2 border-(--primary-blue)"
