@@ -18,9 +18,9 @@ interface SpotifyPlaylist {
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  const { userId } = params;
+  const { userId } = await params;
   if (!userId) return new NextResponse("No userId", { status: 400 });
 
   try {
