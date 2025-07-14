@@ -25,7 +25,7 @@ export default function DesktopTopBar() {
       <Image
         src="/goorm_logo_blue.png"
         alt="로고"
-        className="mr-3"
+        className="mr-3 cursor-pointer"
         width={100}
         height={100}
         onClick={() => router.push("/")}
