@@ -1,5 +1,6 @@
 export interface Profile {
   id: string;
+  email?: string;
   nickname: string;
   username: string;
   imageUrl: string | null;
@@ -11,6 +12,7 @@ export interface GenreTagsProps {
   userId: string;
   genres: string[];
   onSave?: (genres: string[]) => void;
+  showEditButton?: boolean;
 }
 
 export interface Playlist {
@@ -23,13 +25,15 @@ export interface Playlist {
   public?: boolean;
   ownerId: string;
   owner: {
-    id: string;
+    id?: string;
+    display_name?: string;
   };
   ownerNickname: string;
   images?: { url: string }[];
   tracks?: {
     total?: number;
   };
+  isMe: boolean;
 }
 
 export interface Track {

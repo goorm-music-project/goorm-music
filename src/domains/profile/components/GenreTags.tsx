@@ -28,7 +28,12 @@ async function patchUserGenres(userId: string, genres: string[]) {
   return res.json();
 }
 
-export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
+export default function GenreTags({
+  userId,
+  genres,
+  onSave,
+  showEditButton,
+}: GenreTagsProps) {
   const [selected, setSelected] = useState<string[]>(genres || []);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,12 +69,15 @@ export default function GenreTags({ userId, genres, onSave }: GenreTagsProps) {
               {genre}
             </span>
           ))}
-        <button
-          className="ml-2 text-xs text-blue-600 underline"
-          onClick={() => setEditing(true)}
-        >
-          편집
-        </button>
+
+        {showEditButton && (
+          <button
+            className="ml-2 text-xs text-blue-600 underline"
+            onClick={() => setEditing(true)}
+          >
+            편집
+          </button>
+        )}
       </div>
       {editing && (
         <div className="fixed inset-0 bg-black/30 z-50 flex justify-center items-center">

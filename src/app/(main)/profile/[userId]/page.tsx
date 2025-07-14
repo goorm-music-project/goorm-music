@@ -1,22 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ProfileHeader from "@/domains/profile/components/ProfileHeader";
 import GenreTags from "@/domains/profile/components/GenreTags";
-import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
 import PlaylistList from "@/domains/profile/components/PlaylistList";
 import LikedTrackList from "@/domains/profile/components/LikedTrackList";
 import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
+import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
 import {
   Track,
-  SpotifyLikedTrack,
   Profile,
   Playlist,
+  SpotifyLikedTrack,
 } from "@/domains/profile/types/Profile";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { useParams } from "next/navigation";
+import authAxios from "@/domains/common/lib/axios/authAxios";
+import appAxios from "@/domains/common/lib/axios/appAxios";
 
 export default function ProfilePage() {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
+  const myUserId = userSpotifyStore((state) => state.userId);
+
   const [profile, setProfile] = useState<Profile | null>(null);
   const [allPlaylists, setAllPlaylists] = useState<Playlist[]>([]);
   const [likedSongs, setLikedSongs] = useState<Track[]>([]);
@@ -25,14 +30,30 @@ export default function ProfilePage() {
   );
   const [loading, setLoading] = useState(true);
 
-  const handleUnfollowPlaylist = async (playlistId: string) => {
+  const params = useParams();
+  const userId = Array.isArray(params?.userId)
+    ? params.userId[0]
+    : params?.userId;
+
+  const isMe = myUserId !== null && profile?.id === myUserId;
+
+  // 공개 플레이리스트 개수 계산
+  const publicPlaylistsCount = allPlaylists.filter((pl) => pl.public).length;
+
+  // 프로필 링크 복사 핸들러
+  const handleCopyProfileLink = useCallback(() => {
+    if (!profile) return;
+    const profileUrl = `${window.location.origin}/profile/${profile.id}`;
+    navigator.clipboard.writeText(profileUrl);
+    alert("프로필 링크가 복사되었습니다!");
+  }, [profile]);
+
+  // 플레이리스트 언팔로우
+  const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
     if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
     try {
-      await fetch(`/api/playlist/unfollow`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playlistId }),
-        credentials: "include", // 쿠키 포함
+      await authAxios.delete(`/api/playlist/unfollow`, {
+        data: { playlistId },
       });
       setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
     } catch {
@@ -41,13 +62,10 @@ export default function ProfilePage() {
   };
 
   // 좋아요 취소
-  const handleUnlikeTrack = async (trackId: string) => {
+  const handleUnlikeTrack = async (trackId: string): Promise<void> => {
     try {
-      await fetch("/api/likeList", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ trackId }),
-        credentials: "include", // 쿠키 포함 필수
+      await authAxios.delete("/api/likeList", {
+        data: { trackId },
       });
       setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
     } catch {
@@ -55,47 +73,66 @@ export default function ProfilePage() {
     }
   };
 
-  async function fetchAll() {
+  // 데이터 불러오기
+  async function fetchAll(): Promise<void> {
     setLoading(true);
     try {
-      const resProfile = await fetch("/api/userData", {
-        method: "POST",
-        credentials: "include", // 쿠키 포함
-      });
-      const profileData = await resProfile.json();
+      let profileData: {
+        userId: string;
+        display_name?: string;
+        nickname?: string;
+        imageUrl?: string | null;
+        genres?: string[];
+      };
+
+      // 내 프로필
+      if (myUserId && userId === myUserId) {
+        const resProfile = await authAxios.post("/api/userData");
+        profileData = resProfile.data;
+      } else {
+        // 타인 프로필
+        const resProfile = await appAxios.get(`/api/users/${userId}`);
+        profileData = resProfile.data;
+      }
+
       setProfile({
         id: profileData.userId,
-        nickname: profileData.display_name,
+        nickname: profileData.display_name || profileData.nickname || "",
         username: profileData.userId,
         imageUrl: profileData.imageUrl ?? null,
         genres: profileData.genres || [],
-        isMe: true,
+        isMe: myUserId === profileData.userId,
       });
 
-      const resPlaylists = await fetch("/api/playlist/getPlaylist", {
-        credentials: "include",
-      });
-      const playlistsData: Playlist[] = await resPlaylists.json();
+      // 모든 플레이리스트 가져오기 (내 프로필/타인 프로필 분기)
+      let playlistsData: Playlist[];
+      if (myUserId && userId === myUserId) {
+        const resPlaylists = await authAxios.get("/api/playlist/getPlaylist");
+        playlistsData = resPlaylists.data;
+      } else {
+        const resPlaylists = await appAxios.get(
+          `/api/users/${userId}/playlists`
+        );
+        playlistsData = resPlaylists.data;
+      }
       setAllPlaylists(playlistsData);
 
-      const resLiked = await fetch("/api/likeList", {
-        credentials: "include",
-      });
-      if (!resLiked.ok) throw new Error("likeList fetch failed");
-      const likedData = await resLiked.json();
-      const likedTracks: Track[] = (likedData as SpotifyLikedTrack[]).map(
-        (item) => ({
+      // 좋아요 리스트는 내 프로필만
+      if (myUserId && userId === myUserId) {
+        const resLiked = await authAxios.get("/api/likeList");
+        const likedData = resLiked.data as SpotifyLikedTrack[];
+        const likedTracks: Track[] = likedData.map((item) => ({
           id: item.track.id,
           title: item.track.name,
-          artist: item.track.artists
-            .map((a: { name: string }) => a.name)
-            .join(", "),
+          artist: item.track.artists.map((a) => a.name).join(", "),
           albumCoverUrl: item.track.album?.images?.[0]?.url || null,
           duration: Math.floor(item.track.duration_ms / 1000),
           isLiked: true,
-        })
-      );
-      setLikedSongs(likedTracks);
+        }));
+        setLikedSongs(likedTracks);
+      } else {
+        setLikedSongs([]); // 타인 프로필일 땐 빈 배열
+      }
     } catch {
       alert("데이터 로드에 실패했습니다.");
     }
@@ -103,34 +140,47 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn || !userId) return;
     fetchAll();
-  }, [isLoggedIn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, userId]);
 
   if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
-  // 내 플레이리스트와 팔로우 플레이리스트 구분
+  // 공개 여부 필터링 및 커버 이미지 추가
   const myPlaylists = allPlaylists
-    .filter((pl) => pl.owner?.id === profile.id)
+    .filter(
+      (pl) =>
+        pl.owner?.id === profile.id &&
+        (isMe || pl.isPublic === undefined || pl.isPublic === true)
+    )
     .map((pl) => ({
       ...pl,
       coverImageUrl: pl.images?.[0]?.url || null,
     }));
 
-  const followedPlaylists = allPlaylists
-    .filter((pl) => pl.owner?.id !== profile.id)
-    .map((pl) => ({
-      ...pl,
-      coverImageUrl: pl.images?.[0]?.url || null,
-    }));
+  const followedPlaylists = isMe
+    ? allPlaylists
+        .filter((pl) => pl.owner?.id !== profile.id)
+        .map((pl) => ({
+          ...pl,
+          coverImageUrl: pl.images?.[0]?.url || null,
+        }))
+    : [];
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 pb-24">
+    <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
       <div className="bg-gradient-to-b from-blue-50 to-white">
         <div className="px-4 pb-8">
-          <ProfileHeader profile={profile} />
+          <ProfileHeader
+            profile={profile}
+            showSensitiveInfo={isMe}
+            isMe={isMe}
+            publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
+            onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
+          />
           <div className="mt-4">
             <GenreTags
               userId={profile.id}
@@ -140,17 +190,25 @@ export default function ProfilePage() {
                   prev ? { ...prev, genres: newGenres } : prev
                 )
               }
+              showEditButton={isMe}
             />
           </div>
         </div>
       </div>
+
       <div className="px-4">
-        <ProfileTabMenu tab={tab} onTabChange={setTab} />
-        {tab === "playlists" && <PlaylistList playlists={myPlaylists} />}
-        {tab === "liked" && (
+        <ProfileTabMenu
+          tab={tab}
+          onTabChange={setTab}
+          tabs={isMe ? ["playlists", "liked", "following"] : ["playlists"]}
+        />
+        {tab === "playlists" && (
+          <PlaylistList playlists={myPlaylists} isMe={isMe} />
+        )}
+        {tab === "liked" && isMe && (
           <LikedTrackList tracks={likedSongs} onUnlike={handleUnlikeTrack} />
         )}
-        {tab === "following" && (
+        {tab === "following" && isMe && (
           <FollowingPlaylist
             playlists={followedPlaylists}
             onUnfollow={handleUnfollowPlaylist}
