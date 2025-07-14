@@ -35,46 +35,9 @@ export default function ProfilePage() {
     ? params.userId[0]
     : params?.userId;
 
-  const isMe = myUserId !== null && profile?.id === myUserId;
+  const isMe = !!profile && myUserId === profile.id;
 
-  // 공개 플레이리스트 개수 계산
-  const publicPlaylistsCount = allPlaylists.filter((pl) => pl.public).length;
-
-  // 프로필 링크 복사 핸들러
-  const handleCopyProfileLink = useCallback(() => {
-    if (!profile) return;
-    const profileUrl = `${window.location.origin}/profile/${profile.id}`;
-    navigator.clipboard.writeText(profileUrl);
-    alert("프로필 링크가 복사되었습니다!");
-  }, [profile]);
-
-  // 플레이리스트 언팔로우
-  const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
-    if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
-    try {
-      await authAxios.delete(`/api/playlist/unfollow`, {
-        data: { playlistId },
-      });
-      setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
-    } catch {
-      alert("삭제에 실패했습니다.");
-    }
-  };
-
-  // 좋아요 취소
-  const handleUnlikeTrack = async (trackId: string): Promise<void> => {
-    try {
-      await authAxios.delete("/api/likeList", {
-        data: { trackId },
-      });
-      setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
-    } catch {
-      alert("좋아요 취소 실패");
-    }
-  };
-
-  // 데이터 불러오기
-  async function fetchAll(): Promise<void> {
+  const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
       let profileData: {
@@ -85,12 +48,10 @@ export default function ProfilePage() {
         genres?: string[];
       };
 
-      // 내 프로필
       if (myUserId && userId === myUserId) {
         const resProfile = await authAxios.post("/api/userData");
         profileData = resProfile.data;
       } else {
-        // 타인 프로필
         const resProfile = await appAxios.get(`/api/users/${userId}`);
         profileData = resProfile.data;
       }
@@ -104,7 +65,6 @@ export default function ProfilePage() {
         isMe: myUserId === profileData.userId,
       });
 
-      // 모든 플레이리스트 가져오기 (내 프로필/타인 프로필 분기)
       let playlistsData: Playlist[];
       if (myUserId && userId === myUserId) {
         const resPlaylists = await authAxios.get("/api/playlist/getPlaylist");
@@ -116,8 +76,6 @@ export default function ProfilePage() {
         playlistsData = resPlaylists.data;
       }
       setAllPlaylists(playlistsData);
-
-      // 좋아요 리스트는 내 프로필만
       if (myUserId && userId === myUserId) {
         const resLiked = await authAxios.get("/api/likeList");
         const likedData = resLiked.data as SpotifyLikedTrack[];
@@ -131,29 +89,55 @@ export default function ProfilePage() {
         }));
         setLikedSongs(likedTracks);
       } else {
-        setLikedSongs([]); // 타인 프로필일 땐 빈 배열
+        setLikedSongs([]);
       }
     } catch {
       alert("데이터 로드에 실패했습니다.");
     }
     setLoading(false);
-  }
+  }, [myUserId, userId]);
 
   useEffect(() => {
     if (!isLoggedIn || !userId) return;
     fetchAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, userId]);
+  }, [isLoggedIn, userId, fetchAll]);
 
-  if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
-  if (loading) return <div>로딩중...</div>;
-  if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
+  const handleCopyProfileLink = useCallback(() => {
+    if (!profile) return;
+    const profileUrl = `${window.location.origin}/profile/${profile.id}`;
+    navigator.clipboard.writeText(profileUrl);
+    alert("프로필 링크가 복사되었습니다!");
+  }, [profile]);
 
-  // 공개 여부 필터링 및 커버 이미지 추가
+  const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
+    if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
+    try {
+      await authAxios.delete(`/api/playlist/unfollow`, {
+        data: { playlistId },
+      });
+      setAllPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
+    } catch {
+      alert("삭제에 실패했습니다.");
+    }
+  };
+
+  const handleUnlikeTrack = async (trackId: string): Promise<void> => {
+    try {
+      await authAxios.delete("/api/likeList", {
+        data: { trackId },
+      });
+      setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
+    } catch {
+      alert("좋아요 취소 실패");
+    }
+  };
+
+  const publicPlaylistsCount = allPlaylists.filter((pl) => pl.public).length;
+
   const myPlaylists = allPlaylists
     .filter(
       (pl) =>
-        pl.owner?.id === profile.id &&
+        pl.owner?.id === profile?.id &&
         (isMe || pl.isPublic === undefined || pl.isPublic === true)
     )
     .map((pl) => ({
@@ -163,16 +147,19 @@ export default function ProfilePage() {
 
   const followedPlaylists = isMe
     ? allPlaylists
-        .filter((pl) => pl.owner?.id !== profile.id)
+        .filter((pl) => pl.owner?.id !== profile?.id)
         .map((pl) => ({
           ...pl,
           coverImageUrl: pl.images?.[0]?.url || null,
         }))
     : [];
 
+  if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
+  if (loading) return <div>로딩중...</div>;
+  if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
+
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
-      {/* 이 부분의 배경을 아래와 같이 통일 */}
       <div className="bg-[var(--background)]">
         <div className="px-4 pb-8">
           <ProfileHeader

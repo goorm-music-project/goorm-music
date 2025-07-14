@@ -42,7 +42,6 @@ const PlaylistList = ({ playlists }: Props) => {
             className="flex items-center bg-white rounded-xl p-2 md:p-4 shadow border gap-2 md:gap-4 cursor-pointer transition hover:bg-blue-50"
             onClick={() => handleGoDetail(playlist.id)}
           >
-            {/* 앨범 커버 */}
             {playlist.images && playlist.images[0]?.url ? (
               <Image
                 src={playlist.images[0].url}
@@ -55,7 +54,6 @@ const PlaylistList = ({ playlists }: Props) => {
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-lg bg-gray-200 flex-shrink-0" />
             )}
 
-            {/* 정보 */}
             <div className="flex-1 basis-0 min-w-0 max-w-full">
               <div className="font-bold text-sm md:text-base mb-1 truncate">
                 {playlist.name}
