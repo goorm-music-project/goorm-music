@@ -24,9 +24,11 @@ const FollowingPlaylist = ({ playlists, onUnfollow }: Props) => {
           >
             <Image
               src={pl.coverImageUrl || "/default-cover.png"}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded object-cover cursor-pointer"
+              className="rounded object-cover cursor-pointer"
               alt={pl.name}
               onClick={() => router.push(`/playlist/${pl.id}`)}
+              width={64}
+              height={64}
             />
             <div
               className="flex-1 cursor-pointer"

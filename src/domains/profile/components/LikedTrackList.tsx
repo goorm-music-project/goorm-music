@@ -20,8 +20,10 @@ const LikedTrackList = ({ tracks, onUnlike }: Props) => (
         >
           <Image
             src={track.albumCoverUrl || "/default-cover.png"}
-            className="w-12 h-12 rounded"
+            className="rounded"
             alt={track.title}
+            width={48}
+            height={48}
           />
           <div>
             <div className="font-bold">{track.title}</div>
