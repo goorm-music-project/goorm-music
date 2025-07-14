@@ -7,7 +7,7 @@ import PlayBar from "@/domains/main/components/PlayBar";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 
 type dataType = {
@@ -39,7 +39,7 @@ type dataType = {
 function SearchContent() {
   const params = useSearchParams();
   const query = params.get("params") || "";
-
+  const router = useRouter();
   const [data, setData] = useState<dataType>();
   const [isLoading, setisLoading] = useState(false);
 
@@ -78,6 +78,7 @@ function SearchContent() {
                   key={item.id}
                   imageUrl={item.images?.[0]?.url}
                   name={item.name}
+                  onClick={() => router.push(`/artist/${item.id}`)}
                 />
               ))}
         </div>
