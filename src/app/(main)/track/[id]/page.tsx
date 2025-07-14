@@ -21,7 +21,6 @@ interface TrackDetail {
 export default function TrackDetailPage() {
   const { id } = useParams();
   const trackId = String(id);
-
   const [track, setTrack] = useState<TrackDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,7 +60,7 @@ export default function TrackDetailPage() {
           artistsId={track.artistsId}
           title={track.title}
         />
-        <TrackLyrics lyrics={track.lyrics} />
+        <TrackLyrics title={track.title} artist={track.artists[0]} />
       </div>
       <ArtistMoreTracks artistId={track.artistsId[0]} />
     </div>
