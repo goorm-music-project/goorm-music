@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Login() {
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-    const redirectUri = "http://127.0.0.1:3000/callback";
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI as string;
     const scope =
       "user-read-email user-read-private playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-library-read user-library-modify";
 
