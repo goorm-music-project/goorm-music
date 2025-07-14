@@ -1,11 +1,14 @@
 "use client";
+
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 import PlayBar from "@/domains/main/components/PlayBar";
 import { PlaylistItem } from "@/domains/playlist/types/Playlist";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
-export default function Page() {
+// useSearchParams를 사용하는 컴포넌트를 분리
+function SearchTracksContent() {
   const params = useSearchParams();
   const query = params.get("query") || "";
   const [datas, setDatas] = useState<PlaylistItem[]>([]);
@@ -20,10 +23,19 @@ export default function Page() {
     };
     fetchData();
   }, [query]);
+  
   return (
-    <div>
+    <>
       <h2>더 많은 곡을 감상하세요.</h2>
       <div>{datas && <PlayBar tracks={datas} />}</div>
-    </div>
+    </>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <SearchTracksContent />
+    </Suspense>
   );
 }
