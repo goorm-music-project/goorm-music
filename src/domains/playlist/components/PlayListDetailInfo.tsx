@@ -3,6 +3,7 @@ import React from "react";
 import { MdDelete } from "react-icons/md";
 import { TiPencil } from "react-icons/ti";
 import { PlaylistDetail } from "../types/Playlist";
+import Link from "next/link";
 
 interface Props {
   listData: PlaylistDetail;
@@ -26,6 +27,27 @@ export default function PlayListDetailInfo({
         height={250}
         className="rounded"
       />
+      {listData.owner && (
+        <div className="mt-2">
+          <Link href={`/profile/${listData.owner.id}`}>
+            <span
+              className="font-semibold cursor-pointer hover:underline"
+              style={{
+                color: "var(--primary-blue)",
+              }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.color = "var(--primary-blue-hover)")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.color = "var(--primary-blue)")
+              }
+            >
+              프로필로 이동
+            </span>
+          </Link>
+        </div>
+      )}
+
       {canEdit && (
         <div className="text-center">
           <button
