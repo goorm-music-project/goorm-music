@@ -65,7 +65,7 @@ export interface PlaylistDetail {
   name: string;
   description: string;
   images: { url: string }[];
-  owner: { display_name: string };
+  owner: { id: string; display_name: string };
   tracks: {
     items: {
       added_at: string;
