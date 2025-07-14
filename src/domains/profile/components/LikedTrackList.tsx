@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Track } from "../types/Profile";
 import EmptyMessage from "./EmptyMessage";
+import Link from "next/link";
 
 interface Props {
   tracks: Track[];
@@ -17,19 +18,27 @@ const LikedTrackList = ({ tracks, onUnlike }: Props) => (
           key={track.id}
           className="flex items-center gap-4 md:gap-6 py-3 md:py-2 border-b last:border-b-0"
         >
-          <Image
-            src={track.albumCoverUrl || "/default-cover.png"}
-            className="w-12 h-12 md:w-16 md:h-16 rounded"
-            alt={track.title}
-            width={48}
-            height={48}
-          />
-          <div>
-            <div className="font-bold text-sm md:text-base">{track.title}</div>
-            <div className="text-xs md:text-sm text-gray-500">
-              {track.artist}
+          <Link
+            href={`/track/${track.id}`}
+            className="flex items-center flex-1 gap-4 cursor-pointer hover:bg-gray-50 rounded"
+          >
+            <Image
+              src={track.albumCoverUrl || "/default-cover.png"}
+              className="w-12 h-12 md:w-16 md:h-16 rounded"
+              alt={track.title}
+              width={48}
+              height={48}
+            />
+            <div>
+              <div className="font-bold text-sm md:text-base">
+                {track.title}
+              </div>
+
+              <div className="text-xs md:text-sm text-gray-500">
+                {track.artist}
+              </div>
             </div>
-          </div>
+          </Link>
           <span className="ml-auto text-xs md:text-sm text-gray-400">
             {Math.floor(track.duration / 60)}:
             {(track.duration % 60).toString().padStart(2, "0")}
