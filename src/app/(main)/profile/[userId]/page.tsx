@@ -14,13 +14,14 @@ import {
   SpotifyLikedTrack,
 } from "@/domains/profile/types/Profile";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 
 export default function ProfilePage() {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const myUserId = userSpotifyStore((state) => state.userId);
+  const router = useRouter();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [allPlaylists, setAllPlaylists] = useState<Playlist[]>([]);
@@ -158,17 +159,38 @@ export default function ProfilePage() {
   if (loading) return <div>로딩중...</div>;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
+  const handleLogout = async () => {
+    try {
+      await authAxios.post("/api/logout");
+      userSpotifyStore.setState({ isLoggedIn: false, userId: "" });
+      router.push("/");
+    } catch (err) {
+      console.error("로그아웃 실패:", err);
+      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
       <div className="bg-[var(--background)]">
         <div className="px-4 pb-8">
-          <ProfileHeader
-            profile={profile}
-            showSensitiveInfo={isMe}
-            isMe={isMe}
-            publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
-            onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
-          />
+          <div className="flex flex-col md:flex-between md:flex-row">
+            <ProfileHeader
+              profile={profile}
+              showSensitiveInfo={isMe}
+              isMe={isMe}
+              publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
+              onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
+            />
+            <div className="flex px-4 pt-4">
+              <button
+                className="bg-[#FF6C78] text-black font-semibold px-4 py-2 rounded-md hover:opacity-90 transition w-25 h-10"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </div>
+          </div>
           <div className="mt-4">
             <GenreTags
               userId={profile.id}
