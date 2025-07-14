@@ -27,6 +27,8 @@ export default function ProfileHeader({
             src={profile.imageUrl}
             alt="프로필 이미지"
             className="w-full h-full object-cover"
+            width={112}
+            height={112}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400 text-4xl">
