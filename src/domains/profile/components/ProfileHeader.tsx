@@ -1,4 +1,5 @@
 import { Profile } from "@/domains/profile/types/Profile";
+import Image from "next/image";
 
 interface ProfileHeaderProps {
   profile: Profile;
@@ -20,7 +21,7 @@ export default function ProfileHeader({
       {/* 프로필 이미지 */}
       <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
         {profile.imageUrl ? (
-          <img
+          <Image
             src={profile.imageUrl}
             alt="프로필 이미지"
             className="w-full h-full object-cover"

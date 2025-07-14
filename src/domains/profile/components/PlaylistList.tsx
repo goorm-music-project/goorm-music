@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +40,7 @@ const PlaylistList = ({ playlists }: Props) => {
         >
           {/* 앨범 커버 */}
           {playlist.images && playlist.images[0]?.url ? (
-            <img
+            <Image
               src={playlist.images[0].url}
               alt={playlist.name}
               className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"

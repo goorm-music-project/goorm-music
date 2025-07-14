@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Track } from "../types/Profile";
 
 interface Props {
@@ -17,7 +18,7 @@ const LikedTrackList = ({ tracks, onUnlike }: Props) => (
           key={track.id}
           className="flex items-center gap-3 py-2 border-b last:border-b-0"
         >
-          <img
+          <Image
             src={track.albumCoverUrl || "/default-cover.png"}
             className="w-12 h-12 rounded"
             alt={track.title}

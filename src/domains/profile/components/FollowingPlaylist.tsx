@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
 
@@ -21,7 +22,7 @@ const FollowingPlaylist = ({ playlists, onUnfollow }: Props) => {
             key={pl.id}
             className="flex items-center rounded-xl p-3 sm:p-4 shadow border gap-3 w-full group"
           >
-            <img
+            <Image
               src={pl.coverImageUrl || "/default-cover.png"}
               className="w-14 h-14 sm:w-16 sm:h-16 rounded object-cover cursor-pointer"
               alt={pl.name}
