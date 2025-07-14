@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Track } from "../types/Profile";
 import EmptyMessage from "./EmptyMessage";
 import Link from "next/link";
+import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 
 interface Props {
   tracks: Track[];
@@ -17,6 +18,7 @@ const LikedTrackList = ({ tracks, onUnlike }: Props) => (
         <div
           key={track.id}
           className="flex items-center gap-4 md:gap-6 py-3 md:py-2 border-b last:border-b-0"
+          onClick={() => usePlayerSotre.setState({ selectedTrackId: track.id })}
         >
           <Link
             href={`/track/${track.id}`}
