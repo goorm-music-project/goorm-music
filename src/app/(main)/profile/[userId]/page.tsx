@@ -38,6 +38,8 @@ export default function ProfilePage() {
 
   const isMe = !!profile && myUserId === profile.id;
 
+  console.log(isMe);
+
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
@@ -182,14 +184,16 @@ export default function ProfilePage() {
               publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
               onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
             />
-            <div className="flex px-4 pt-4">
-              <button
-                className="bg-[#FF6C78] text-black font-semibold px-4 py-2 rounded-md hover:opacity-90 transition w-25 h-10"
-                onClick={handleLogout}
-              >
-                로그아웃
-              </button>
-            </div>
+            {isMe && (
+              <div className="flex px-4 pt-4">
+                <button
+                  className="bg-[#FF6C78] text-black font-semibold px-4 py-2 rounded-md hover:opacity-90 transition w-25 h-10"
+                  onClick={handleLogout}
+                >
+                  로그아웃
+                </button>
+              </div>
+            )}
           </div>
           <div className="mt-4">
             <GenreTags
