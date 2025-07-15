@@ -33,6 +33,7 @@ export default function SelectGenre() {
     setSelectedGenres((prev) =>
       prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
     );
+    console.log(selectedGenres, "선택된 장르들");
   };
 
   const handleSignUp = async () => {
@@ -47,7 +48,7 @@ export default function SelectGenre() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, selectedGenres }),
+        body: JSON.stringify({ userId, genres: selectedGenres }),
       });
       router.push("/");
     } catch (err) {
