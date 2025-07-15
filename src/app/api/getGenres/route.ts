@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const data = userSnap.data();
-    const genres = data.preferredGenres || [];
+    const genres = data.genres || [];
 
     return NextResponse.json({ genres });
   } catch (error) {
