@@ -39,9 +39,9 @@ export default function Page() {
                   height={100}
                   className="rounded"
                 />
-                <div className="place-content-center">
-                  <h3>{playlist.name}</h3>
-                  <p>{playlist.description}</p>
+                <div className="flex flex-col justify-center w-full overflow-hidden">
+                  <h3 className="truncate">{playlist.name}</h3>
+                  <p className="truncate">{playlist.description}</p>
                 </div>
               </div>
             </Link>

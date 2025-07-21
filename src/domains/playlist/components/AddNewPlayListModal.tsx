@@ -65,7 +65,7 @@ export default function AddNewPlayListModal({
   if (isLoading) return <LoadingSpinner />;
   return (
     <Modal showModal={showModal} onClose={onClose}>
-      <div className="h-[300px] flex flex-col gap-2">
+      <div className="h-[230px] flex flex-col gap-2">
         <h2>새 플레이리스트</h2>
         <div className="">
           <form onSubmit={handleAddNewPlaylist} id="addPlayList">
@@ -85,16 +85,6 @@ export default function AddNewPlayListModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <label>공개 여부</label>
-            <select
-              className="my-2"
-              name="public"
-              value={isPublic}
-              onChange={(e) => setIsPublic(e.target.value)}
-            >
-              <option value="true">공개</option>
-              <option value="false">비공개</option>
-            </select>
           </form>
         </div>
         <div className="flex gap-2">
