@@ -38,6 +38,7 @@ export default function Page() {
   const [message, setMessage] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const handleChangeChk = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -74,11 +75,13 @@ export default function Page() {
 
   const handleTrackDelBtn = async () => {
     if (deleteTracks.length === 0) {
-      alert("삭제할 데이터를 선택해주세요.");
+      setMessage("삭제할 데이터를 선택해주세요.");
+      setShowAlertModal(true);
       return;
     }
 
     try {
+      setDeleting(true);
       await authAxios.delete("/api/playlist/removePlaylistItem", {
         data: {
           id,
@@ -86,10 +89,13 @@ export default function Page() {
           snapshot_id: snapshotId,
         },
       });
-      alert("트랙이 삭제되었습니다.");
+      setMessage("트랙이 삭제 되었습니다.");
+      setShowAlertModal(true);
       fetchData();
     } catch (err) {
       console.log("트랙 삭제 오류", err);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -98,7 +104,8 @@ export default function Page() {
       await fetch(`/api/playlist/deletePlaylist?playlistId=${id}`, {
         method: "DELETE",
       });
-      alert("플레이리스트가 삭제 되었습니다.");
+      setMessage("플레이리스트가 삭제 되었습니다.");
+      setShowAlertModal(true);
       router.push("/playlist");
     } catch (err) {
       console.log("플리 삭제 오류", err);
@@ -119,11 +126,12 @@ export default function Page() {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
     if (data.owner.id === userId) {
-      setCanEdit(data.owner.id === userId);
+      setCanEdit(true);
       const text = decodeHtmlEntities(data.description);
       setDescription(text);
     } else {
       setDescription(data.owner.display_name);
+      setCanEdit(false);
     }
     setListData(data);
     setSnapshotId(data.snapshot_id);
@@ -144,10 +152,10 @@ export default function Page() {
       {canEdit && <h1>나의 플레이리스트</h1>}
 
       {listData && (
-        <div className="flex flex-col gap-2 items-center md:flex-row md:items-start">
+        <div className="flex flex-col gap-2 items-center lg:flex-row lg:items-start">
           <div
-            className={`md:flex flex-col md:w-[40%] ${
-              !canEdit ? "md:mt-2" : "md:mt-8"
+            className={`lg:flex flex-col lg:w-[40%] ${
+              !canEdit ? "lg:mt-2" : "lg:mt-8"
             }`}
           >
             <PlayListDetailInfo
@@ -171,8 +179,9 @@ export default function Page() {
               <button
                 className="errorBtn py-1.5 px-2 block ml-auto"
                 onClick={handleTrackDelBtn}
+                disabled={deleting}
               >
-                트랙 삭제
+                {deleting ? "삭제중..." : "트랙 삭제"}
               </button>
             ) : (
               <FollowBtn
