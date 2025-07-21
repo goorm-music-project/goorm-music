@@ -4,7 +4,7 @@ export const genreList = [
   { ko: "어쿠스틱", en: "acoustic" },
   { ko: "아이돌", en: "idol" },
   { ko: "락", en: "rock" },
-  { ko: "알앤비", en: "rnb" },
+  { ko: "알앤비", en: "r&b" },
   { ko: "일렉트로닉", en: "electronic" },
   { ko: "재즈", en: "jazz" },
   { ko: "힙합", en: "hiphop" },

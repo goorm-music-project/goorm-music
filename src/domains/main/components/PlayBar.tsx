@@ -106,7 +106,7 @@ export default function PlayBar({
             onClick={() => handleClickTrack(item.track.id)}
           >
             <Image
-              src={item.track.album.images[0]?.url}
+              src={item.track.album.images[0]?.url || "/goorm_logo_blue.png"}
               alt={item.track.name}
               width={100}
               height={100}
