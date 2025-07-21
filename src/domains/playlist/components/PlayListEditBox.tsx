@@ -1,5 +1,4 @@
 import React, { SetStateAction } from "react";
-import { RiSave3Fill } from "react-icons/ri";
 
 interface Props {
   isEdit: boolean;
@@ -50,8 +49,11 @@ export default function PlayListEditBox({
         />
       </div>
       {isEdit ? (
-        <button className="text-2xl" onClick={handleEditPlaylist}>
-          <RiSave3Fill />
+        <button
+          className="primaryBtn py-1.5 px-2 mr-2"
+          onClick={handleEditPlaylist}
+        >
+          저장
         </button>
       ) : null}
     </div>
