@@ -105,12 +105,23 @@ export default function Page() {
     }
   };
 
+  const decodeHtmlEntities = (str: string) => {
+    return str
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&#x27;/g, "`");
+  };
+
   const fetchData = async () => {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
     if (data.owner.id === userId) {
       setCanEdit(data.owner.id === userId);
-      setDescription(data.description);
+      const text = decodeHtmlEntities(data.description);
+      setDescription(text);
     } else {
       setDescription(data.owner.display_name);
     }
