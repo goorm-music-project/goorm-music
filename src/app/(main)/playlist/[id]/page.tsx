@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import AlertModal from "@/domains/common/components/AlertModal";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
@@ -14,7 +15,6 @@ import {
 } from "@/domains/playlist/types/Playlist";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
 
 export interface DeleteInfo {
   uri: string;
@@ -26,7 +26,7 @@ export default function Page() {
   const params = useParams();
   const id = params.id;
   const { userId } = userSpotifyStore();
-  const [canEdit, setCanEdit] = useState(false);
+  const [canEdit, setCanEdit] = useState<null | boolean>(null);
   const [listData, setListData] = useState<PlaylistDetail | null>(null);
   const [snapshotId, setSnapshotId] = useState<string>("");
   const [name, setName] = useState("");
@@ -109,7 +109,7 @@ export default function Page() {
     const res = await authAxios.get(`/api/playlist/getPlaylistDetail?id=${id}`);
     const data = res.data;
     if (data.owner.id === userId) {
-      setCanEdit(true);
+      setCanEdit(data.owner.id === userId);
       setDescription(data.description);
     } else {
       setDescription(data.owner.display_name);
@@ -122,8 +122,11 @@ export default function Page() {
   };
 
   useEffect(() => {
+    if (!userId) return;
     fetchData();
-  }, []);
+  }, [userId]);
+
+  if (canEdit === null) return <LoadingSpinner />;
 
   return (
     <div>
@@ -155,10 +158,10 @@ export default function Page() {
           <div className="w-full">
             {canEdit ? (
               <button
-                className="text-2xl block ml-auto"
+                className="errorBtn py-1.5 px-2 block ml-auto"
                 onClick={handleTrackDelBtn}
               >
-                <MdDelete />
+                트랙 삭제
               </button>
             ) : (
               <FollowBtn
