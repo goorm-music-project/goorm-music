@@ -7,6 +7,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 import { useRouter } from "next/navigation";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 import appAxios from "@/domains/common/lib/axios/appAxios";
@@ -75,6 +77,8 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
               clickable: true,
             }}
             className="w-full"
+            navigation={true}
+            modules={[Navigation]}
           >
             {tracks.map((track) => (
               <SwiperSlide

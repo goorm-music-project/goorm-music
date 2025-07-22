@@ -8,7 +8,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { FreeMode } from "swiper/modules";
+import "swiper/css/navigation";
+import { FreeMode, Navigation } from "swiper/modules";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 
 export default function Page() {
@@ -52,7 +53,8 @@ export default function Page() {
           slidesPerView={"auto"}
           spaceBetween={10}
           freeMode={true}
-          modules={[FreeMode]}
+          modules={[FreeMode, Navigation]}
+          navigation={true}
         >
           {genreList.map((genre) => {
             const isActive = genre.ko === isSelect;

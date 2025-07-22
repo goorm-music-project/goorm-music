@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 
 type TrackItem = {
   id: string;
@@ -48,6 +51,8 @@ export default function JenreRecoList() {
             clickable: true,
           }}
           className="recoSwiper"
+          navigation={true}
+          modules={[Navigation]}
         >
           {datas.map((item) => (
             <SwiperSlide

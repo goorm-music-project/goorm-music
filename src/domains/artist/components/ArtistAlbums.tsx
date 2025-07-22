@@ -4,8 +4,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import Link from "next/link";
 import appAxios from "@/domains/common/lib/axios/appAxios";
+import { Navigation } from "swiper/modules";
 
 interface Props {
   artistId: string;
@@ -46,6 +48,8 @@ export default function ArtistAlbums({ artistId }: Props) {
             clickable: true,
           }}
           className="w-full"
+          navigation={true}
+          modules={[Navigation]}
         >
           {ablums.map((track) => (
             <SwiperSlide

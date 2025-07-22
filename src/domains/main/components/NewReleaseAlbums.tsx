@@ -4,8 +4,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import "swiper/css/navigation";
 import Link from "next/link";
 import appAxios from "@/domains/common/lib/axios/appAxios";
+import { Navigation } from "swiper/modules";
 
 type Album = {
   id: string;
@@ -33,6 +35,8 @@ export default function NewReleaseAlbum() {
             clickable: true,
           }}
           className="albumSwiper"
+          navigation={true}
+          modules={[Navigation]}
         >
           {albums.map((album) => (
             <SwiperSlide key={album.id} style={{ width: "150px" }}>

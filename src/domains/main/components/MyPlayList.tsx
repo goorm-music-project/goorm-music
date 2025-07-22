@@ -8,8 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 
 export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { userId } = userSpotifyStore();
@@ -29,7 +31,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
     if (!isLoggedIn) return;
     const fetchData = async () => {
       const res = await authAxios.get("/api/playlist/getPlaylist");
-      const data = await res.data as Playlist[];
+      const data = (await res.data) as Playlist[];
       const myPlaylist = data.filter((v) => v.owner.id === userId);
       setListData(myPlaylist);
     };
@@ -58,6 +60,8 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
             clickable: true,
           }}
           className="swiper"
+          navigation={true}
+          modules={[Navigation]}
         >
           {!isLoggedIn && listData.length === 0 ? (
             <button
