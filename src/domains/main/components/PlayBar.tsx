@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
 import PlaybarCover from "@/domains/main/components/PlaybarCover";
@@ -8,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import AlertModal from "@/domains/common/components/AlertModal";
 
 interface Props {
   tracks: PlaylistItem[];
@@ -34,6 +36,8 @@ export default function PlayBar({
   const [selectTrack, setSelectTrack] = useState<string>("");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [message, setMessage] = useState("");
   const router = useRouter();
   const { setSelectedTrackId } = usePlayerSotre();
 
@@ -87,7 +91,7 @@ export default function PlayBar({
   }, [tracks, userId]);
 
   return (
-    <div className={className ? "grid grid-cols-1 md:grid-cols-2 gap-2" : ""}>
+    <div className={className ? "grid grid-cols-1 lg:grid-cols-2 gap-2" : ""}>
       {tracks.map((item, idx) => (
         <div
           key={`${item.track.id}_${idx}`}
@@ -106,7 +110,7 @@ export default function PlayBar({
             onClick={() => handleClickTrack(item.track.id)}
           >
             <Image
-              src={item.track.album.images[0]?.url || "/goorm_logo_blue.png"}
+              src={item.track.album?.images[0]?.url || "/goorm_logo_blue.png"}
               alt={item.track.name}
               width={100}
               height={100}
@@ -136,6 +140,8 @@ export default function PlayBar({
         setPlaylists={setPlaylists}
         onShowNewPlaylist={() => handleShowNewPlayList()}
         track={selectTrack}
+        setMessage={setMessage}
+        setShowAlertModal={setShowAlertModal}
       />
 
       <AddNewPlayListModal
@@ -143,6 +149,14 @@ export default function PlayBar({
         onClose={() => setShowAddNewPlayListModal(false)}
         setPlaylists={setPlaylists}
         track={selectTrack}
+        setMessage={setMessage}
+        setShowAlertModal={setShowAlertModal}
+      />
+
+      <AlertModal
+        showModal={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        message={message}
       />
     </div>
   );
