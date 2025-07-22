@@ -43,7 +43,8 @@ export default function FollowBtn({
       await fetch(`/api/playlist/deletePlaylist?playlistId=${followId}`, {
         method: "DELETE",
       });
-      alert("플레이리스트가 삭제 되었습니다.");
+      setMessage("플레이리스트가 삭제 되었습니다.");
+      setShowAlertModal(true);
       setIsExist(false);
     } catch (err) {
       console.log("플리 삭제 오류", err);

@@ -10,8 +10,16 @@ type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   track: string;
+  setMessage: Dispatch<SetStateAction<string>>;
+  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 };
-export default function PlayList({ playlists, setPlaylists, track }: Props) {
+export default function PlayList({
+  playlists,
+  setPlaylists,
+  track,
+  setMessage,
+  setShowAlertModal,
+}: Props) {
   const { userId } = userSpotifyStore();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,20 +48,18 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
       `/api/playlist/getPlaylistDetail?id=${playlistId}`
     );
     const detailData = res.data;
-
     const alreadyExists = detailData.tracks.items.some(
       (item: { track: { uri: string } }) => item.track.uri === track
     );
     if (alreadyExists) {
-      alert("이미 해당 플레이리스트에 존재하는 곡입니다.");
+      setMessage("이미 해당 플레이리스트에 존재하는 곡입니다.");
+      setShowAlertModal(true);
       return;
     }
 
     try {
       setIsLoading(true);
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
-
-      //TODO : 신규 트랙 추가 후 플리 track 수 업데이트 미반영 오류
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const json = res.data as Playlist[];
       const data = json.filter((v) => v.owner.id === userId);
@@ -62,10 +68,18 @@ export default function PlayList({ playlists, setPlaylists, track }: Props) {
       console.log("플리 추가 오류 ", err);
     } finally {
       setIsLoading(false);
+      setMessage("플레이리스트에 추가되었습니다.");
+      setShowAlertModal(true);
     }
   };
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) {
+    return (
+      <div className="w-[480px] flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">

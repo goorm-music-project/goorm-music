@@ -16,8 +16,8 @@ export default function AlertModal({ showModal, onClose, message }: Props) {
 
   return (
     <Modal showModal={showModal} onClose={onClose}>
-      <div className="w-xs text-center">
-        <h3 className="text-center">{message}</h3>
+      <div className="text-center">
+        <p className="my-8">{message}</p>
       </div>
     </Modal>
   );
