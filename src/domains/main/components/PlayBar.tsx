@@ -128,6 +128,8 @@ export default function PlayBar({
               setSelectTrack={setSelectTrack}
               handleShowPlayList={handleShowPlayList}
               likedMap={likedMap}
+              setMessage={setMessage}
+              setShowAlertModal={setShowAlertModal}
             />
           ) : null}
         </div>
