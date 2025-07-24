@@ -12,6 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import TrackCardSkeleton from "@/domains/common/components/TrackCardSkeleton";
 
 export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { userId } = userSpotifyStore();
@@ -70,6 +71,12 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
             >
               <FaPlus />
             </button>
+          ) : listData.length === 0 ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <SwiperSlide key={i} style={{ width: "150px" }}>
+                <TrackCardSkeleton />
+              </SwiperSlide>
+            ))
           ) : (
             listData.map((data) => (
               <SwiperSlide key={data.id} style={{ width: "150px" }}>

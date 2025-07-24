@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -8,6 +7,8 @@ import "swiper/css/navigation";
 import Link from "next/link";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 import { Navigation } from "swiper/modules";
+import TrackCard from "@/domains/common/components/TrackCard";
+import TrackCardSkeleton from "@/domains/common/components/TrackCardSkeleton";
 
 type Album = {
   id: string;
@@ -38,24 +39,28 @@ export default function NewReleaseAlbum() {
           navigation={true}
           modules={[Navigation]}
         >
-          {albums.map((album) => (
-            <SwiperSlide key={album.id} style={{ width: "150px" }}>
-              <div>
-                <Link href={`/album/${album.id}`}>
-                  <Image
-                    src={album.images[0]?.url}
-                    alt={album.name}
-                    width={150}
-                    height={150}
-                  />
-                  <p className="truncate my-1">{album.name}</p>
-                  <p className="truncate">
-                    {album.artists.map((a) => a.name).join(", ")}
-                  </p>
-                </Link>
-              </div>
-            </SwiperSlide>
-          ))}
+          {albums.length === 0
+            ? Array.from({ length: 10 }).map((_, i) => (
+                <SwiperSlide key={i} style={{ width: "150px" }}>
+                  <TrackCardSkeleton />
+                </SwiperSlide>
+              ))
+            : albums.map((album) => (
+                <SwiperSlide key={album.id} style={{ width: "150px" }}>
+                  <div>
+                    <Link href={`/album/${album.id}`}>
+                      <TrackCard
+                        key={album.id}
+                        imageUrl={
+                          album.images[0]?.url || "/goorm_logo_blue.png"
+                        }
+                        name={album.name}
+                        artists={album.artists.map((a) => a.name)}
+                      />
+                    </Link>
+                  </div>
+                </SwiperSlide>
+              ))}
         </Swiper>
       </div>
     </main>
