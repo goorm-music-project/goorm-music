@@ -13,7 +13,9 @@ interface Props {
 export default function PlaylistSection({ data }: { data: Props }) {
   return (
     <div className="h-[30vh] overflow-y-auto flex gap-4 flex-wrap">
-      {data &&
+      {data.items.length === 0 ? (
+        <p>검색 결과가 없습니다.</p>
+      ) : (
         data?.items
           ?.filter((item) => item !== null)
           .map((item) => (
@@ -23,7 +25,8 @@ export default function PlaylistSection({ data }: { data: Props }) {
                 name={item.name}
               />
             </Link>
-          ))}
+          ))
+      )}
     </div>
   );
 }
