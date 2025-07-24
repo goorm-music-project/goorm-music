@@ -31,7 +31,7 @@ export default function DesktopTopBar() {
         onClick={() => router.push("/")}
       />
       <form
-        className="flex items-center rounded-full px-4 py-2 w-full max-w-[550px] border-2 border-(--primary-blue)"
+        className="flex items-center rounded-full px-4 py-2 w-full max-w-[550px] border-2 border-(--primary-blue) hover:bg-blue-100"
         onSubmit={handleSearch}
       >
         <input

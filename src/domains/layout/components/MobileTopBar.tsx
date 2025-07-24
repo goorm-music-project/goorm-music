@@ -31,7 +31,7 @@ export default function MobileTopBar() {
       </Link>
 
       <form
-        className="flex items-center bg-white rounded-full px-4 py-2 w-full max-w-[550px]"
+        className="flex items-center bg-white rounded-full px-4 py-2 w-full max-w-[550px] hover:bg-blue-100"
         onSubmit={handleSearch}
       >
         <input
