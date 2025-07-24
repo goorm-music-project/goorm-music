@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 export default function MobileTopBar() {
   const [searchText, setSearchText] = useState("");
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,6 +18,12 @@ export default function MobileTopBar() {
 
     router.push(`/search?params=${encodeURIComponent(searchText)}`);
   };
+
+  useEffect(() => {
+    if (!pathname.includes("/search")) {
+      setSearchText("");
+    }
+  }, [pathname]);
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-(--primary-blue) h-16 flex justify-between items-center px-4 z-50">
