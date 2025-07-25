@@ -32,8 +32,8 @@ export default function AlbumSection({ data }: { data: Props }) {
             }}
             className="albumSwiper"
             navigation={{
-              prevEl: ".custom-prev",
-              nextEl: ".custom-next",
+              prevEl: ".searchAlbum-prev",
+              nextEl: ".searchAlbum-next",
             }}
             modules={[Navigation]}
           >
@@ -57,7 +57,7 @@ export default function AlbumSection({ data }: { data: Props }) {
           </Swiper>
         )}
       </div>
-      <SwiperArrow />
+      <SwiperArrow classPrev="searchAlbum-prev" classNext="searchAlbum-next" />
     </div>
   );
 }

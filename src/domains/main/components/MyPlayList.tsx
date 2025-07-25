@@ -64,8 +64,8 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
             }}
             className="swiper"
             navigation={{
-              prevEl: ".custom-prev",
-              nextEl: ".custom-next",
+              prevEl: ".playlist-prev",
+              nextEl: ".playlist-next",
             }}
             modules={[Navigation]}
           >
@@ -97,7 +97,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
             )}
           </Swiper>
         </div>
-        <SwiperArrow />
+        <SwiperArrow classPrev="playlist-prev" classNext="playlist-next" />
       </div>
       <SuggestLoginModal
         showModal={showModal}

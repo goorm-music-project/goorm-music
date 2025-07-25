@@ -55,8 +55,8 @@ export default function JenreRecoList() {
             }}
             className="recoSwiper"
             navigation={{
-              prevEl: ".custom-prev",
-              nextEl: ".custom-next",
+              prevEl: ".genreList-prev",
+              nextEl: ".genreList-next",
             }}
             modules={[Navigation]}
           >
@@ -84,7 +84,7 @@ export default function JenreRecoList() {
                 ))}
           </Swiper>
         </div>
-        <SwiperArrow />
+        <SwiperArrow classPrev="genreList-prev" classNext="genreList-next" />
       </div>
     </main>
   );
