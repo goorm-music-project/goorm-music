@@ -23,11 +23,11 @@ function SearchTracksContent() {
     };
     fetchData();
   }, [query]);
-  
+
   return (
     <>
       <h2>더 많은 곡을 감상하세요.</h2>
-      <div>{datas && <PlayBar tracks={datas} />}</div>
+      <div>{datas && <PlayBar tracks={datas} className={"twoGrid"} />}</div>
     </>
   );
 }

@@ -16,7 +16,7 @@ export default function TopChartList() {
   return (
     <main>
       <h1>추천 음악을 들어보세요.</h1>
-      <PlayBar tracks={datas} className={"topChart"} />
+      <PlayBar tracks={datas} className={"twoGrid"} />
     </main>
   );
 }

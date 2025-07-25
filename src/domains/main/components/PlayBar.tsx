@@ -114,14 +114,15 @@ export default function PlayBar({
                 className="flex gap-3 w-full"
                 onClick={() => handleClickTrack(item.track.id)}
               >
-                <Image
-                  src={
-                    item.track.album?.images[0]?.url || "/goorm_logo_blue.png"
-                  }
-                  alt={item.track.name}
-                  width={100}
-                  height={100}
-                />
+                <div className=" relative w-[100px] h-[100px]">
+                  <Image
+                    src={
+                      item.track.album?.images[0]?.url || "/goorm_logo_blue.png"
+                    }
+                    alt={item.track.name}
+                    fill
+                  />
+                </div>
                 <div className="w-[40%]">
                   <p className="truncate my-1 w-full">{item.track.name}</p>
                   <p className="truncate w-full">

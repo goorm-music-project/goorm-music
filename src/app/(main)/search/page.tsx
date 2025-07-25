@@ -84,7 +84,10 @@ function SearchContent() {
 
       <div className="mt-2">
         <Link href={`/search/tracks?query=${encodeURIComponent(query)}`}>
-          <h2 className="my-2 cursor-pointer hover:underline">곡</h2>
+          <div className="flex justify-between items-center cursor-pointer hover:underline">
+            <h2 className="my-2">곡</h2>
+            <span>더 많은 곡 확인하기</span>
+          </div>
         </Link>
         {data && <TrackSection data={data.tracks} />}
       </div>

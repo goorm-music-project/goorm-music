@@ -8,7 +8,7 @@ export default function TrackSection({ data }: { data: PlaylistItem[] }) {
       {data.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (
-        <PlayBar tracks={data} />
+        <PlayBar tracks={data} className={"twoGrid"} />
       )}
     </div>
   );

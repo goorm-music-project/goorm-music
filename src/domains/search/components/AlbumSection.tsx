@@ -17,7 +17,7 @@ interface Props {
 
 export default function AlbumSection({ data }: { data: Props }) {
   return (
-    <div className="h-[20vh] overflow-y-auto flex gap-4 flex-wrap">
+    <div className="h-[20vh]">
       {data.items.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (
