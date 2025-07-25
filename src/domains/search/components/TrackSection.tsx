@@ -4,7 +4,7 @@ import React from "react";
 
 export default function TrackSection({ data }: { data: PlaylistItem[] }) {
   return (
-    <div className="h-[30vh] overflow-y-auto">
+    <div className=" overflow-y-auto">
       {data.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (

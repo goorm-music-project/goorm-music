@@ -73,13 +73,6 @@ function SearchContent() {
       </div>
 
       <div className="mt-2">
-        <Link href={`/search/tracks?query=${encodeURIComponent(query)}`}>
-          <h2 className="my-2 cursor-pointer hover:underline">곡</h2>
-        </Link>
-        {data && <TrackSection data={data.tracks} />}
-      </div>
-
-      <div className="mt-2">
         <h2 className="my-2">앨범</h2>
         {data && <AlbumSection data={data.albums} />}
       </div>
@@ -87,6 +80,13 @@ function SearchContent() {
       <div className="mt-2">
         <h2 className="my-2">플레이리스트</h2>
         {data && <PlaylistSection data={data.playlists} />}
+      </div>
+
+      <div className="mt-2">
+        <Link href={`/search/tracks?query=${encodeURIComponent(query)}`}>
+          <h2 className="my-2 cursor-pointer hover:underline">곡</h2>
+        </Link>
+        {data && <TrackSection data={data.tracks} />}
       </div>
     </div>
   );
