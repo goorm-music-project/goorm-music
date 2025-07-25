@@ -1,7 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import { MdDelete } from "react-icons/md";
-import { TiPencil } from "react-icons/ti";
 import { PlaylistDetail } from "../types/Playlist";
 import Link from "next/link";
 
@@ -27,7 +25,7 @@ export default function PlayListDetailInfo({
         height={250}
         className="rounded"
       />
-      {listData.owner && (
+      {!canEdit && (
         <div className="mt-2">
           <Link href={`/profile/${listData.owner.id}`}>
             <span
@@ -51,13 +49,16 @@ export default function PlayListDetailInfo({
       {canEdit && (
         <div className="text-center">
           <button
-            className="text-2xl"
+            className="primaryBtn py-1.5 px-2 mr-2"
             onClick={() => setIsEdit((prev) => !prev)}
           >
-            <TiPencil />
+            수정
           </button>
-          <button className="text-2xl" onClick={handlePlaylistDelBtn}>
-            <MdDelete />
+          <button
+            className="errorBtn py-1.5 px-2"
+            onClick={handlePlaylistDelBtn}
+          >
+            삭제
           </button>
         </div>
       )}

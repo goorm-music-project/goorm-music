@@ -26,23 +26,27 @@ export default function Page() {
     <div>
       <h1>나의 플레이리스트</h1>
       <div className="flex flex-col gap-4">
-        {listData.map((playlist) => (
-          <Link href={`/playlist/${playlist.id}`} key={playlist.id}>
-            <div className="flex gap-4 p-2 rounded border border-(--gray) cursor-pointer hover:bg-(--primary-blue-hover)">
-              <Image
-                src={playlist.images?.[0]?.url || "/goorm_logo_blue.png"}
-                alt={playlist.name}
-                width={100}
-                height={100}
-                className="rounded"
-              />
-              <div className="place-content-center">
-                <h3>{playlist.name}</h3>
-                <p>{playlist.tracks.total} 곡</p>
+        {listData.length === 0 ? (
+          <p>플레이리스트가 없습니다.</p>
+        ) : (
+          listData.map((playlist) => (
+            <Link href={`/playlist/${playlist.id}`} key={playlist.id}>
+              <div className="flex gap-4 p-2 rounded border border-(--gray) cursor-pointer hover:bg-(--primary-blue-hover)">
+                <Image
+                  src={playlist.images?.[0]?.url || "/goorm_logo_blue.png"}
+                  alt={playlist.name}
+                  width={100}
+                  height={100}
+                  className="rounded"
+                />
+                <div className="flex flex-col justify-center w-full overflow-hidden">
+                  <h3 className="truncate">{playlist.name}</h3>
+                  <p className="truncate">{playlist.description}</p>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );

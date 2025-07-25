@@ -2,8 +2,8 @@
 
 import { FaSearch, FaUser } from "react-icons/fa";
 import Image from "next/image";
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 
@@ -13,12 +13,19 @@ export default function DesktopTopBar() {
   const router = useRouter();
   const userId = userSpotifyStore((state) => state.userId);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
+  const pathname = usePathname();
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!searchText.trim()) return;
     router.push(`/search?params=${encodeURIComponent(searchText)}`);
   };
+
+  useEffect(() => {
+    if (!pathname.includes("/search")) {
+      setSearchText("");
+    }
+  }, [pathname]);
 
   return (
     <div className="w-full h-25 px-4 flex items-center justify-between border-b-2 border-(--primary-blue) bg-(--background) fixed top-0 left-0 z-50">
@@ -31,7 +38,7 @@ export default function DesktopTopBar() {
         onClick={() => router.push("/")}
       />
       <form
-        className="flex items-center rounded-full px-4 py-2 w-full max-w-[550px] border-2 border-(--primary-blue)"
+        className="flex items-center rounded-full px-4 py-2 w-full max-w-[550px] border-2 border-(--primary-blue) hover:bg-blue-100"
         onSubmit={handleSearch}
       >
         <input

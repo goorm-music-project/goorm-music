@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
 import PlaybarCover from "@/domains/main/components/PlaybarCover";
@@ -8,6 +9,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import AlertModal from "@/domains/common/components/AlertModal";
+import PlayListBoxSkeleton from "@/domains/playlist/components/PlayListBoxSkeleton";
 
 interface Props {
   tracks: PlaylistItem[];
@@ -34,6 +37,8 @@ export default function PlayBar({
   const [selectTrack, setSelectTrack] = useState<string>("");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [message, setMessage] = useState("");
   const router = useRouter();
   const { setSelectedTrackId } = usePlayerSotre();
 
@@ -87,47 +92,57 @@ export default function PlayBar({
   }, [tracks, userId]);
 
   return (
-    <div className={className ? "grid grid-cols-1 md:grid-cols-2 gap-2" : ""}>
-      {tracks.map((item, idx) => (
-        <div
-          key={`${item.track.id}_${idx}`}
-          className="relative p-2 flex gap-2 cursor-pointer"
-        >
-          {selectable && canEdit && (
-            <input
-              type="checkbox"
-              className="flex-none"
-              style={{ width: "18px" }}
-              onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
-            />
-          )}
-          <div
-            className="flex gap-3 w-full"
-            onClick={() => handleClickTrack(item.track.id)}
-          >
-            <Image
-              src={item.track.album.images[0]?.url}
-              alt={item.track.name}
-              width={100}
-              height={100}
-            />
-            <div className="w-[40%]">
-              <p className="truncate my-1 w-full">{item.track.name}</p>
-              <p className="truncate w-full">
-                {item.track.artists.map((a) => a.name).join(", ")}
-              </p>
+    <div className={className ? "grid grid-cols-1 lg:grid-cols-2 gap-2" : ""}>
+      {tracks.length === 0
+        ? Array.from({ length: 10 }).map((_, i) => (
+            <PlayListBoxSkeleton key={i} />
+          ))
+        : tracks.map((item, idx) => (
+            <div
+              key={`${item.track.id}_${idx}`}
+              className="relative p-2 flex gap-2 cursor-pointer"
+            >
+              {selectable && canEdit && (
+                <input
+                  type="checkbox"
+                  className="flex-none"
+                  style={{ width: "18px" }}
+                  onChange={(e) => handleChangeChk?.(e, item.track.uri, idx)}
+                />
+              )}
+              <div
+                className="flex gap-3 w-full"
+                onClick={() => handleClickTrack(item.track.id)}
+              >
+                <div className=" relative w-[100px] h-[100px]">
+                  <Image
+                    src={
+                      item.track.album?.images[0]?.url || "/goorm_logo_blue.png"
+                    }
+                    alt={item.track.name}
+                    fill
+                    sizes="100px"
+                  />
+                </div>
+                <div className="w-[40%]">
+                  <p className="truncate my-1 w-full">{item.track.name}</p>
+                  <p className="truncate w-full">
+                    {item.track.artists.map((a) => a.name).join(", ")}
+                  </p>
+                </div>
+              </div>
+              {userId ? (
+                <PlaybarCover
+                  item={item}
+                  setSelectTrack={setSelectTrack}
+                  handleShowPlayList={handleShowPlayList}
+                  likedMap={likedMap}
+                  setMessage={setMessage}
+                  setShowAlertModal={setShowAlertModal}
+                />
+              ) : null}
             </div>
-          </div>
-          {userId ? (
-            <PlaybarCover
-              item={item}
-              setSelectTrack={setSelectTrack}
-              handleShowPlayList={handleShowPlayList}
-              likedMap={likedMap}
-            />
-          ) : null}
-        </div>
-      ))}
+          ))}
 
       <PlayListModal
         showModal={showPlayListModal}
@@ -136,6 +151,8 @@ export default function PlayBar({
         setPlaylists={setPlaylists}
         onShowNewPlaylist={() => handleShowNewPlayList()}
         track={selectTrack}
+        setMessage={setMessage}
+        setShowAlertModal={setShowAlertModal}
       />
 
       <AddNewPlayListModal
@@ -143,6 +160,14 @@ export default function PlayBar({
         onClose={() => setShowAddNewPlayListModal(false)}
         setPlaylists={setPlaylists}
         track={selectTrack}
+        setMessage={setMessage}
+        setShowAlertModal={setShowAlertModal}
+      />
+
+      <AlertModal
+        showModal={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        message={message}
       />
     </div>
   );

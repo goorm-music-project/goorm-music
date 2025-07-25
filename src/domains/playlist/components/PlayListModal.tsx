@@ -11,6 +11,8 @@ type Props = {
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   onShowNewPlaylist: () => void;
   track: string;
+  setMessage: Dispatch<SetStateAction<string>>;
+  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function PlayListModal({
@@ -20,6 +22,8 @@ export default function PlayListModal({
   setPlaylists,
   onShowNewPlaylist,
   track,
+  setMessage,
+  setShowAlertModal,
 }: Props) {
   return (
     <Modal showModal={showModal} onClose={onClose}>
@@ -30,6 +34,8 @@ export default function PlayListModal({
             playlists={playlists}
             setPlaylists={setPlaylists}
             track={track as string}
+            setMessage={setMessage}
+            setShowAlertModal={setShowAlertModal}
           />
         </div>
         <button

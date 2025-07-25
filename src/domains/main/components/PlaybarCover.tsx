@@ -1,5 +1,5 @@
 import LikedButton from "@/domains/common/components/LikedButton";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { PlaylistItem } from "../../playlist/types/Playlist";
 
@@ -8,12 +8,16 @@ interface PlaybarCoverProps {
   setSelectTrack?: Dispatch<React.SetStateAction<string>>;
   handleShowPlayList?: () => void;
   likedMap: Record<string, boolean>;
+  setMessage: Dispatch<SetStateAction<string>>;
+  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 export default function PlaybarCover({
   item,
   handleShowPlayList,
   setSelectTrack,
   likedMap,
+  setMessage,
+  setShowAlertModal,
 }: PlaybarCoverProps) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -28,6 +32,8 @@ export default function PlaybarCover({
           trackId={item.track.id}
           isLiked={isLiked}
           setIsLiked={setIsLiked}
+          setMessage={setMessage}
+          setShowAlertModal={setShowAlertModal}
           className="absolute right-15 top-[36%] pointer-events-auto"
         />
         <button

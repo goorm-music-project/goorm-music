@@ -4,8 +4,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import Link from "next/link";
 import appAxios from "@/domains/common/lib/axios/appAxios";
+import { Navigation } from "swiper/modules";
+import SwiperArrow from "@/domains/common/components/SwiperArrow";
 
 interface Props {
   artistId: string;
@@ -37,32 +40,42 @@ export default function ArtistAlbums({ artistId }: Props) {
   return (
     <div>
       <h1>아티스트의 앨범을 만나보세요.</h1>
-      {ablums && (
-        <Swiper
-          slidesPerView={"auto"}
-          spaceBetween={30}
-          freeMode={true}
-          pagination={{
-            clickable: true,
-          }}
-          className="w-full"
-        >
-          {ablums.map((track) => (
-            <SwiperSlide
-              key={track.images?.[0].url + track.name}
-              className="!w-[150px]"
+      <div className="relative">
+        <div className="w-[90%] ml-[5%]">
+          {ablums && (
+            <Swiper
+              slidesPerView={"auto"}
+              spaceBetween={30}
+              freeMode={true}
+              pagination={{
+                clickable: true,
+              }}
+              className="w-full"
+              navigation={{
+                prevEl: ".custom-prev",
+                nextEl: ".custom-next",
+              }}
+              modules={[Navigation]}
             >
-              <Link href={`/album/${track.id}`}>
-                <TrackCard
-                  imageUrl={track.images?.[0].url}
-                  name={track.name}
-                  artists={[track.artists[0].name]}
-                />
-              </Link>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
+              {ablums.map((track) => (
+                <SwiperSlide
+                  key={track.images?.[0].url + track.name}
+                  className="!w-[150px]"
+                >
+                  <Link href={`/album/${track.id}`}>
+                    <TrackCard
+                      imageUrl={track.images?.[0].url}
+                      name={track.name}
+                      artists={[track.artists[0].name]}
+                    />
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+        </div>
+        <SwiperArrow />
+      </div>
     </div>
   );
 }
