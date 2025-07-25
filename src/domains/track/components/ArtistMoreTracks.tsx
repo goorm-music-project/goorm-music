@@ -12,6 +12,7 @@ import { Navigation } from "swiper/modules";
 import { useRouter } from "next/navigation";
 import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
 import appAxios from "@/domains/common/lib/axios/appAxios";
+import SwiperArrow from "@/domains/common/components/SwiperArrow";
 
 type artistMoreTracksType = [
   {
@@ -63,39 +64,47 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
   return (
     <div>
       <h2 className="mt-3 mb-3">이 아티스트의 인기곡들을 만나보세요.</h2>
-      {error ? (
-        <div className="text-red-500 font-semibold">
-          인기곡 로드 중 오류 발생: {error.message}
-        </div>
-      ) : (
-        tracks && (
-          <Swiper
-            slidesPerView={"auto"}
-            spaceBetween={30}
-            freeMode={true}
-            pagination={{
-              clickable: true,
-            }}
-            className="w-full"
-            navigation={true}
-            modules={[Navigation]}
-          >
-            {tracks.map((track) => (
-              <SwiperSlide
-                key={track.imageUrl + track.title}
-                className="!w-[150px]"
+      <div className="relative">
+        <div className="w-[90%] ml-[5%]">
+          {error ? (
+            <div className="text-red-500 font-semibold">
+              인기곡 로드 중 오류 발생: {error.message}
+            </div>
+          ) : (
+            tracks && (
+              <Swiper
+                slidesPerView={"auto"}
+                spaceBetween={30}
+                freeMode={true}
+                pagination={{
+                  clickable: true,
+                }}
+                className="w-full"
+                navigation={{
+                  prevEl: ".custom-prev",
+                  nextEl: ".custom-next",
+                }}
+                modules={[Navigation]}
               >
-                <TrackCard
-                  imageUrl={track.imageUrl}
-                  name={track.title}
-                  artists={track.artists}
-                  onClick={() => handleTrackCardClick(track.trackId)}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        )
-      )}
+                {tracks.map((track) => (
+                  <SwiperSlide
+                    key={track.imageUrl + track.title}
+                    className="!w-[150px]"
+                  >
+                    <TrackCard
+                      imageUrl={track.imageUrl}
+                      name={track.title}
+                      artists={track.artists}
+                      onClick={() => handleTrackCardClick(track.trackId)}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )
+          )}
+        </div>
+        <SwiperArrow />
+      </div>
     </div>
   );
 }

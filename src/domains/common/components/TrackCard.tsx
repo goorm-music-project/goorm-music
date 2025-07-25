@@ -14,11 +14,8 @@ export default function TrackCard({
   onClick,
 }: TrackCardProps) {
   return (
-    <div
-      className="w-[150px] h-[150px] cursor-pointer relative"
-      onClick={onClick}
-    >
-      <Image src={imageUrl} alt={name} fill sizes="150px" />
+    <div className=" cursor-pointer" onClick={onClick}>
+      <Image src={imageUrl} alt={name} width={150} height={150} sizes="150px" />
       <p className="truncate my-1">{name}</p>
       <p className="truncate">{artists?.join(", ")}</p>
     </div>
