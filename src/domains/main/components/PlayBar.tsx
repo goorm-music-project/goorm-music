@@ -121,6 +121,7 @@ export default function PlayBar({
                     }
                     alt={item.track.name}
                     fill
+                    sizes="100px"
                   />
                 </div>
                 <div className="w-[40%]">
