@@ -8,6 +8,7 @@ import { FaPlus } from "react-icons/fa";
 import PlayListModal from "@/domains/playlist/components/PlayListModal";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
+import AlertModal from "@/domains/common/components/AlertModal";
 
 interface TrackActionBtnsProps {
   trackId: string;
@@ -19,6 +20,9 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
+
+  const [message, setMessage] = useState("");
+  const [showAlertModal, setShowAlertModal] = useState(false);
 
   useEffect(() => {
     const fetchLikedTracks = async () => {
@@ -45,12 +49,16 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
         setPlaylists={setPlaylists}
         onShowNewPlaylist={() => setShowAddNewPlayListModal(true)}
         track={"spotify:track:" + trackId}
+        setMessage={setMessage}
+        setShowAlertModal={setShowAlertModal}
       />
       <AddNewPlayListModal
         showModal={showAddNewPlayListModal}
         onClose={() => setShowAddNewPlayListModal(false)}
         setPlaylists={setPlaylists}
         track={trackId}
+        setMessage={setMessage}
+        setShowAlertModal={setShowAlertModal}
       />
       <div className="flex text-(--primary-blue)">
         <LikedButton
@@ -58,6 +66,8 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
           isLiked={isLiked}
           setIsLiked={setIsLiked}
           className="ml-5 mr-5"
+          setMessage={setMessage}
+          setShowAlertModal={setShowAlertModal}
         />
         <FaPlus
           size={30}
@@ -65,6 +75,11 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
           onClick={() => setShowPlayListModal(true)}
         />
       </div>
+      <AlertModal
+        showModal={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        message={message}
+      />
     </div>
   );
 }
