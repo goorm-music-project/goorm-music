@@ -57,8 +57,8 @@ export default function Page() {
             freeMode={true}
             modules={[FreeMode, Navigation]}
             navigation={{
-              prevEl: ".custom-prev",
-              nextEl: ".custom-next",
+              prevEl: ".genre-prev",
+              nextEl: ".genre-next",
             }}
           >
             {genreList.map((genre) => {
@@ -86,7 +86,7 @@ export default function Page() {
           </Swiper>
         </div>
 
-        <SwiperArrow top="0" />
+        <SwiperArrow top="0" classPrev="genre-prev" classNext="genre-next" />
       </div>
       <div>
         <PlayBar tracks={datas} />

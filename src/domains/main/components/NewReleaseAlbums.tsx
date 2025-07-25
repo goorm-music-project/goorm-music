@@ -39,8 +39,8 @@ export default function NewReleaseAlbum() {
             }}
             className="albumSwiper"
             navigation={{
-              prevEl: ".custom-prev",
-              nextEl: ".custom-next",
+              prevEl: ".newRelease-prev",
+              nextEl: ".newRelease-next",
             }}
             modules={[Navigation]}
           >
@@ -68,7 +68,7 @@ export default function NewReleaseAlbum() {
                 ))}
           </Swiper>
         </div>
-        <SwiperArrow />
+        <SwiperArrow classPrev="newRelease-prev" classNext="newRelease-next" />
       </div>
     </main>
   );

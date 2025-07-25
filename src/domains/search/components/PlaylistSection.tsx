@@ -32,8 +32,8 @@ export default function PlaylistSection({ data }: { data: Props }) {
             }}
             className="albumSwiper"
             navigation={{
-              prevEl: ".custom-prev",
-              nextEl: ".custom-next",
+              prevEl: ".playlist-prev",
+              nextEl: ".playlist-next",
             }}
             modules={[Navigation]}
           >
@@ -60,7 +60,7 @@ export default function PlaylistSection({ data }: { data: Props }) {
           </Swiper>
         )}
       </div>
-      <SwiperArrow />
+      <SwiperArrow classPrev="playlist-prev" classNext="playlist-next" />
     </div>
   );
 }
