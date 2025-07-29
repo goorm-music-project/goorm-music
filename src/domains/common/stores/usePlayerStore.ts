@@ -5,7 +5,7 @@ interface PlayerState {
   setSelectedTrackId: (id: string) => void;
 }
 
-export const usePlayerSotre = create<PlayerState>((set) => ({
+export const usePlayerStore = create<PlayerState>((set) => ({
   selectedTrackId: null,
   setSelectedTrackId: (id) => set({ selectedTrackId: id }),
 }));

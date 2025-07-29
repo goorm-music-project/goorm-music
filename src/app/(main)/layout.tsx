@@ -4,7 +4,7 @@ import BottomNavBar from "@/domains/layout/components/BottomNavBar";
 import MobileTopBar from "@/domains/layout/components/MobileTopBar";
 import InitUserIdState from "@/domains/common/components/InitUserIdState";
 import MiniPlayer from "@/domains/layout/components/MiniPlayer";
-import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
 import { useWindowWidth } from "@/domains/common/hooks/useWindowWidth";
 import DesktopTopBar from "@/domains/layout/components/DesktopTopBar";
 import SideBar from "@/domains/layout/components/SideBar";
@@ -14,7 +14,7 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { selectedTrackId } = usePlayerSotre();
+  const { selectedTrackId } = usePlayerStore();
   const windowWidth = useWindowWidth();
 
   return (
