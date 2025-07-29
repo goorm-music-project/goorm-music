@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { useRouter } from "next/navigation";
-import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 import SwiperArrow from "@/domains/common/components/SwiperArrow";
 
@@ -28,7 +28,7 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const route = useRouter();
-  const setSelectedTrackId = usePlayerSotre(
+  const setSelectedTrackId = usePlayerStore(
     (state) => state.setSelectedTrackId
   );
 
