@@ -2,28 +2,37 @@
 
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import { useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { FaMusic } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
 import { FaListUl } from "react-icons/fa";
 
 export default function SideBar() {
-  const [playList, setPlayList] = useState<Playlist[]>([]);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const router = useRouter();
   const userId = userSpotifyStore((state) => state.userId);
+  
+  const { playlistStore, setPlaylistsStore } = usePlaylistStore();
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await authAxios.get("/api/playlist/getPlaylist");
-      const data = res.data as Playlist[];
-      const myPlaylist = data.filter((v) => v.owner.id === userId);
-      setPlayList(myPlaylist);
+      if (!isLoggedIn || !userId) return;
+      
+      try {
+        const res = await authAxios.get("/api/playlist/getPlaylist");
+        const data = res.data as Playlist[];
+        const myPlaylist = data.filter((v) => v.owner.id === userId);
+        setPlaylistsStore(myPlaylist);
+      } catch (error) {
+        console.error("사이드바 플레이리스트 로딩 실패:", error);
+      }
     };
-    if (isLoggedIn) fetchData();
-  }, [isLoggedIn]);
+
+    fetchData();
+  }, [isLoggedIn, userId, setPlaylistsStore]);
 
   return (
     <div className="fixed top-25 left-0 w-65 h-full bg-(--primary-blue) z-50 p-4 text-white">
@@ -42,8 +51,8 @@ export default function SideBar() {
             <h1>내 플레이리스트</h1>
           </RouterBox>
           <div className="flex flex-col">
-            {playList.length > 0 ? (
-              playList.map((playlist) => (
+            {playlistStore.length > 0 ? (
+              playlistStore.map((playlist) => (
                 <div
                   key={playlist.id}
                   className="cursor-pointer hover:bg-(--primary-blue-hover) p-2 rounded border-1 mb-4"
