@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import PlayListBox from "./PlayListBox";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 
@@ -21,6 +22,7 @@ export default function PlayList({
   setShowAlertModal,
 }: Props) {
   const { userId } = userSpotifyStore();
+  const { setPlaylistsStore } = usePlaylistStore();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function PlayList({
         const data = res.data as Playlist[];
         const myPlaylist = data.filter((v) => v.owner.id === userId);
         setPlaylists(myPlaylist);
+        setPlaylistsStore(myPlaylist);
       } catch (error) {
         console.error("플레이리스트 로딩 실패:", error);
       } finally {
@@ -41,7 +44,7 @@ export default function PlayList({
     };
 
     fetchPlaylists();
-  }, [setPlaylists, userId]);
+  }, [setPlaylists, userId, setPlaylistsStore]);
 
   const handleAddPlayList = async (playlistId: string) => {
     const res = await authAxios.get(
@@ -60,10 +63,12 @@ export default function PlayList({
     try {
       setIsLoading(true);
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
+      
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const json = res.data as Playlist[];
       const data = json.filter((v) => v.owner.id === userId);
       setPlaylists(data);
+      setPlaylistsStore(data);
     } catch (err) {
       console.log("플리 추가 오류 ", err);
     } finally {
