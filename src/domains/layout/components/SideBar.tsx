@@ -58,7 +58,7 @@ export default function SideBar() {
                   className="cursor-pointer hover:bg-(--primary-blue-hover) p-2 rounded border-1 mb-4"
                   onClick={() => router.push(`/playlist/${playlist.id}`)}
                 >
-                  <h2>{playlist.name}</h2>
+                  <h2 className="truncate text-sm">{playlist.name}</h2>
                 </div>
               ))
             ) : (
