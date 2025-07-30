@@ -5,6 +5,7 @@ import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import PlayBar from "@/domains/main/components/PlayBar";
 import FollowBtn from "@/domains/playlist/components/FollowBtn";
 import PlayListDetailInfo from "@/domains/playlist/components/PlayListDetailInfo";
@@ -26,6 +27,7 @@ export default function Page() {
   const params = useParams();
   const id = params.id;
   const { userId } = userSpotifyStore();
+  const { playlistStore, setPlaylistsStore } = usePlaylistStore();
   const [canEdit, setCanEdit] = useState<null | boolean>(null);
   const [listData, setListData] = useState<PlaylistDetail | null>(null);
   const [snapshotId, setSnapshotId] = useState<string>("");
@@ -104,6 +106,10 @@ export default function Page() {
       await fetch(`/api/playlist/deletePlaylist?playlistId=${id}`, {
         method: "DELETE",
       });
+      
+      const updatedPlaylists = playlistStore.filter(playlist => playlist.id !== id);
+      setPlaylistsStore(updatedPlaylists);
+      
       setMessage("플레이리스트가 삭제 되었습니다.");
       setShowAlertModal(true);
       router.push("/playlist");
