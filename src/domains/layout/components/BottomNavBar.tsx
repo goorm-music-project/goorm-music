@@ -50,10 +50,8 @@ export default function BottomNavBar() {
   ];
 
   const handleNavClick = (item: NavItem) => {
-    // 터치 효과를 위한 상태 설정
     setActiveItem(item.id);
 
-    // 150ms 후 터치 효과 제거
     setTimeout(() => {
       setActiveItem(null);
     }, 150);
