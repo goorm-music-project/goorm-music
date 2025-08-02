@@ -117,7 +117,7 @@ export default function PlayBar({
                 <div className=" relative w-[100px] h-[100px]">
                   <Image
                     src={
-                      item.track.album?.images[0]?.url || "/goorm_logo_blue.png"
+                      item.track?.album?.images[0]?.url || "/goorm_logo_blue.png"
                     }
                     alt={item.track.name}
                     fill
