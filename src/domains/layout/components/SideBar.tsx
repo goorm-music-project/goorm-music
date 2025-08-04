@@ -14,13 +14,13 @@ export default function SideBar() {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const router = useRouter();
   const userId = userSpotifyStore((state) => state.userId);
-  
+
   const { playlistStore, setPlaylistsStore } = usePlaylistStore();
 
   useEffect(() => {
     const fetchData = async () => {
       if (!isLoggedIn || !userId) return;
-      
+
       try {
         const res = await authAxios.get("/api/playlist/getPlaylist");
         const data = res.data as Playlist[];
@@ -35,27 +35,31 @@ export default function SideBar() {
   }, [isLoggedIn, userId, setPlaylistsStore]);
 
   return (
-    <div className="fixed top-25 left-0 w-65 h-full bg-(--primary-blue) z-50 p-4 text-white">
-      <RouterBox url="/">
-        <FaHome size={30} className="mr-5" />
-        <h1>홈</h1>
-      </RouterBox>
-      <RouterBox url="/genre">
-        <FaMusic size={30} className="mr-5" />
-        <h1>장르별 인기차트</h1>
-      </RouterBox>
-      {isLoggedIn && (
-        <>
+    <div className="fixed top-25 left-0 w-65 h-full bg-(--primary-blue) z-50 text-white">
+      <div className="p-4">
+        <RouterBox url="/">
+          <FaHome size={30} className="mr-5" />
+          <h1>홈</h1>
+        </RouterBox>
+        <RouterBox url="/genre">
+          <FaMusic size={30} className="mr-5" />
+          <h1>장르별 인기차트</h1>
+        </RouterBox>
+        {isLoggedIn && (
           <RouterBox url="/playlist">
             <FaListUl size={30} className="mr-5" />
             <h1>내 플레이리스트</h1>
           </RouterBox>
-          <div className="flex flex-col">
+        )}
+      </div>
+      {isLoggedIn && (
+        <>
+          <div className="flex flex-col h-103 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
             {playlistStore.length > 0 ? (
               playlistStore.map((playlist) => (
                 <div
                   key={playlist.id}
-                  className="cursor-pointer hover:bg-(--primary-blue-hover) p-2 rounded border-1 mb-4"
+                  className="cursor-pointer hover:bg-(--primary-blue-hover) p-2 rounded border-1 mb-4 ml-4 mr-4 flex-shrink-0"
                   onClick={() => router.push(`/playlist/${playlist.id}`)}
                 >
                   <h2 className="truncate text-sm">{playlist.name}</h2>
