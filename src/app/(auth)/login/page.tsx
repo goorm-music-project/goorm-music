@@ -7,7 +7,7 @@ export default function Login() {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
     const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI as string;
     const scope =
-      "user-read-email user-read-private playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-library-read user-library-modify";
+      "user-read-email user-read-private playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-library-read user-library-modify streaming user-read-playback-state user-modify-playback-state";
 
     const authUrl =
       `https://accounts.spotify.com/authorize` +
