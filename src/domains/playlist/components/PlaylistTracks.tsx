@@ -4,25 +4,18 @@ import PlayBar from "@/domains/main/components/PlayBar";
 import { DeleteInfo } from "@/app/(main)/playlist/[id]/page";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import { usePlaylistProps } from "../stores/usePlaylistProps";
+import { useAlertModalStore } from "@/domains/common/stores/useAlertModalStore";
 
 interface Props {
   id: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  setShowAlertModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
   fetchData: () => void;
 }
 
-export default function PlaylistTracks({
-  id,
-  setMessage,
-  setShowAlertModal,
-  setShowLoginModal,
-  fetchData,
-}: Props) {
+export default function PlaylistTracks({ id, fetchData }: Props) {
   const [deleteTracks, setDeleteTracks] = useState<DeleteInfo[]>([]);
   const [deleting, setDeleting] = useState(false);
   const { canEdit, tracks, snapshotId } = usePlaylistProps();
+  const { setMessage, setShowAlertModal } = useAlertModalStore();
 
   const handleChangeChk = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -74,12 +67,7 @@ export default function PlaylistTracks({
           {deleting ? "삭제중..." : "트랙 삭제"}
         </button>
       ) : (
-        <FollowBtn
-          followId={id as string}
-          setShowLoginModal={setShowLoginModal}
-          setShowAlertModal={setShowAlertModal}
-          setMessage={setMessage}
-        />
+        <FollowBtn followId={id as string} />
       )}
 
       {tracks && tracks.length > 0 ? (

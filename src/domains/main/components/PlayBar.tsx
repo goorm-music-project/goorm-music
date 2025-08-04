@@ -37,8 +37,6 @@ export default function PlayBar({
   const [selectTrack, setSelectTrack] = useState<string>("");
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [likedMap, setLikedMap] = useState<Record<string, boolean>>({});
-  const [showAlertModal, setShowAlertModal] = useState(false);
-  const [message, setMessage] = useState("");
   const router = useRouter();
   const { setSelectedTrackId } = usePlayerStore();
 
@@ -137,8 +135,6 @@ export default function PlayBar({
                   setSelectTrack={setSelectTrack}
                   handleShowPlayList={handleShowPlayList}
                   likedMap={likedMap}
-                  setMessage={setMessage}
-                  setShowAlertModal={setShowAlertModal}
                 />
               ) : null}
             </div>
@@ -151,8 +147,6 @@ export default function PlayBar({
         setPlaylists={setPlaylists}
         onShowNewPlaylist={() => handleShowNewPlayList()}
         track={selectTrack}
-        setMessage={setMessage}
-        setShowAlertModal={setShowAlertModal}
       />
 
       <AddNewPlayListModal
@@ -160,15 +154,9 @@ export default function PlayBar({
         onClose={() => setShowAddNewPlayListModal(false)}
         setPlaylists={setPlaylists}
         track={selectTrack}
-        setMessage={setMessage}
-        setShowAlertModal={setShowAlertModal}
       />
 
-      <AlertModal
-        showModal={showAlertModal}
-        onClose={() => setShowAlertModal(false)}
-        message={message}
-      />
+      <AlertModal />
     </div>
   );
 }

@@ -5,16 +5,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { useLoginModalStore } from "../stores/useLoginModalStore";
 
 export default function NavPlaylist() {
   const { isLoggedIn, userId } = userSpotifyStore();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const { setShowLoginModal } = useLoginModalStore();
 
   const handleAddPlayListBtn = () => {
     if (!isLoggedIn) {
-      setShowModal(true);
+      setShowLoginModal(true);
     } else {
       router.push("/playlist");
     }
@@ -59,10 +60,7 @@ export default function NavPlaylist() {
         ))
       )}
 
-      <SuggestLoginModal
-        showModal={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <SuggestLoginModal />
     </div>
   );
 }

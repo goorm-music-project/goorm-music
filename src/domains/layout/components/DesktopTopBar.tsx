@@ -6,14 +6,15 @@ import { FormEvent, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import { useLoginModalStore } from "@/domains/common/stores/useLoginModalStore";
 
 export default function DesktopTopBar() {
   const [searchText, setSearchText] = useState("");
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const router = useRouter();
   const userId = userSpotifyStore((state) => state.userId);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const pathname = usePathname();
+  const { setShowLoginModal } = useLoginModalStore();
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,10 +66,7 @@ export default function DesktopTopBar() {
         }}
       />
 
-      <SuggestLoginModal
-        showModal={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
+      <SuggestLoginModal />
     </div>
   );
 }

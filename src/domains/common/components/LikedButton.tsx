@@ -1,18 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaRegThumbsUp, FaThumbsUp } from "react-icons/fa";
 import authAxios from "../lib/axios/authAxios";
 import useDebounce from "../hooks/useDebounce";
+import { useLoginModalStore } from "../stores/useLoginModalStore";
+import { useAlertModalStore } from "../stores/useAlertModalStore";
 
 interface LikedButtonProps {
   trackId: string;
   className?: string;
   isLiked: boolean;
   setIsLiked: React.Dispatch<React.SetStateAction<boolean>>;
-  setMessage: Dispatch<SetStateAction<string>>;
-  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function LikedButton({
@@ -20,18 +20,17 @@ export default function LikedButton({
   className = "",
   isLiked,
   setIsLiked,
-  setMessage,
-  setShowAlertModal,
 }: LikedButtonProps) {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
-  const [showModal, setShowModal] = useState(false);
   const [hasClicked, setHasClicked] = useState(false);
   const debouncedClick = useDebounce(isLiked, 2000);
+  const { setShowLoginModal } = useLoginModalStore();
+  const { setMessage, setShowAlertModal } = useAlertModalStore();
 
   const toggleLiked = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.stopPropagation();
     if (!isLoggedIn) {
-      setShowModal(true);
+      setShowLoginModal(true);
       return;
     }
     const liked = !isLiked;
@@ -65,10 +64,7 @@ export default function LikedButton({
       >
         {isLiked ? <FaThumbsUp size={30} /> : <FaRegThumbsUp size={30} />}
       </button>
-      <SuggestLoginModal
-        showModal={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <SuggestLoginModal />
     </>
   );
 }

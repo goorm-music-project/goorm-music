@@ -7,22 +7,18 @@ import authAxios from "@/domains/common/lib/axios/authAxios";
 import { useRouter } from "next/navigation";
 import { PlaylistDetail } from "../types/Playlist";
 import { usePlaylistProps } from "../stores/usePlaylistProps";
+import { useAlertModalStore } from "@/domains/common/stores/useAlertModalStore";
 
 interface Props {
   id: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  setShowAlertModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function PlaylistSidebar({
-  id,
-  setMessage,
-  setShowAlertModal,
-}: Props) {
+export default function PlaylistSidebar({ id }: Props) {
   const router = useRouter();
   const { playlistStore, setPlaylistsStore } = usePlaylistStore();
   const [isEdit, setIsEdit] = useState(false);
   const { canEdit, name, description, isPublic } = usePlaylistProps();
+  const { setMessage, setShowAlertModal } = useAlertModalStore();
 
   const handleEditPlaylist = async () => {
     if (!id) {

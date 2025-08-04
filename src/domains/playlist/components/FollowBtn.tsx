@@ -1,24 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import { useAlertModalStore } from "@/domains/common/stores/useAlertModalStore";
+import { useLoginModalStore } from "@/domains/common/stores/useLoginModalStore";
 
 interface Props {
   followId: string;
-  setShowLoginModal: Dispatch<SetStateAction<boolean>>;
-  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
-  setMessage: Dispatch<SetStateAction<string>>;
 }
 
-export default function FollowBtn({
-  followId,
-  setShowLoginModal,
-  setShowAlertModal,
-  setMessage,
-}: Props) {
+export default function FollowBtn({ followId }: Props) {
   const { userId } = userSpotifyStore();
   const [isExist, setIsExist] = useState(false);
+  const { setMessage, setShowAlertModal } = useAlertModalStore();
+  const { setShowLoginModal } = useLoginModalStore();
 
   const confirmFollow = async () => {
     if (userId === "") {

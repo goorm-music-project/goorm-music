@@ -9,6 +9,7 @@ import { IoMusicalNotes } from "react-icons/io5";
 import { IoHomeOutline } from "react-icons/io5";
 import { IoHome } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa6";
+import { useLoginModalStore } from "@/domains/common/stores/useLoginModalStore";
 
 interface NavItem {
   id: string;
@@ -22,8 +23,8 @@ export default function BottomNavBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { isLoggedIn, userId } = userSpotifyStore();
-  const [showModal, setShowModal] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const { setShowLoginModal } = useLoginModalStore();
 
   const navItems: NavItem[] = [
     {
@@ -60,7 +61,7 @@ export default function BottomNavBar() {
       if (isLoggedIn && userId) {
         router.push(item.path);
       } else {
-        setShowModal(true);
+        setShowLoginModal(true);
       }
     } else {
       router.push(item.path);
@@ -105,10 +106,7 @@ export default function BottomNavBar() {
         })}
       </nav>
 
-      <SuggestLoginModal
-        showModal={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <SuggestLoginModal />
     </>
   );
 }

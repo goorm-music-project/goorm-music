@@ -6,24 +6,18 @@ import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import PlayListBox from "./PlayListBox";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import { useAlertModalStore } from "@/domains/common/stores/useAlertModalStore";
 
 type Props = {
   playlists: Playlist[];
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   track: string;
-  setMessage: Dispatch<SetStateAction<string>>;
-  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 };
-export default function PlayList({
-  playlists,
-  setPlaylists,
-  track,
-  setMessage,
-  setShowAlertModal,
-}: Props) {
+export default function PlayList({ playlists, setPlaylists, track }: Props) {
   const { userId } = userSpotifyStore();
   const { setPlaylistsStore } = usePlaylistStore();
   const [isLoading, setIsLoading] = useState(false);
+  const { setMessage, setShowAlertModal } = useAlertModalStore();
 
   useEffect(() => {
     if (!userId) return;
@@ -63,7 +57,7 @@ export default function PlayList({
     try {
       setIsLoading(true);
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
-      
+
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const json = res.data as Playlist[];
       const data = json.filter((v) => v.owner.id === userId);

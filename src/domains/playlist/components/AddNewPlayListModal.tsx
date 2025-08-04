@@ -6,14 +6,13 @@ import { Playlist } from "../types/Playlist";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import authAxios from "@/domains/common/lib/axios/authAxios";
+import { useAlertModalStore } from "@/domains/common/stores/useAlertModalStore";
 
 interface Props {
   showModal: boolean;
   onClose: () => void;
   setPlaylists: Dispatch<SetStateAction<Playlist[]>>;
   track: string;
-  setMessage: Dispatch<SetStateAction<string>>;
-  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function AddNewPlayListModal({
@@ -21,8 +20,6 @@ export default function AddNewPlayListModal({
   onClose,
   setPlaylists,
   track,
-  setMessage,
-  setShowAlertModal,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
   const { setPlaylistsStore } = usePlaylistStore();
@@ -30,6 +27,7 @@ export default function AddNewPlayListModal({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState("true");
+  const { setMessage, setShowAlertModal } = useAlertModalStore();
 
   const handleAddNewPlaylist = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,13 +46,13 @@ export default function AddNewPlayListModal({
       const playlistId = await addPlaylistRes.data;
 
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
-      
+
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const json = await res.data;
       const data = json.filter(
         (v: { owner: { id: string } }) => v.owner.id === userId
       );
-      
+
       setPlaylists(data);
       setPlaylistsStore(data);
 
