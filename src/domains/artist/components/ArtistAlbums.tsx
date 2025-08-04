@@ -52,8 +52,8 @@ export default function ArtistAlbums({ artistId }: Props) {
               }}
               className="w-full"
               navigation={{
-                prevEl: ".custom-prev",
-                nextEl: ".custom-next",
+                prevEl: ".artistAlbum-prev",
+                nextEl: ".artistAlbum-next",
               }}
               modules={[Navigation]}
             >
@@ -74,7 +74,10 @@ export default function ArtistAlbums({ artistId }: Props) {
             </Swiper>
           )}
         </div>
-        <SwiperArrow />
+        <SwiperArrow
+          classPrev="artistAlbum-prev"
+          classNext="artistAlbum-next"
+        />
       </div>
     </div>
   );

@@ -81,8 +81,8 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
                 }}
                 className="w-full"
                 navigation={{
-                  prevEl: ".custom-prev",
-                  nextEl: ".custom-next",
+                  prevEl: ".artistTrack-prev",
+                  nextEl: ".artistTrack-next",
                 }}
                 modules={[Navigation]}
               >
@@ -103,7 +103,10 @@ export default function ArtistMoreTracks({ artistId }: { artistId: string }) {
             )
           )}
         </div>
-        <SwiperArrow />
+        <SwiperArrow
+          classPrev="artistTrack-prev"
+          classNext="artistTrack-next"
+        />
       </div>
     </div>
   );
