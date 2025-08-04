@@ -1,9 +1,9 @@
 "use client";
 
-import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
 
 export default function MiniPlayer() {
-  const { selectedTrackId } = usePlayerSotre();
+  const { selectedTrackId } = usePlayerStore();
 
   if (!selectedTrackId) return null;
 

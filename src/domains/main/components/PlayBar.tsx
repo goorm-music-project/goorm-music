@@ -7,7 +7,7 @@ import { Playlist, PlaylistItem } from "@/domains/playlist/types/Playlist";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { usePlayerSotre } from "@/domains/common/stores/usePlayerStore";
+import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import AlertModal from "@/domains/common/components/AlertModal";
 import PlayListBoxSkeleton from "@/domains/playlist/components/PlayListBoxSkeleton";
@@ -40,7 +40,7 @@ export default function PlayBar({
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
-  const { setSelectedTrackId } = usePlayerSotre();
+  const { setSelectedTrackId } = usePlayerStore();
 
   const handleClickTrack = (trackId: string) => {
     setSelectedTrackId(trackId);

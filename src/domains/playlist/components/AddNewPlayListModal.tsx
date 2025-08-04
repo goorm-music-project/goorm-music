@@ -4,6 +4,7 @@ import Modal from "@/domains/common/components/Modal";
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Playlist } from "../types/Playlist";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import { usePlaylistStore } from "@/domains/playlist/stores/usePlaylist";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 
 interface Props {
@@ -24,6 +25,7 @@ export default function AddNewPlayListModal({
   setShowAlertModal,
 }: Props) {
   const { userId } = userSpotifyStore.getState();
+  const { setPlaylistsStore } = usePlaylistStore();
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -46,12 +48,15 @@ export default function AddNewPlayListModal({
       const playlistId = await addPlaylistRes.data;
 
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
+      
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const json = await res.data;
       const data = json.filter(
         (v: { owner: { id: string } }) => v.owner.id === userId
       );
+      
       setPlaylists(data);
+      setPlaylistsStore(data);
 
       setName("");
       setDescription("");
