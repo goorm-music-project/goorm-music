@@ -9,6 +9,7 @@ import PlayListModal from "@/domains/playlist/components/PlayListModal";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
 import AlertModal from "@/domains/common/components/AlertModal";
+import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 
 interface TrackActionBtnsProps {
   trackId: string;
@@ -23,6 +24,7 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
 
   const [message, setMessage] = useState("");
   const [showAlertModal, setShowAlertModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const fetchLikedTracks = async () => {
@@ -39,6 +41,10 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
 
     fetchLikedTracks();
   }, [trackId, isLoggedIn]);
+
+  const handleAddPlayListBtn = () => {
+    isLoggedIn ? setShowPlayListModal(true) : setShowLoginModal(true);
+  };
 
   return (
     <div className="relative flex flex-col items-center mt-4">
@@ -72,13 +78,17 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
         <FaPlus
           size={30}
           className="ml-5 mr-5 cursor-pointer"
-          onClick={() => setShowPlayListModal(true)}
+          onClick={() => handleAddPlayListBtn()}
         />
       </div>
       <AlertModal
         showModal={showAlertModal}
         onClose={() => setShowAlertModal(false)}
         message={message}
+      />
+      <SuggestLoginModal
+        showModal={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
       />
     </div>
   );
