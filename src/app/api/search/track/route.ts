@@ -10,18 +10,19 @@ export async function GET(req: Request) {
   const offset = parseInt(searchParams.get("offset") ?? "0");
   const limit = parseInt(searchParams.get("limit") ?? "15");
 
-  if (!access_token || !query) {
-    return NextResponse.json(
-      { error: "access_token 또는 검색어 누락" },
-      { status: 400 }
-    );
+  if (!access_token) {
+    return NextResponse.json({ error: "access_token 누락" }, { status: 401 });
+  }
+
+  if (!query) {
+    return NextResponse.json({ error: "검색어 누락" }, { status: 400 });
   }
 
   try {
     const res = await axios.get(
       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
         query
-      )}&type=track&limit=${limit}&offset=${offset}`,
+      )}&type=track&limit=${limit}&offset=${offset}&market=KR`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -29,9 +30,11 @@ export async function GET(req: Request) {
       }
     );
     const json = res.data;
-    const data = json.tracks?.items.map((v: TrackItem) => ({
-      track: v,
-    }));
+    const data = json.tracks?.items
+      .map((v: TrackItem) => ({
+        track: v,
+      }))
+      .filter((v: { track: TrackItem }) => v.track.is_playable);
     return NextResponse.json(data);
   } catch (err) {
     console.log("검색 오류", err);

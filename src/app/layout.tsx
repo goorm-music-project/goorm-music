@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { Gowun_Batang } from "next/font/google";
 import "./globals.css";
-
-const gowunBatang = Gowun_Batang({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Groom Music",
@@ -19,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${gowunBatang.className} antialiased`}>{children}</body>
+      <body className={`antialiased`}>{children}</body>
     </html>
   );
 }

@@ -11,6 +11,7 @@ export interface TrackItem {
     name: string;
     images: { url: string }[];
   };
+  is_playable: boolean;
 }
 
 export async function GET(req: Request) {
@@ -19,18 +20,19 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("searchText");
 
-  if (!access_token || !query) {
-    return NextResponse.json(
-      { error: "access_token 또는 검색어 누락" },
-      { status: 400 }
-    );
+  if (!access_token) {
+    return NextResponse.json({ error: "access_token 누락" }, { status: 401 });
+  }
+
+  if (!query) {
+    return NextResponse.json({ error: "검색어 누락" }, { status: 400 });
   }
 
   try {
     const res = await axios.get(
       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
         query
-      )}&type=track,artist,album,playlist&limit=10`,
+      )}&type=track,artist,album,playlist&limit=10&market=KR`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -38,9 +40,11 @@ export async function GET(req: Request) {
       }
     );
     const json = res.data;
-    const formatted = json.tracks?.items.map((v: TrackItem) => ({
-      track: v,
-    }));
+    const formatted = json.tracks?.items
+      .map((v: TrackItem) => ({
+        track: v,
+      }))
+      .filter((v: { track: TrackItem }) => v.track.is_playable === true);
     const data = {
       ...json,
       tracks: formatted,

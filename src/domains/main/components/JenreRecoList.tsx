@@ -10,6 +10,7 @@ import { Navigation } from "swiper/modules";
 import TrackCard from "@/domains/common/components/TrackCard";
 import TrackCardSkeleton from "@/domains/common/components/TrackCardSkeleton";
 import SwiperArrow from "@/domains/common/components/SwiperArrow";
+import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
 
 type TrackItem = {
   id: string;
@@ -25,6 +26,9 @@ export default function JenreRecoList() {
   const [datas, setDatas] = useState<TrackItem[]>([]);
   const userId = userSpotifyStore((state) => state.userId);
   const router = useRouter();
+  const setSelectedTrackId = usePlayerStore(
+    (state) => state.setSelectedTrackId
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +44,11 @@ export default function JenreRecoList() {
 
     if (userId) fetchData();
   }, [userId]);
+
+  const handleTrackClick = (trackId: string) => {
+    router.push(`/track/${trackId}`);
+    setSelectedTrackId(trackId);
+  };
 
   return (
     <main className="mb-4">
@@ -70,7 +79,7 @@ export default function JenreRecoList() {
                   <SwiperSlide
                     key={item.id}
                     style={{ width: "150px" }}
-                    onClick={() => router.push(`/track/${item.id}`)}
+                    onClick={() => handleTrackClick(item.id)}
                     className="cursor-pointer"
                   >
                     <TrackCard

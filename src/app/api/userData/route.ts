@@ -20,12 +20,11 @@ export async function POST() {
       },
     });
 
-    const { id: userId, display_name, email, images } = res.data;
+    const { id: userId, display_name, email, images, product } = res.data;
     const imageUrl = images && images.length > 0 ? images[0].url : null;
 
     const userRef = doc(db, "users", userId);
     const userSnap = await getDoc(userRef);
-    console.log("검사하기");
     const userExists = userSnap.exists();
 
     let genres: string[] = [];
@@ -40,6 +39,7 @@ export async function POST() {
       userExists,
       imageUrl,
       genres,
+      product,
     });
   } catch (err: any) {
     console.error("❌❌❌❌", err.response?.data || err.message);
