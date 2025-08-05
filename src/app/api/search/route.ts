@@ -19,11 +19,15 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("searchText");
 
-  if (!access_token || !query) {
+  if (!access_token) {
     return NextResponse.json(
-      { error: "access_token 또는 검색어 누락" },
-      { status: 400 }
+      { error: "access_token 누락" },
+      { status: 401 }
     );
+  }
+
+  if (!query) {
+    return NextResponse.json({ error: "검색어 누락" }, { status: 400 });
   }
 
   try {

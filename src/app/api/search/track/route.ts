@@ -10,11 +10,12 @@ export async function GET(req: Request) {
   const offset = parseInt(searchParams.get("offset") ?? "0");
   const limit = parseInt(searchParams.get("limit") ?? "15");
 
-  if (!access_token || !query) {
-    return NextResponse.json(
-      { error: "access_token 또는 검색어 누락" },
-      { status: 400 }
-    );
+  if (!access_token) {
+    return NextResponse.json({ error: "access_token 누락" }, { status: 401 });
+  }
+
+  if (!query) {
+    return NextResponse.json({ error: "검색어 누락" }, { status: 400 });
   }
 
   try {
@@ -32,6 +33,7 @@ export async function GET(req: Request) {
     const data = json.tracks?.items.map((v: TrackItem) => ({
       track: v,
     }));
+    // TODO: playable 검열
     return NextResponse.json(data);
   } catch (err) {
     console.log("검색 오류", err);
