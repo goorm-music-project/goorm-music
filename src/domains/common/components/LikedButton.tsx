@@ -48,13 +48,13 @@ export default function LikedButton({
 
   useEffect(() => {
     if (!hasClicked) return;
-    fetchLiked();
     if (isLiked) {
       setMessage("좋아요 목록에 추가 되었습니다.");
     } else {
       setMessage("좋아요 목록에서 제거되었습니다.");
     }
     setShowAlertModal(true);
+    fetchLiked();
   }, [debouncedClick]);
 
   return (
