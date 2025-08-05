@@ -14,16 +14,17 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import TrackCardSkeleton from "@/domains/common/components/TrackCardSkeleton";
 import SwiperArrow from "@/domains/common/components/SwiperArrow";
+import { useLoginModalStore } from "@/domains/common/stores/useLoginModalStore";
 
 export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { userId } = userSpotifyStore();
   const [listData, setListData] = useState<Playlist[]>([]);
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+  const { setShowLoginModal } = useLoginModalStore();
 
   const handleAddPlayListBtn = () => {
     if (!isLoggedIn) {
-      setShowModal(true);
+      setShowLoginModal(true);
     } else {
       router.push("/playlist");
     }
@@ -99,10 +100,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
         </div>
         <SwiperArrow classPrev="playlist-prev" classNext="playlist-next" />
       </div>
-      <SuggestLoginModal
-        showModal={showModal}
-        onClose={() => setShowModal(false)}
-      />
+      <SuggestLoginModal />
     </div>
   );
 }

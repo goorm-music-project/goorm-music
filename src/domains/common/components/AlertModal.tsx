@@ -1,21 +1,19 @@
 import React, { useEffect } from "react";
 import Modal from "./Modal";
-interface Props {
-  showModal: boolean;
-  onClose: () => void;
-  message: string;
-}
-export default function AlertModal({ showModal, onClose, message }: Props) {
+import { useAlertModalStore } from "../stores/useAlertModalStore";
+
+export default function AlertModal() {
+  const { message, showAlertModal, setShowAlertModal } = useAlertModalStore();
   useEffect(() => {
-    if (!showModal) return;
+    if (!showAlertModal) return;
     const timer = setTimeout(() => {
-      onClose();
+      setShowAlertModal(false);
     }, 2000);
     return () => clearTimeout(timer);
-  }, [showModal, onClose]);
+  }, [showAlertModal, setShowAlertModal]);
 
   return (
-    <Modal showModal={showModal} onClose={onClose}>
+    <Modal showModal={showAlertModal} onClose={() => setShowAlertModal(false)}>
       <div className="text-center">
         <p className="my-8">{message}</p>
       </div>

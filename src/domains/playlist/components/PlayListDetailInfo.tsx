@@ -1,21 +1,21 @@
 import Image from "next/image";
 import React from "react";
-import { PlaylistDetail } from "../types/Playlist";
 import Link from "next/link";
+import { usePlaylistProps } from "../stores/usePlaylistProps";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 
 interface Props {
-  listData: PlaylistDetail;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
   handlePlaylistDelBtn: () => void;
-  canEdit: boolean;
 }
 
 export default function PlayListDetailInfo({
-  listData,
   setIsEdit,
   handlePlaylistDelBtn,
-  canEdit,
 }: Props) {
+  const { listData, canEdit } = usePlaylistProps();
+
+  if (!listData) return <LoadingSpinner />;
   return (
     <div className="flex flex-col gap-2 items-center">
       <Image

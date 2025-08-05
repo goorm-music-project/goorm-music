@@ -1,24 +1,13 @@
-import React, { SetStateAction } from "react";
+import { usePlaylistProps } from "../stores/usePlaylistProps";
 
 interface Props {
   isEdit: boolean;
-  name: string;
-  setName: React.Dispatch<SetStateAction<string>>;
-  description: string;
-  setDescription: React.Dispatch<SetStateAction<string>>;
-  isPublic: string;
   handleEditPlaylist: () => void;
 }
 
-export default function PlayListEditBox({
-  isEdit,
-  name,
-  setName,
-  description,
-  setDescription,
-  isPublic,
-  handleEditPlaylist,
-}: Props) {
+export default function PlayListEditBox({ isEdit, handleEditPlaylist }: Props) {
+  const { name, description, isPublic, setName, setDescription } =
+    usePlaylistProps();
   return (
     <div className="flex flex-col gap-4 items-center mt-2">
       <div>
