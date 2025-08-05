@@ -21,10 +21,7 @@ export async function GET(req: Request) {
   const query = searchParams.get("searchText");
 
   if (!access_token) {
-    return NextResponse.json(
-      { error: "access_token 누락" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "access_token 누락" }, { status: 401 });
   }
 
   if (!query) {
