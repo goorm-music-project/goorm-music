@@ -1,15 +1,18 @@
 declare global {
   interface Window {
-    Spotify: typeof Spotify;
+    Spotify: {
+      Player: PlayerConstructor;
+    };
     onSpotifyWebPlaybackSDKReady: () => void;
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare namespace Spotify {
   interface Player {
     connect(): Promise<boolean>;
     disconnect(): void;
-    addListener(event: string, callback: (data: any) => void): void;
+    addListener(event: string, callback: (data: unknown) => void): void;
     removeListener(event: string): void;
     getCurrentState(): Promise<PlayerState | null>;
     setName(name: string): Promise<void>;
@@ -27,7 +30,7 @@ declare namespace Spotify {
   interface PlayerState {
     context: {
       uri: string;
-      metadata: any;
+      metadata: unknown;
     };
     disallows: {
       pausing: boolean;
@@ -91,4 +94,4 @@ declare namespace Spotify {
   const Player: PlayerConstructor;
 }
 
-export {}; 
+export {};

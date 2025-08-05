@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
 import PlaybarCover from "@/domains/main/components/PlaybarCover";
@@ -117,7 +116,8 @@ export default function PlayBar({
                 <div className=" relative w-[100px] h-[100px]">
                   <Image
                     src={
-                      item.track?.album?.images[0]?.url || "/goorm_logo_blue.png"
+                      item.track?.album?.images[0]?.url ||
+                      "/goorm_logo_blue.png"
                     }
                     alt={item.track.name}
                     fill

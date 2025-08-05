@@ -39,7 +39,7 @@ export default function TrackInfo({ track, isLoading }: TrackInfoProps) {
             {track.name}
           </span>
           <span className="text-xs text-gray-300 truncate">
-            {track.artists.map((a: any) => a.name).join(", ")}
+            {track.artists.map((a: { name: string }) => a.name).join(", ")}
           </span>
         </div>
       </div>
@@ -62,4 +62,4 @@ export default function TrackInfo({ track, isLoading }: TrackInfoProps) {
   }
 
   return null;
-} 
+}
