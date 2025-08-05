@@ -37,8 +37,7 @@ export default function ProfilePage() {
     : params?.userId;
 
   const isMe = !!profile && myUserId === profile.id;
-
-  console.log(isMe);
+  const { setIsLoggedIn, setUserId } = userSpotifyStore();
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -164,7 +163,8 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     try {
       await authAxios.post("/api/logout");
-      userSpotifyStore.setState({ isLoggedIn: false, userId: "" });
+      setUserId("");
+      setIsLoggedIn(false);
       router.push("/");
     } catch (err) {
       console.error("로그아웃 실패:", err);
