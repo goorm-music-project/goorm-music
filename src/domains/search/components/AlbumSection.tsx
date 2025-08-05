@@ -18,7 +18,7 @@ interface Props {
 
 export default function AlbumSection({ data }: { data: Props }) {
   return (
-    <div className="h-[20vh] relative">
+    <div className="h-[200px] relative">
       <div className="w-[90%] ml-[5%]">
         {data.items.length === 0 ? (
           <p>검색 결과가 없습니다.</p>

@@ -13,7 +13,7 @@ interface Props {
 export default function ArtistSection({ data }: { data: Props }) {
   const router = useRouter();
   return (
-    <div className="h-[20vh] overflow-y-auto">
+    <div className="h-[200px] overflow-y-auto">
       {data.items.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (
