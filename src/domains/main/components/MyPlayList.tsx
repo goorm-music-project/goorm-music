@@ -53,7 +53,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
           나만의 플레이리스트를 만들어보세요.
         </h1>
       )}
-      <div className="relative">
+      <div className="relative py-2">
         <div className="w-[90%] ml-[5%]">
           <Swiper
             slidesPerView={"auto"}
