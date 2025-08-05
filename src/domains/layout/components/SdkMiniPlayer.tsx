@@ -7,11 +7,18 @@ import PlaybackControls from "./PlaybackControls";
 import VolumeControl from "./VolumeControl";
 import ErrorDisplay from "./ErrorDisplay";
 import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
+import { useWindowWidth } from "@/domains/common/hooks/useWindowWidth";
 
 export default function SdkMiniPlayer() {
-  const { player, deviceId, error: playerError, isLoading: playerLoading } = useSpotifyPlayer();
+  const {
+    player,
+    deviceId,
+    error: playerError,
+    isLoading: playerLoading,
+  } = useSpotifyPlayer();
   const { selectedTrackId } = usePlayerStore();
-  
+  const displayWidth = useWindowWidth();
+
   const {
     track,
     paused,
@@ -36,11 +43,11 @@ export default function SdkMiniPlayer() {
   }
 
   return (
-    <div className="fixed bottom-11 md:bottom-0 left-0 w-full z-51 bg-gray-900 border-t border-gray-700 shadow-lg h-20">
+    <div className="fixed bottom-16 md:bottom-0 left-0 w-full z-51 bg-gray-900 border-t border-gray-700 h-20">
       <div className="flex items-center justify-between px-4 py-3">
         {/* 트랙 정보 섹션 */}
         <TrackInfo track={track} isLoading={isLoading} />
-        
+
         {/* 컨트롤 섹션 */}
         <div className="flex items-center space-x-4">
           {/* 재생/일시정지 버튼 */}
@@ -49,12 +56,11 @@ export default function SdkMiniPlayer() {
             isLoading={isLoading}
             onTogglePlay={togglePlay}
           />
-          
+
           {/* 볼륨 슬라이더 */}
-          <VolumeControl
-            volume={volume}
-            onVolumeChange={changeVolume}
-          />
+          {displayWidth && displayWidth >= 768 && (
+            <VolumeControl volume={volume} onVolumeChange={changeVolume} />
+          )}
         </div>
       </div>
     </div>
