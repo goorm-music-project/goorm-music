@@ -11,6 +11,7 @@ export interface TrackItem {
     name: string;
     images: { url: string }[];
   };
+  is_playable: boolean;
 }
 
 export async function GET(req: Request) {
@@ -34,7 +35,7 @@ export async function GET(req: Request) {
     const res = await axios.get(
       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
         query
-      )}&type=track,artist,album,playlist&limit=10`,
+      )}&type=track,artist,album,playlist&limit=10&market=KR`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -42,9 +43,11 @@ export async function GET(req: Request) {
       }
     );
     const json = res.data;
-    const formatted = json.tracks?.items.map((v: TrackItem) => ({
-      track: v,
-    }));
+    const formatted = json.tracks?.items
+      .map((v: TrackItem) => ({
+        track: v,
+      }))
+      .filter((v: { track: TrackItem }) => v.track.is_playable === true);
     const data = {
       ...json,
       tracks: formatted,

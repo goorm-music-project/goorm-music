@@ -1,15 +1,7 @@
+import { SpotifyTrack } from "@/domains/track/types/SpotifyTrack";
 import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-
-type SpotifyTrack = {
-  id: string;
-  name: string;
-  artists: { name: string }[];
-  album: {
-    images: { url: string }[];
-  };
-};
 
 export async function GET(
   req: NextRequest,
@@ -23,7 +15,7 @@ export async function GET(
   try {
     const access_token = (await cookies()).get("public_access_token")?.value;
     const res = await axios.get(
-      `https://api.spotify.com/v1/artists/${artistId}/top-tracks`,
+      `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=KR`,
       {
         params: { market: "KR" },
         headers: {
@@ -34,11 +26,13 @@ export async function GET(
 
     const tracks = res.data.tracks as SpotifyTrack[];
 
+    const censoredTracks = tracks.filter((track) => track.is_playable === true);
+
     if (mode === "allData") {
       return NextResponse.json(res.data.tracks);
     } else {
       return NextResponse.json(
-        tracks.map((track) => ({
+        censoredTracks.map((track) => ({
           imageUrl: track.album.images[0]?.url ?? "",
           title: track.name,
           artists: track.artists.map((artist) => artist.name),

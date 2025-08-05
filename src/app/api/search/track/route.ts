@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     const res = await axios.get(
       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
         query
-      )}&type=track&limit=${limit}&offset=${offset}`,
+      )}&type=track&limit=${limit}&offset=${offset}&market=KR`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -30,10 +30,11 @@ export async function GET(req: Request) {
       }
     );
     const json = res.data;
-    const data = json.tracks?.items.map((v: TrackItem) => ({
-      track: v,
-    }));
-    // TODO: playable 검열
+    const data = json.tracks?.items
+      .map((v: TrackItem) => ({
+        track: v,
+      }))
+      .filter((v: { track: TrackItem }) => v.track.is_playable);
     return NextResponse.json(data);
   } catch (err) {
     console.log("검색 오류", err);
