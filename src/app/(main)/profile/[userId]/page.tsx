@@ -2,9 +2,11 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import appAxios from "@/domains/common/lib/axios/appAxios";
-import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
+import ProfileHeaderArea from "@/domains/profile/components/ProfileHeaderArea";
+import ProfileTabArea from "@/domains/profile/components/ProfileTabArea";
 import {
   Track,
   Profile,
@@ -12,11 +14,7 @@ import {
   SpotifyLikedTrack,
   RawProfileData,
 } from "@/domains/profile/types/Profile";
-import ProfileHeaderArea from "@/domains/profile/components/ProfileHeaderArea";
-import PlaylistList from "@/domains/profile/components/PlaylistList";
-import LikedTrackList from "@/domains/profile/components/LikedTrackList";
-import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
-import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
+
 import ProfileHeaderSkeleton from "@/domains/profile/components/ProfileHeaderSkeleton";
 
 export default function ProfilePage() {
@@ -46,10 +44,10 @@ export default function ProfilePage() {
       let profileData: RawProfileData;
       if (myUserId && userId === myUserId) {
         const resProfile = await authAxios.post("/api/userData");
-        profileData = resProfile.data;
+        profileData = resProfile.data as RawProfileData;
       } else {
         const resProfile = await appAxios.get(`/api/users/${userId}`);
-        profileData = resProfile.data;
+        profileData = resProfile.data as RawProfileData;
       }
       setProfile({
         id: profileData.userId,
@@ -63,12 +61,12 @@ export default function ProfilePage() {
       let playlistsData: Playlist[];
       if (myUserId && userId === myUserId) {
         const resPlaylists = await authAxios.get("/api/playlist/getPlaylist");
-        playlistsData = resPlaylists.data;
+        playlistsData = resPlaylists.data as Playlist[];
       } else {
         const resPlaylists = await appAxios.get(
           `/api/users/${userId}/playlists`
         );
-        playlistsData = resPlaylists.data;
+        playlistsData = resPlaylists.data as Playlist[];
       }
       setAllPlaylists(playlistsData);
 
@@ -182,25 +180,16 @@ export default function ProfilePage() {
         onLogout={handleLogout}
         onGenresSave={handleGenresSave}
       />
-      <div className="px-4">
-        <ProfileTabMenu
-          tab={tab}
-          onTabChange={setTab}
-          tabs={isMe ? ["playlists", "liked", "following"] : ["playlists"]}
-        />
-        {tab === "playlists" && (
-          <PlaylistList playlists={myPlaylists} isMe={isMe} />
-        )}
-        {tab === "liked" && isMe && (
-          <LikedTrackList tracks={likedSongs} onUnlike={handleUnlikeTrack} />
-        )}
-        {tab === "following" && isMe && (
-          <FollowingPlaylist
-            playlists={followedPlaylists}
-            onUnfollow={handleUnfollowPlaylist}
-          />
-        )}
-      </div>
+      <ProfileTabArea
+        tab={tab}
+        onTabChange={setTab}
+        isMe={isMe}
+        myPlaylists={myPlaylists}
+        likedSongs={likedSongs}
+        followedPlaylists={followedPlaylists}
+        onUnlike={handleUnlikeTrack}
+        onUnfollow={handleUnfollowPlaylist}
+      />
     </div>
   );
 }
