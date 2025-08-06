@@ -30,7 +30,7 @@ export default function PlayBar({
   className,
   canEdit,
 }: Props) {
-  const { userId } = userSpotifyStore.getState();
+  const { isLoggedIn } = userSpotifyStore.getState();
   const [showPlayListModal, setShowPlayListModal] = useState(false);
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [selectTrack, setSelectTrack] = useState<string>("");
@@ -54,7 +54,7 @@ export default function PlayBar({
   };
 
   useEffect(() => {
-    if (!tracks || tracks.length === 0 || userId === "") return;
+    if (!tracks || tracks.length === 0 || !isLoggedIn) return;
 
     const fetchLikedTracks = async () => {
       const trackIds = tracks.map((t) => t.track.id);
@@ -88,7 +88,7 @@ export default function PlayBar({
     };
 
     fetchLikedTracks();
-  }, [tracks, userId]);
+  }, [tracks, isLoggedIn]);
 
   return (
     <div className={className ? "grid grid-cols-1 lg:grid-cols-2 gap-2" : ""}>
@@ -131,7 +131,7 @@ export default function PlayBar({
                   </p>
                 </div>
               </div>
-              {userId ? (
+              {isLoggedIn ? (
                 <PlaybarCover
                   item={item}
                   setSelectTrack={setSelectTrack}

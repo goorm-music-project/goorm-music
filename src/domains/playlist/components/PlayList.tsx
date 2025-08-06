@@ -21,12 +21,12 @@ export default function PlayList({
   setMessage,
   setShowAlertModal,
 }: Props) {
-  const { userId } = userSpotifyStore();
+  const { userId, isLoggedIn } = userSpotifyStore();
   const { setPlaylistsStore } = usePlaylistStore();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!isLoggedIn) return;
 
     const fetchPlaylists = async () => {
       setIsLoading(true);
@@ -44,7 +44,7 @@ export default function PlayList({
     };
 
     fetchPlaylists();
-  }, [setPlaylists, userId, setPlaylistsStore]);
+  }, [setPlaylists, userId, setPlaylistsStore, isLoggedIn]);
 
   const handleAddPlayList = async (playlistId: string) => {
     const res = await authAxios.get(
@@ -63,7 +63,7 @@ export default function PlayList({
     try {
       setIsLoading(true);
       await authAxios.post("/api/playlist/addTrack", { playlistId, track });
-      
+
       const res = await authAxios.get("/api/playlist/getPlaylist");
       const json = res.data as Playlist[];
       const data = json.filter((v) => v.owner.id === userId);
