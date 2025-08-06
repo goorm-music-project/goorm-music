@@ -78,7 +78,7 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
         <FaPlus
           size={30}
           className="ml-5 mr-5 cursor-pointer"
-          onClick={() => handleAddPlayListBtn()}
+          onClick={handleAddPlayListBtn}
         />
       </div>
       <AlertModal
