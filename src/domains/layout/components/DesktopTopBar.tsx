@@ -3,17 +3,19 @@
 import { FaSearch, FaUser } from "react-icons/fa";
 import Image from "next/image";
 import { FormEvent, useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
 
 export default function DesktopTopBar() {
-  const [searchText, setSearchText] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const router = useRouter();
   const userId = userSpotifyStore((state) => state.userId);
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("params") || "";
+  const [searchText, setSearchText] = useState(initialQuery);
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -28,7 +28,7 @@ export default function NewReleaseAlbum() {
   return (
     <main className="mb-4">
       <h1>최신 앨범을 만나보세요.</h1>
-      <div className="relative">
+      <div className="relative py-2">
         <div className="w-[90%] ml-[5%]">
           <Swiper
             slidesPerView={"auto"}

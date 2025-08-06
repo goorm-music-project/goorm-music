@@ -53,7 +53,7 @@ export default function JenreRecoList() {
   return (
     <main className="mb-4">
       <h1>추천 장르를 들어보세요.</h1>
-      <div className="relative">
+      <div className="relative py-2">
         <div className="w-[90%] ml-[5%]">
           <Swiper
             slidesPerView={"auto"}

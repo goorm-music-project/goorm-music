@@ -2,14 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 export default function MobileTopBar() {
-  const [searchText, setSearchText] = useState("");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("params") || "";
+  const [searchText, setSearchText] = useState(initialQuery);
+
+  // const [searchText, setSearchText] = useState(initialQuery);
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

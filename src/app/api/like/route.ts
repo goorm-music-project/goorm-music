@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { trackId, liked } = await req.json();
+  const { trackId, isLiked } = await req.json();
   const cookieAwait = await cookies();
   const access_token = cookieAwait.get("access_token")?.value;
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
   try {
     const url = "https://api.spotify.com/v1/me/tracks";
-    if (liked) {
+    if (isLiked) {
       await axios.put(
         url,
         { ids: [trackId] },
