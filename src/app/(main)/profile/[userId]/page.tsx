@@ -1,22 +1,22 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import ProfileHeader from "@/domains/profile/components/ProfileHeader";
-import GenreTags from "@/domains/profile/components/GenreTags";
-import PlaylistList from "@/domains/profile/components/PlaylistList";
-import LikedTrackList from "@/domains/profile/components/LikedTrackList";
-import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
-import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
+import { useParams, useRouter } from "next/navigation";
+import authAxios from "@/domains/common/lib/axios/authAxios";
+import appAxios from "@/domains/common/lib/axios/appAxios";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import {
   Track,
   Profile,
   Playlist,
   SpotifyLikedTrack,
+  RawProfileData,
 } from "@/domains/profile/types/Profile";
-import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import { useParams, useRouter } from "next/navigation";
-import authAxios from "@/domains/common/lib/axios/authAxios";
-import appAxios from "@/domains/common/lib/axios/appAxios";
+import ProfileHeaderArea from "@/domains/profile/components/ProfileHeaderArea";
+import PlaylistList from "@/domains/profile/components/PlaylistList";
+import LikedTrackList from "@/domains/profile/components/LikedTrackList";
+import FollowingPlaylist from "@/domains/profile/components/FollowingPlaylist";
+import ProfileTabMenu from "@/domains/profile/components/ProfileTabMenu";
 import ProfileHeaderSkeleton from "@/domains/profile/components/ProfileHeaderSkeleton";
 
 export default function ProfilePage() {
@@ -36,21 +36,14 @@ export default function ProfilePage() {
   const userId = Array.isArray(params?.userId)
     ? params.userId[0]
     : params?.userId;
-
   const isMe = !!profile && myUserId === profile.id;
+
   const { setIsLoggedIn, setUserId } = userSpotifyStore();
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      let profileData: {
-        userId: string;
-        display_name?: string;
-        nickname?: string;
-        imageUrl?: string | null;
-        genres?: string[];
-      };
-
+      let profileData: RawProfileData;
       if (myUserId && userId === myUserId) {
         const resProfile = await authAxios.post("/api/userData");
         profileData = resProfile.data;
@@ -58,7 +51,6 @@ export default function ProfilePage() {
         const resProfile = await appAxios.get(`/api/users/${userId}`);
         profileData = resProfile.data;
       }
-
       setProfile({
         id: profileData.userId,
         nickname: profileData.display_name || profileData.nickname || "",
@@ -79,6 +71,7 @@ export default function ProfilePage() {
         playlistsData = resPlaylists.data;
       }
       setAllPlaylists(playlistsData);
+
       if (myUserId && userId === myUserId) {
         const resLiked = await authAxios.get("/api/likeList");
         const likedData = resLiked.data as SpotifyLikedTrack[];
@@ -112,7 +105,7 @@ export default function ProfilePage() {
     alert("프로필 링크가 복사되었습니다!");
   }, [profile]);
 
-  const handleUnfollowPlaylist = async (playlistId: string): Promise<void> => {
+  const handleUnfollowPlaylist = async (playlistId: string) => {
     if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
     try {
       await authAxios.delete(`/api/playlist/unfollow`, {
@@ -124,15 +117,17 @@ export default function ProfilePage() {
     }
   };
 
-  const handleUnlikeTrack = async (trackId: string): Promise<void> => {
+  const handleUnlikeTrack = async (trackId: string) => {
     try {
-      await authAxios.delete("/api/likeList", {
-        data: { trackId },
-      });
+      await authAxios.delete("/api/likeList", { data: { trackId } });
       setLikedSongs((prev) => prev.filter((t) => t.id !== trackId));
     } catch {
       alert("좋아요 취소 실패");
     }
+  };
+
+  const handleGenresSave = (newGenres: string[]) => {
+    setProfile((prev) => (prev ? { ...prev, genres: newGenres } : prev));
   };
 
   const publicPlaylistsCount = allPlaylists.filter((pl) => pl.public).length;
@@ -143,21 +138,16 @@ export default function ProfilePage() {
         pl.owner?.id === profile?.id &&
         (isMe || pl.isPublic === undefined || pl.isPublic === true)
     )
-    .map((pl) => ({
-      ...pl,
-      coverImageUrl: pl.images?.[0]?.url || null,
-    }));
+    .map((pl) => ({ ...pl, coverImageUrl: pl.images?.[0]?.url || null }));
 
   const followedPlaylists = isMe
     ? allPlaylists
         .filter((pl) => pl.owner?.id !== profile?.id)
-        .map((pl) => ({
-          ...pl,
-          coverImageUrl: pl.images?.[0]?.url || null,
-        }))
+        .map((pl) => ({ ...pl, coverImageUrl: pl.images?.[0]?.url || null }))
     : [];
 
   if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
+
   if (loading) {
     return (
       <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
@@ -183,42 +173,15 @@ export default function ProfilePage() {
 
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)] pb-24 min-h-full overflow-y-auto">
-      <div className="bg-[var(--background)]">
-        <div className="px-4 pb-8">
-          <div className="flex flex-col md:flex-between md:flex-row">
-            <ProfileHeader
-              profile={profile}
-              showSensitiveInfo={isMe}
-              isMe={isMe}
-              publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
-              onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
-            />
-            {isMe && (
-              <div className="flex px-4 pt-4">
-                <button
-                  className="bg-[#FF6C78] text-black font-semibold px-4 py-2 rounded-md hover:opacity-90 transition w-25 h-10"
-                  onClick={handleLogout}
-                >
-                  로그아웃
-                </button>
-              </div>
-            )}
-          </div>
-          <div className="mt-4">
-            <GenreTags
-              userId={profile.id}
-              genres={profile.genres}
-              onSave={(newGenres: string[]) =>
-                setProfile((prev) =>
-                  prev ? { ...prev, genres: newGenres } : prev
-                )
-              }
-              showEditButton={isMe}
-            />
-          </div>
-        </div>
-      </div>
-
+      <ProfileHeaderArea
+        loading={loading}
+        profile={profile}
+        isMe={isMe}
+        publicPlaylistsCount={!isMe ? publicPlaylistsCount : undefined}
+        onCopyProfileLink={!isMe ? handleCopyProfileLink : undefined}
+        onLogout={handleLogout}
+        onGenresSave={handleGenresSave}
+      />
       <div className="px-4">
         <ProfileTabMenu
           tab={tab}
