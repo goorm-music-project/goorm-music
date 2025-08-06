@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GenreTagsProps } from "@/domains/profile/types/Profile";
 
 const GENRES = [
@@ -13,7 +13,7 @@ const GENRES = [
   "힙합",
   "인디",
   "성인가요",
-  "매탈",
+  "메탈",
   "뉴에이지",
   "클래식",
 ];
@@ -37,6 +37,10 @@ export default function GenreTags({
   const [selected, setSelected] = useState<string[]>(genres || []);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setSelected(genres || []);
+  }, [genres]);
 
   const toggleGenre = (genre: string) => {
     setSelected((prev) =>
