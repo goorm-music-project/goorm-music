@@ -47,7 +47,10 @@ const LikedTrackList = ({ tracks, onUnlike }: Props) => (
           </span>
           {track.isLiked && (
             <button
-              onClick={() => onUnlike(track.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onUnlike(track.id);
+              }}
               className="ml-2 text-pink-500 text-lg focus:outline-none"
               aria-label="좋아요 취소"
             >
