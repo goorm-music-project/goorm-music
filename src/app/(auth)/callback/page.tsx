@@ -36,8 +36,6 @@ function InnerCallback() {
           } else {
             router.push("/select-genre");
           }
-
-          localStorage.setItem("userId", data.userId);
         }
       } catch (error) {
         console.error("Token 발급 중 오류 발생", error);
