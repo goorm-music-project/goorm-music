@@ -35,7 +35,7 @@ export default function SideBar() {
   }, [isLoggedIn, userId, setPlaylistsStore]);
 
   return (
-    <div className="fixed top-25 left-0 w-65 h-full bg-(--primary-blue) z-50 text-white">
+    <div className="fixed top-20 left-0 w-65 h-full bg-(--primary-blue) z-50 text-white">
       <div className="p-4">
         <RouterBox url="/">
           <FaHome size={20} className="mr-5" />
