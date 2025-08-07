@@ -32,7 +32,7 @@ export default function MainLayout({
         {windowWidth && windowWidth < 768 ? <MobileTopBar /> : <DesktopTopBar />}
       </Suspense>
       <div
-        className={`w-full md:w-auto py-5 px-15 md:pb-0 pb-12 fixed left-0 top-16 overflow-y-auto overflow-x-hidden md:top-20 md:left-65 md:right-0 ${
+        className={`w-full md:w-auto p-4 md:py-5 md:px-15 md:pb-0 pb-12 fixed left-0 top-16 overflow-y-auto overflow-x-hidden md:top-20 md:left-65 md:right-0 ${
           selectedTrackId
             ? "h-[calc(90vh-80px)] md:h-[calc(90vh-65px)] "
             : "h-[86vh] md:h-[calc(100vh-100px)]"

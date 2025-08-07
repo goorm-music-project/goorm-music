@@ -41,7 +41,7 @@ export default function MyPlayList({ isLoggedIn }: { isLoggedIn: boolean }) {
   }, [isLoggedIn, userId]);
 
   return (
-    <div className="my-10">
+    <div className="my-5 md:my-10">
       {isLoggedIn ? (
         <Link href="/playlist">
           <h1 className="cursor-pointer hover:underline">
