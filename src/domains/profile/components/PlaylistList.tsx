@@ -25,13 +25,17 @@ const PlaylistList = ({ userId, isMe }: Props) => {
         let res;
         if (isMe) {
           res = await authAxios.get("/api/playlist/getPlaylist");
+          const onlyMy = (res.data as Playlist[]).filter(
+            (pl) => pl.owner?.id === myUserId
+          );
+          setPlaylists(onlyMy);
         } else {
           res = await appAxios.get(`/api/users/${userId}/playlists`);
+          const targetUserPlaylists = (res.data as Playlist[]).filter(
+            (pl) => pl.owner?.id === userId
+          );
+          setPlaylists(targetUserPlaylists);
         }
-        const onlyMy = (res.data as Playlist[]).filter(
-          (pl) => pl.owner?.id === myUserId
-        );
-        setPlaylists(onlyMy);
       } catch {
         setPlaylists([]);
       }
