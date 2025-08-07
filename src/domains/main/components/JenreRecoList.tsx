@@ -72,7 +72,7 @@ export default function JenreRecoList() {
             {datas.length === 0
               ? Array.from({ length: 10 }).map((_, i) => (
                   <SwiperSlide key={i} style={{ width: "150px" }}>
-                    <TrackCardSkeleton />
+                    <TrackCardSkeleton showSub={true} />
                   </SwiperSlide>
                 ))
               : datas.map((item) => (
