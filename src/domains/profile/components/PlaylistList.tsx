@@ -1,15 +1,44 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
 import EmptyMessage from "./EmptyMessage";
+import authAxios from "@/domains/common/lib/axios/authAxios";
+import appAxios from "@/domains/common/lib/axios/appAxios";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 interface Props {
-  playlists: Playlist[];
+  userId: string;
   isMe: boolean;
 }
 
-const PlaylistList = ({ playlists }: Props) => {
+const PlaylistList = ({ userId, isMe }: Props) => {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const myUserId = userSpotifyStore.getState().userId;
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      setLoading(true);
+      try {
+        let res;
+        if (isMe) {
+          res = await authAxios.get("/api/playlist/getPlaylist");
+        } else {
+          res = await appAxios.get(`/api/users/${userId}/playlists`);
+        }
+        const onlyMy = (res.data as Playlist[]).filter(
+          (pl) => pl.owner?.id === myUserId
+        );
+        setPlaylists(onlyMy);
+      } catch {
+        setPlaylists([]);
+      }
+      setLoading(false);
+    };
+    fetchPlaylists();
+  }, [userId, isMe, myUserId]);
 
   const handleGoDetail = (playlistId: string) => {
     router.push(`/playlist/${playlistId}`);
@@ -30,6 +59,8 @@ const PlaylistList = ({ playlists }: Props) => {
     if ("public" in playlist) return !!playlist.public;
     return false;
   };
+
+  if (loading) return <div>로딩중...</div>;
 
   return (
     <div className="flex flex-col gap-2 md:gap-2 mt-6">
