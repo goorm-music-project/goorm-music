@@ -8,7 +8,7 @@ export default function RecoListWrapper({
   isLoggedIn: boolean;
 }) {
   return (
-    <div className="my-4">
+    <div className="my-10">
       {isLoggedIn ? <JenreRecoList /> : <NewReleaseAlbum />}
     </div>
   );
