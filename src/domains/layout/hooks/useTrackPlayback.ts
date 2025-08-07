@@ -147,7 +147,7 @@ export const useTrackPlayback = ({
           if (!res.ok) throw new Error("트랙 정보를 불러올 수 없습니다.");
           const data = await res.json();
           setTrack(data);
-        } catch (e) {
+        } catch {
           setError("트랙 정보를 불러올 수 없습니다.");
         }
       }
