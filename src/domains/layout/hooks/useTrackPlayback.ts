@@ -84,14 +84,26 @@ export const useTrackPlayback = ({
   };
 
   const togglePlay = async () => {
-    if (player) {
-      try {
-        setError(null);
+    if (!player || !deviceId) return;
+
+    try {
+      setError(null);
+
+      const state = await player.getCurrentState();
+
+      if (!state || !state.track_window.current_track) {
+        if (selectedTrackId) {
+          await playTrack(selectedTrackId);
+        } else {
+          setError("재생할 트랙이 선택되지 않았습니다.");
+          return;
+        }
+      } else {
         await player.togglePlay();
-      } catch (error) {
-        console.error("Error toggling play:", error);
-        setError("재생/일시정지 전환 실패");
       }
+    } catch (error) {
+      console.error("Error toggling play:", error);
+      setError("재생/일시정지 전환 실패");
     }
   };
 
