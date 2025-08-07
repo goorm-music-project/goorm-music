@@ -10,6 +10,7 @@ import SideBar from "@/domains/layout/components/SideBar";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import SdkMiniPlayer from "@/domains/layout/components/SdkMiniPlayer";
 import EmbedMiniPlayer from "@/domains/layout/components/EmbedMiniPlayer";
+import { Suspense } from "react";
 
 export default function MainLayout({
   children,
@@ -22,7 +23,14 @@ export default function MainLayout({
 
   return (
     <div className="min-h-screen relative">
-      {windowWidth && windowWidth < 768 ? <MobileTopBar /> : <DesktopTopBar />}
+      <Suspense fallback={<div className="fixed top-0 left-0 right-0 bg-(--primary-blue) h-16 flex justify-between items-center px-4 z-50">
+        <div className="w-12 h-12 mr-3 bg-white rounded"></div>
+        <div className="flex items-center bg-white rounded-full px-4 py-2 w-full max-w-[550px]">
+          <div className="flex-grow h-4 bg-gray-200 rounded"></div>
+        </div>
+      </div>}>
+        {windowWidth && windowWidth < 768 ? <MobileTopBar /> : <DesktopTopBar />}
+      </Suspense>
       <div
         className={`w-full md:w-auto p-4 md:pb-0 pb-12 fixed left-0 top-16 overflow-y-auto overflow-x-hidden md:top-25 md:left-65 md:right-0 ${
           selectedTrackId

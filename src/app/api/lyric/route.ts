@@ -1,5 +1,8 @@
+// app/api/get-lyrics/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
-import Genius from "genius-lyrics-api";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,25 +10,78 @@ export async function POST(req: NextRequest) {
     const { title, artist } = body;
 
     if (!title || !artist) {
-      return NextResponse.json({ error: "title과 artist는 필수입니다." }, { status: 400 });
+      return NextResponse.json(
+        { error: "title과 artist는 필수입니다." },
+        { status: 400 }
+      );
     }
 
-    const options = {
-      apiKey: process.env.GENIUS_ACCESS_TOKEN!,
-      title,
-      artist,
-      optimizeQuery: true,
-    };
+    const searchQuery = `${title} ${artist}`;
+    const searchResponse = await axios.get(
+      "https://genius.com/api/search/multi",
+      {
+        params: { q: searchQuery },
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/115.0.0.0 Safari/537.36",
+          Accept: "application/json",
+        },
+      }
+    );
 
-    const lyrics = await Genius.getLyrics(options);
-    const song = await Genius.getSong(options);
+    const hits =
+      searchResponse.data.response.sections
+        ?.flatMap(
+          (section: {
+            hits?: Array<{
+              type: string;
+              result: { primary_artist: { name: string }; url?: string };
+            }>;
+          }) => section.hits || []
+        )
+        .filter((hit: { type: string }) => hit.type === "song") ?? [];
 
-    return NextResponse.json({
-      lyrics,
-      geniusUrl: song?.url || null,
+    const songHit = hits.find(
+      (hit: { result: { primary_artist: { name: string } } }) =>
+        hit.result.primary_artist.name
+          .toLowerCase()
+          .includes(artist.toLowerCase())
+    );
+
+    const geniusUrl = songHit?.result?.url;
+    if (!geniusUrl) {
+      return NextResponse.json(
+        { error: "곡을 찾을 수 없습니다." },
+        { status: 404 }
+      );
+    }
+
+    const songPage = await axios.get(geniusUrl, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/115.0.0.0 Safari/537.36",
+        Accept: "text/html",
+      },
     });
-  } catch (err: unknown) {
-    console.error("Genius API 요청 실패:", err);
-    return NextResponse.json({ error: "가사 조회 실패" }, { status: 500 });
+
+    const $ = cheerio.load(songPage.data);
+    const lyrics = $("div[data-lyrics-container='true']").text().trim();
+
+    if (!lyrics) {
+      return NextResponse.json(
+        { error: "가사를 찾을 수 없습니다." },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ lyrics, geniusUrl });
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("가사 조회 실패:", errorMessage);
+    return NextResponse.json(
+      { error: "가사 조회 중 오류 발생" },
+      { status: 500 }
+    );
   }
 }

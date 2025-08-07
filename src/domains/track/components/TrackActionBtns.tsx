@@ -3,20 +3,20 @@
 import LikedButton from "@/domains/common/components/LikedButton";
 import { useEffect, useState } from "react";
 import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
-import authAxios from "@/domains/common/lib/axios/authAxios";
 import { FaPlus } from "react-icons/fa";
 import PlayListModal from "@/domains/playlist/components/PlayListModal";
 import { Playlist } from "@/domains/playlist/types/Playlist";
 import AddNewPlayListModal from "@/domains/playlist/components/AddNewPlayListModal";
 import AlertModal from "@/domains/common/components/AlertModal";
 import SuggestLoginModal from "@/domains/common/components/SuggestLoginModal";
+import authAxios from "@/domains/common/lib/axios/authAxios";
 
 interface TrackActionBtnsProps {
   trackId: string;
 }
 
 export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showPlayListModal, setShowPlayListModal] = useState<boolean>(false);
   const [showAddNewPlayListModal, setShowAddNewPlayListModal] = useState(false);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -26,25 +26,19 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  useEffect(() => {
-    const fetchLikedTracks = async () => {
-      if (!trackId || !isLoggedIn) return;
-      try {
-        const res = await authAxios.get(`/api/isLiked?trackId=${trackId}`);
-        const result = res.data;
-
-        setIsLiked(result.data);
-      } catch (err) {
-        console.error("좋아요 상태 가져오기 실패", err);
-      }
-    };
-
-    fetchLikedTracks();
-  }, [trackId, isLoggedIn]);
-
-  const handleAddPlayListBtn = () => {
-    isLoggedIn ? setShowPlayListModal(true) : setShowLoginModal(true);
+  const fetchIsLiked = async () => {
+    try {
+      const res = await authAxios.get(`/api/isLiked?trackId=${trackId}`);
+      const result = res.data.data[0] as boolean;
+      setIsLiked(result);
+    } catch (err) {
+      console.error("좋아요 상태 가져오기 실패", err);
+    }
   };
+
+  useEffect(() => {
+    fetchIsLiked();
+  }, []);
 
   return (
     <div className="relative flex flex-col items-center mt-4">
@@ -78,7 +72,9 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
         <FaPlus
           size={30}
           className="ml-5 mr-5 cursor-pointer"
-          onClick={handleAddPlayListBtn}
+          onClick={() =>
+            isLoggedIn ? setShowPlayListModal(true) : setShowLoginModal(true)
+          }
         />
       </div>
       <AlertModal
