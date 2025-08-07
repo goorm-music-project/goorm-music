@@ -16,9 +16,9 @@ export default function VolumeControl({ volume, onVolumeChange }: VolumeControlP
         step={0.01}
         value={volume}
         onChange={(e) => onVolumeChange(Number(e.target.value))}
-        className="w-20 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+        className="w-20 h-2 bg-(--primary-blue) rounded-lg appearance-none cursor-pointer"
         style={{
-          background: `linear-gradient(to right, #10b981 0%, #10b981 ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
+          background: `linear-gradient(to right, #6cc2ff 0%, #6cc2ff ${volume * 100}%, #374151 ${volume * 100}%, #374151 100%)`
         }}
       />
     </div>
