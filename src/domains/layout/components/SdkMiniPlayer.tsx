@@ -32,12 +32,10 @@ export default function SdkMiniPlayer() {
   const error = playerError || playbackError;
   const isLoading = playerLoading || playbackLoading;
 
-  // 에러가 있으면 에러 표시
   if (error) {
     return <ErrorDisplay error={error} />;
   }
 
-  // 트랙이 없고 선택된 트랙도 없으면 렌더링하지 않음
   if (!track && !selectedTrackId) {
     return null;
   }

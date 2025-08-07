@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePlayerStore } from "@/domains/common/stores/usePlayerStore";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 
@@ -18,13 +18,16 @@ interface UseTrackPlaybackReturn {
   changeVolume: (volume: number) => void;
 }
 
-export const useTrackPlayback = ({ player, deviceId }: UseTrackPlaybackProps): UseTrackPlaybackReturn => {
+export const useTrackPlayback = ({
+  player,
+  deviceId,
+}: UseTrackPlaybackProps): UseTrackPlaybackReturn => {
   const [track, setTrack] = useState<Spotify.Track | null>(null);
   const [paused, setPaused] = useState(true);
   const [volume, setVolume] = useState(0.5);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { selectedTrackId } = usePlayerStore();
 
   const fetchAccessToken = async () => {
@@ -58,7 +61,7 @@ export const useTrackPlayback = ({ player, deviceId }: UseTrackPlaybackProps): U
         {
           method: "PUT",
           headers: {
-            "Authorization": `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -99,7 +102,6 @@ export const useTrackPlayback = ({ player, deviceId }: UseTrackPlaybackProps): U
     }
   };
 
-  // 플레이어 상태 변경 리스너 설정
   useEffect(() => {
     if (!player) return;
 
@@ -116,11 +118,42 @@ export const useTrackPlayback = ({ player, deviceId }: UseTrackPlaybackProps): U
     };
   }, [player]);
 
-  // selectedTrackId가 변경될 때 트랙 재생
   useEffect(() => {
-    if (selectedTrackId && deviceId && player) {
+    const fetchTrackInfo = async () => {
+      if (selectedTrackId && !track) {
+        try {
+          const accessToken = await fetchAccessToken();
+          if (!accessToken) return;
+          const res = await fetch(
+            `https://api.spotify.com/v1/tracks/${selectedTrackId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          if (!res.ok) throw new Error("트랙 정보를 불러올 수 없습니다.");
+          const data = await res.json();
+          setTrack(data);
+        } catch (e) {
+          setError("트랙 정보를 불러올 수 없습니다.");
+        }
+      }
+    };
+    fetchTrackInfo();
+  }, [selectedTrackId]);
+
+  const prevTrackIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (
+      selectedTrackId &&
+      deviceId &&
+      player &&
+      prevTrackIdRef.current !== selectedTrackId
+    ) {
       playTrack(selectedTrackId);
     }
+    prevTrackIdRef.current = selectedTrackId;
   }, [selectedTrackId, deviceId, player]);
 
   return {
@@ -133,4 +166,4 @@ export const useTrackPlayback = ({ player, deviceId }: UseTrackPlaybackProps): U
     togglePlay,
     changeVolume,
   };
-}; 
+};
