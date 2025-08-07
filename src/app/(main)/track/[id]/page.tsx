@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import TrackActionBtns from "@/domains/track/components/TrackActionBtns";
 import TrackInfo from "@/domains/track/components/TrackInfo";
-import TrackLyrics from "@/domains/track/components/TrackLyrics";
 import ArtistMoreTracks from "@/domains/track/components/ArtistMoreTracks";
 import appAxios from "@/domains/common/lib/axios/appAxios";
 
@@ -29,6 +28,7 @@ export default function TrackDetailPage() {
     const fetchTrack = async () => {
       try {
         const res = await appAxios.get(`/api/track/${trackId}`);
+        console.log(res);
         const data = res.data as TrackDetail;
         setTrack(data);
       } catch (err) {
@@ -60,7 +60,6 @@ export default function TrackDetailPage() {
           artistsId={track.artistsId}
           title={track.title}
         />
-        <TrackLyrics title={track.title} artist={track.artists[0]} />
       </div>
       <ArtistMoreTracks artistId={track.artistsId[0]} />
     </div>
