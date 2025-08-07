@@ -3,7 +3,7 @@ import { FaMusic, FaHeart, FaUsers } from "react-icons/fa";
 interface Props {
   tab: "playlists" | "liked" | "following";
   onTabChange: (tab: "playlists" | "liked" | "following") => void;
-  tabs: ("playlists" | "liked" | "following")[]; // 추가
+  tabs: ("playlists" | "liked" | "following")[];
 }
 
 const ProfileTabMenu = ({ tab, onTabChange, tabs }: Props) => (

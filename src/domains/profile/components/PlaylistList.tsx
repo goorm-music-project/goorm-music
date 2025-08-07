@@ -1,15 +1,48 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
 import EmptyMessage from "./EmptyMessage";
+import authAxios from "@/domains/common/lib/axios/authAxios";
+import appAxios from "@/domains/common/lib/axios/appAxios";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 interface Props {
-  playlists: Playlist[];
+  userId: string;
   isMe: boolean;
 }
 
-const PlaylistList = ({ playlists }: Props) => {
+const PlaylistList = ({ userId, isMe }: Props) => {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const myUserId = userSpotifyStore.getState().userId;
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      setLoading(true);
+      try {
+        let res;
+        if (isMe) {
+          res = await authAxios.get("/api/playlist/getPlaylist");
+          const onlyMy = (res.data as Playlist[]).filter(
+            (pl) => pl.owner?.id === myUserId
+          );
+          setPlaylists(onlyMy);
+        } else {
+          res = await appAxios.get(`/api/users/${userId}/playlists`);
+          const targetUserPlaylists = (res.data as Playlist[]).filter(
+            (pl) => pl.owner?.id === userId
+          );
+          setPlaylists(targetUserPlaylists);
+        }
+      } catch {
+        setPlaylists([]);
+      }
+      setLoading(false);
+    };
+    fetchPlaylists();
+  }, [userId, isMe, myUserId]);
 
   const handleGoDetail = (playlistId: string) => {
     router.push(`/playlist/${playlistId}`);
@@ -31,6 +64,8 @@ const PlaylistList = ({ playlists }: Props) => {
     return false;
   };
 
+  if (loading) return <div>로딩중...</div>;
+
   return (
     <div className="flex flex-col gap-2 md:gap-2 mt-6">
       {playlists.length === 0 ? (
@@ -42,17 +77,17 @@ const PlaylistList = ({ playlists }: Props) => {
             className="flex items-center bg-white rounded-xl p-2 md:p-4 shadow border gap-2 md:gap-4 cursor-pointer transition hover:bg-blue-50"
             onClick={() => handleGoDetail(playlist.id)}
           >
-            {playlist.images && playlist.images[0]?.url ? (
-              <Image
-                src={playlist.images[0].url}
-                alt={playlist.name}
-                className="w-12 h-12 md:w-16 md:h-16 rounded-lg object-cover flex-shrink-0"
-                width={64}
-                height={64}
-              />
-            ) : (
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-lg bg-gray-200 flex-shrink-0" />
-            )}
+            <Image
+              src={
+                playlist.images && playlist.images[0]?.url
+                  ? playlist.images[0].url
+                  : "/goorm_logo_blue.png"
+              }
+              alt={playlist.name}
+              className="w-12 h-12 md:w-16 md:h-16 rounded-lg object-cover flex-shrink-0"
+              width={64}
+              height={64}
+            />
 
             <div className="flex-1 basis-0 min-w-0 max-w-full">
               <div className="font-bold text-sm md:text-base mb-1 truncate">

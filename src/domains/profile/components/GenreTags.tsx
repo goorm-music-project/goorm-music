@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GenreTagsProps } from "@/domains/profile/types/Profile";
 
 const GENRES = [
@@ -37,6 +37,10 @@ export default function GenreTags({
   const [selected, setSelected] = useState<string[]>(genres || []);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setSelected(genres || []);
+  }, [genres]);
 
   const toggleGenre = (genre: string) => {
     setSelected((prev) =>

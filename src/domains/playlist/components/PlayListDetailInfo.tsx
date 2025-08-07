@@ -24,6 +24,7 @@ export default function PlayListDetailInfo({
         width={250}
         height={250}
         className="rounded"
+        style={{ maxWidth: "none" }}
       />
       {!canEdit && (
         <div className="mt-2">

@@ -1,15 +1,61 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Playlist } from "../types/Profile";
 import { useRouter } from "next/navigation";
 import EmptyMessage from "./EmptyMessage";
+import authAxios from "@/domains/common/lib/axios/authAxios";
+import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 
 interface Props {
-  playlists: Playlist[];
-  onUnfollow?: (playlistId: string) => void;
+  isMe: boolean;
 }
 
-const FollowingPlaylist = ({ playlists, onUnfollow }: Props) => {
+const FollowingPlaylist = ({ isMe }: Props) => {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isMe) {
+      setPlaylists([]);
+      setLoading(false);
+      return;
+    }
+    const fetchPlaylists = async () => {
+      setLoading(true);
+      try {
+        const res = await authAxios.get("/api/playlist/getPlaylist");
+        const all = res.data as Playlist[];
+        const myUserId = userSpotifyStore.getState().userId;
+        const followed = all
+          .filter((pl) => pl.owner?.id !== myUserId)
+          .map((pl) => ({
+            ...pl,
+            coverImageUrl: pl.images?.[0]?.url || null,
+          }));
+        setPlaylists(followed);
+      } catch {
+        setPlaylists([]);
+      }
+      setLoading(false);
+    };
+    fetchPlaylists();
+  }, [isMe]);
+
+  const handleUnfollow = async (playlistId: string) => {
+    if (!confirm("정말 삭제(언팔로우) 하시겠습니까?")) return;
+    try {
+      await authAxios.delete(`/api/playlist/unfollow`, {
+        data: { playlistId },
+      });
+      setPlaylists((prev) => prev.filter((pl) => pl.id !== playlistId));
+    } catch {
+      alert("삭제에 실패했습니다.");
+    }
+  };
+
+  if (!isMe) return null;
+  if (loading) return <div>로딩중...</div>;
 
   return (
     <div className="flex flex-col gap-2 md:gap-2 mt-6">
@@ -38,18 +84,16 @@ const FollowingPlaylist = ({ playlists, onUnfollow }: Props) => {
                 {pl.name}
               </div>
             </div>
-            {onUnfollow && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onUnfollow(pl.id);
-                }}
-                className="ml-2 px-3 md:px-4 py-1 md:py-2 text-xs md:text-sm bg-red-100 text-red-600 rounded hover:bg-red-200 transition"
-                aria-label="언팔로우"
-              >
-                삭제
-              </button>
-            )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUnfollow(pl.id);
+              }}
+              className="ml-2 px-3 md:px-4 py-1 md:py-2 text-xs md:text-sm bg-red-100 text-red-600 rounded hover:bg-red-200 transition"
+              aria-label="언팔로우"
+            >
+              삭제
+            </button>
           </div>
         ))
       )}

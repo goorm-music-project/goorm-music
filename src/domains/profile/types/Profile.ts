@@ -56,3 +56,11 @@ export type SpotifyLikedTrack = {
     duration_ms: number;
   };
 };
+
+export type RawProfileData = {
+  userId: string;
+  display_name?: string;
+  nickname?: string;
+  imageUrl?: string | null;
+  genres?: string[];
+};
