@@ -38,23 +38,23 @@ export default function SideBar() {
     <div className="fixed top-25 left-0 w-65 h-full bg-(--primary-blue) z-50 text-white">
       <div className="p-4">
         <RouterBox url="/">
-          <FaHome size={30} className="mr-5" />
-          <h1>홈</h1>
+          <FaHome size={20} className="mr-5" />
+          <h2>홈</h2>
         </RouterBox>
         <RouterBox url="/genre">
-          <FaMusic size={30} className="mr-5" />
-          <h1>장르별 인기차트</h1>
+          <FaMusic size={20} className="mr-5" />
+          <h2>장르별 인기차트</h2>
         </RouterBox>
         {isLoggedIn && (
           <RouterBox url="/playlist">
-            <FaListUl size={30} className="mr-5" />
-            <h1>내 플레이리스트</h1>
+            <FaListUl size={20} className="mr-5" />
+            <h2>내 플레이리스트</h2>
           </RouterBox>
         )}
       </div>
       {isLoggedIn && (
         <>
-          <div className="flex flex-col h-103 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+          <div className="flex flex-col h-103 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent h-[calc(61%-72px)]">
             {playlistStore.length > 0 ? (
               playlistStore.map((playlist) => (
                 <div
