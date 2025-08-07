@@ -25,10 +25,6 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const handleAddPlayListBtn = () => {
-    isLoggedIn ? setShowPlayListModal(true) : setShowLoginModal(true);
-  };
-
   return (
     <div className="relative flex flex-col items-center mt-4">
       <PlayListModal
@@ -61,7 +57,9 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
         <FaPlus
           size={30}
           className="ml-5 mr-5 cursor-pointer"
-          onClick={handleAddPlayListBtn}
+          onClick={() =>
+            isLoggedIn ? setShowPlayListModal(true) : setShowLoginModal(true)
+          }
         />
       </div>
       <AlertModal
