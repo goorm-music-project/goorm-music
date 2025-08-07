@@ -17,6 +17,7 @@ import { userSpotifyStore } from "@/domains/common/stores/userSpotifyStore";
 import { useParams, useRouter } from "next/navigation";
 import authAxios from "@/domains/common/lib/axios/authAxios";
 import appAxios from "@/domains/common/lib/axios/appAxios";
+import LoadingSpinner from "@/domains/common/components/LoadingSpinner";
 
 export default function ProfilePage() {
   const isLoggedIn = userSpotifyStore((state) => state.isLoggedIn);
@@ -157,7 +158,7 @@ export default function ProfilePage() {
     : [];
 
   if (!isLoggedIn) return <div>로그인이 필요합니다.</div>;
-  if (loading) return <div>로딩중...</div>;
+  if (loading) return <LoadingSpinner />;
   if (!profile) return <div>프로필 정보를 불러올 수 없습니다.</div>;
 
   const handleLogout = async () => {

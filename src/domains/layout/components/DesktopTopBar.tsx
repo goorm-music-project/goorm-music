@@ -30,7 +30,7 @@ export default function DesktopTopBar() {
   }, [pathname]);
 
   return (
-    <div className="w-full h-25 px-4 flex items-center justify-between border-b-2 border-(--primary-blue) bg-(--background) fixed top-0 left-0 z-50">
+    <div className="w-full h-20 px-4 flex items-center justify-between border-b-2 border-(--primary-blue) bg-(--background) fixed top-0 left-0 z-50">
       <Image
         src="/goorm_logo_blue.png"
         alt="로고"

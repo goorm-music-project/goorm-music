@@ -37,7 +37,7 @@ export default function TrackActionBtns({ trackId }: TrackActionBtnsProps) {
   };
 
   useEffect(() => {
-    fetchIsLiked();
+    if (isLoggedIn) fetchIsLiked();
   }, []);
 
   return (
