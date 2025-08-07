@@ -31,13 +31,21 @@ export async function POST(req: NextRequest) {
 
     const hits =
       searchResponse.data.response.sections
-        ?.flatMap((section: any) => section.hits || [])
-        .filter((hit: any) => hit.type === "song") ?? [];
+        ?.flatMap(
+          (section: {
+            hits?: Array<{
+              type: string;
+              result: { primary_artist: { name: string }; url?: string };
+            }>;
+          }) => section.hits || []
+        )
+        .filter((hit: { type: string }) => hit.type === "song") ?? [];
 
-    const songHit = hits.find((hit: any) =>
-      hit.result.primary_artist.name
-        .toLowerCase()
-        .includes(artist.toLowerCase())
+    const songHit = hits.find(
+      (hit: { result: { primary_artist: { name: string } } }) =>
+        hit.result.primary_artist.name
+          .toLowerCase()
+          .includes(artist.toLowerCase())
     );
 
     const geniusUrl = songHit?.result?.url;
@@ -67,8 +75,13 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ lyrics, geniusUrl });
-  } catch (error: any) {
-    console.error("가사 조회 실패:", error.message);
-    return NextResponse.json({ error: "가사 조회 중 오류 발생" }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("가사 조회 실패:", errorMessage);
+    return NextResponse.json(
+      { error: "가사 조회 중 오류 발생" },
+      { status: 500 }
+    );
   }
 }
